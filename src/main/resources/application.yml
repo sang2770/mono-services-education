@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: education
+  swagger:
+    enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  profiles:
+    active: ${ENV:dev}
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: true
+      WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
+security:
+  authentication:
+    jwt:
+      key-store: sang.jks
+      key-store-password: 1234aA@
+      key-alias: sang
+      access-token-expires-in: 1d
+      refresh-token-expires-in: 30d
+      email-token-expires-in: 10m
+
+server:
+  port: ${PORT:8082}
+
+feign:
+  circuitbreaker:
+    enabled: true
+  okhttp:
+    enabled: true
+eureka:
+  instance:
+    prefer-ip-address: true
+    nonSecurePort: ${server.port}
+    secure-port-enabled: false
+  client:
+    serviceUrl:
+      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8081}/eureka/
+app:
+  iam:
+    client:
+      authenticate-uri: /api/client/authenticate
+      client-id: 46fa7bd2-eb87-41f7-82e5-576d9dee258b
+      client-secret: mbMvn2YAnBfJH8JrkLVeXFJ72tbTEMUGUZDP8ZqKSYeMLi8XGqA0xcduji34hdv4Y3usA9S9B0IfYQJoX516M9sLQgTprSgalWZw
+
+
+#  keytool -genkeypair -alias sang -keyalg RSA -keystore /home/nguyensang/DoAn/BE/iam/src/main/resources/sang.jks  -keypass 12346aA@ -storepass 1234aA@
+template:
+  folder: 'templates/excel'
+  user:
+    exportFileName: 'user_export_template.xlsx'
+    importFileName: 'user_import_template.xlsx'

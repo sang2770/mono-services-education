@@ -1,0 +1,154 @@
+package com.sang.nv.education.exam.domain;
+
+import com.sang.commonclient.domain.UserDTO;
+import com.sang.commonmodel.exception.ResponseException;
+import com.sang.commonutil.IdUtils;
+import com.sang.nv.education.exam.application.dto.request.UserExamInfoCreateRequest;
+import com.sang.nv.education.exam.application.dto.response.UserExamResult;
+import com.sang.nv.education.exam.domain.command.UserExamCreateCmd;
+import com.sang.nv.education.exam.domain.command.UserExamInfoCreateCmd;
+import com.sang.nv.education.exam.infrastructure.support.enums.UserExamStatus;
+import com.sang.nv.education.exam.infrastructure.support.exception.NotFoundError;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.springframework.util.CollectionUtils;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
+@Setter(AccessLevel.PRIVATE)
+@Getter
+public class UserExam {
+    String id;
+    String code;
+    Float totalPoint;
+    Float maxPoint;
+    Instant timeEnd;
+    Instant timeStart;
+    Boolean deleted;
+    String examId;
+    String periodId;
+    String roomId;
+    String userId;
+    UserExamStatus status;
+    List<UserExamInfo> userExamInfos;
+
+    Exam exam;
+    UserExamResult userExamResult;
+    UserDTO user;
+
+    Room room;
+    Period period;
+
+    public UserExam(UserExamCreateCmd cmd){
+        this.id = IdUtils.nextId();
+//        this.timeEnd = cmd.getTimeEnd();
+//        this.timeStart = cmd.getTimeStart();
+        this.maxPoint = cmd.getMaxPoint();
+        this.examId = cmd.getExamId();
+        this.code = cmd.getCode();
+        this.roomId = cmd.getRoomId();
+        this.periodId = cmd.getPeriodId();
+        this.userExamInfos = new ArrayList<>();
+        this.totalPoint = 0f;
+        this.status = UserExamStatus.WAITING;
+//        this.timeEnd = Instant.now();
+        this.deleted = Boolean.FALSE;
+        this.userId = cmd.getUserId();
+    }
+    public UserExam(UserExamCreateCmd cmd, List<ExamQuestion> examQuestions) {
+        this.id = IdUtils.nextId();
+        this.timeEnd = cmd.getTimeEnd();
+        this.timeStart = cmd.getTimeStart();
+        this.examId = cmd.getExamId();
+        this.roomId = cmd.getRoomId();
+        this.userId = cmd.getUserId();
+        this.userExamInfos = new ArrayList<>();
+        this.totalPoint = 0f;
+        this.deleted = Boolean.FALSE;
+        if (!CollectionUtils.isEmpty(cmd.getUserExamInfoCreateRequests())) {
+            this.validateExam(cmd.getUserExamInfoCreateRequests(), examQuestions);
+        }
+    }
+
+    public void update(UserExamCreateCmd cmd, List<ExamQuestion> examQuestions) {
+        this.timeEnd = Instant.now();
+        this.status = UserExamStatus.DONE;
+        if (!CollectionUtils.isEmpty(cmd.getUserExamInfoCreateRequests())) {
+            this.validateExam(cmd.getUserExamInfoCreateRequests(), examQuestions);
+        }
+    }
+
+    public void validateExam(List<UserExamInfoCreateRequest> userExamInfoCreateRequests, List<ExamQuestion> examQuestions){
+        userExamInfoCreateRequests.forEach(userExamInfoCreateRequest -> {
+            Optional<ExamQuestion> optionalExamQuestion = examQuestions.stream().filter(question ->
+                    Objects.equals(question.getQuestionId(), userExamInfoCreateRequest.getQuestionId())).findFirst();
+            if (optionalExamQuestion.isEmpty()) {
+                throw new ResponseException(NotFoundError.QUESTION_NOT_EXISTED);
+            }
+            ExamQuestion examQuestion = optionalExamQuestion.get();
+            Optional<Answer> optionalAnswer = examQuestion.getQuestion().answers.stream().filter(answer ->
+                    Objects.equals(answer.id, userExamInfoCreateRequest.getAnswerId())).findFirst();
+            if (optionalAnswer.isEmpty()) {
+                throw new ResponseException(NotFoundError.ANSWER_NOT_EXISTED);
+            }
+            Answer answer = optionalAnswer.get();
+            if (answer.getStatus())
+            {
+                this.totalPoint += examQuestion.point;
+            }
+            this.userExamInfos.add(new UserExamInfo(UserExamInfoCreateCmd.builder()
+                    .answerId(userExamInfoCreateRequest.getAnswerId())
+                    .questionId(userExamInfoCreateRequest.getQuestionId())
+                    .status(Objects.equals(answer.getStatus(), Boolean.TRUE) ? Boolean.TRUE : Boolean.FALSE)
+                    .point(examQuestion.getPoint())
+                    .userExamId(this.id)
+                    .build()));
+        });
+    }
+
+    public void startTesting(){
+        this.timeStart = Instant.now();
+    }
+    public void deleted() {
+        this.deleted = true;
+    }
+
+    public void unDelete() {
+        this.deleted = false;
+    }
+
+    public void enrichUserExamInfo(List<UserExamInfo> userExamInfos){
+        this.userExamInfos = userExamInfos;
+    }
+
+    public void updateStatus(UserExamStatus status)
+    {
+        this.status = status;
+    }
+
+    public void enrichUser(UserDTO user){
+        this.user = user;
+    }
+
+    public void enrichRoom(Room room){
+        this.room = room;
+    }
+
+    public void enrichPeriod(Period period){
+        this.period = period;
+    }
+    public void enrichExam(Exam exam){
+        this.exam = exam;
+    }
+    public void enrichUserExamResult(UserExamResult userExamResult){
+        this.userExamResult = userExamResult;
+    }
+}

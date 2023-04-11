@@ -1,0 +1,46 @@
+package com.sang.nv.education.exam.application.service;
+
+import com.sang.commonmodel.dto.PageDTO;
+import com.sang.nv.education.exam.application.dto.request.ExamCreateRequest;
+import com.sang.nv.education.exam.application.dto.request.ExamSearchRequest;
+import com.sang.nv.education.exam.application.dto.request.ExamUpdateRequest;
+import com.sang.nv.education.exam.domain.Exam;
+
+public interface ExamService {
+    /**
+     * Create exam
+     *
+     * @param request ExamCreateRequest
+     * @return Exam
+     */
+    Exam create(ExamCreateRequest request);
+
+    /**
+     * Update exam
+     *
+     * @param request ExamCreateOrUpdateRequest
+     * @return Exam
+     */
+    Exam update(String id, ExamUpdateRequest request);
+
+    /**
+     * Search exam
+     *
+     * @param request ExamSearchRequest
+     * @return PageDTO<Exam>
+     */
+    PageDTO<Exam> search(ExamSearchRequest request);
+
+    /**
+     * Get detail exam
+     *
+     * @param id String
+     * @return Exam
+     */
+    Exam getById(String id);
+
+    PageDTO<Exam> getByRoomId(String roomId, ExamSearchRequest request);
+
+    void addQuestionToExam(String examId, String questionId);
+    void removeQuestionToExam(String examId, String questionId);
+}
