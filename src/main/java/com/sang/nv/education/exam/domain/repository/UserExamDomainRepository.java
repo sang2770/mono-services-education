@@ -2,7 +2,7 @@ package com.sang.nv.education.exam.domain.repository;
 
 
 import com.sang.commonmodel.dto.PageDTO;
-import com.sang.commonweb.support.DomainRepository;
+import com.sang.nv.education.common.web.support.DomainRepository;
 import com.sang.nv.education.exam.domain.UserExam;
 import org.springframework.data.domain.Pageable;
 

@@ -4,7 +4,7 @@ import com.sang.commonmodel.auth.UserAuthority;
 import com.sang.commonmodel.dto.request.FindByIdsRequest;
 import com.sang.commonmodel.dto.response.PagingResponse;
 import com.sang.commonmodel.dto.response.Response;
-import com.sang.commonweb.security.AuthorityService;
+import com.sang.nv.education.common.web.security.AuthorityService;
 import com.sang.nv.education.iam.application.dto.request.User.UserChangePasswordRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserCreateRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserExportRequest;

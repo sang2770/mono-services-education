@@ -3,7 +3,7 @@ package com.sang.nv.education.iam.infrastructure.domainrepository;
 
 import com.sang.commonmodel.error.enums.NotFoundError;
 import com.sang.commonmodel.exception.ResponseException;
-import com.sang.commonweb.support.AbstractDomainRepository;
+import com.sang.nv.education.common.web.support.AbstractDomainRepository;
 import com.sang.nv.education.iam.domain.Role;
 import com.sang.nv.education.iam.domain.User;
 import com.sang.nv.education.iam.domain.UserRole;

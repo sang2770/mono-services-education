@@ -4,7 +4,7 @@ package com.sang.nv.education.exam.application.service.impl;
 import com.sang.commonmodel.dto.PageDTO;
 import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonmodel.mapper.util.PageableMapperUtil;
-import com.sang.commonweb.support.SecurityUtils;
+import com.sang.nv.education.common.web.support.SecurityUtils;
 import com.sang.nv.education.exam.application.dto.request.UserExamCreateRequest;
 import com.sang.nv.education.exam.application.dto.request.UserRoomSearchRequest;
 import com.sang.nv.education.exam.application.dto.response.UserExamResult;

@@ -2,7 +2,7 @@ package com.sang.nv.education.iam.infrastructure.domainrepository;
 
 
 import com.sang.commonmodel.exception.ResponseException;
-import com.sang.commonweb.support.AbstractDomainRepository;
+import com.sang.nv.education.common.web.support.AbstractDomainRepository;
 import com.sang.nv.education.iam.domain.Classes;
 import com.sang.nv.education.iam.domain.Department;
 import com.sang.nv.education.iam.domain.repository.DepartmentDomainRepository;

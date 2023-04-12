@@ -2,7 +2,7 @@ package com.sang.nv.education.iam.application.service;
 
 import com.sang.commonmodel.auth.UserAuthority;
 import com.sang.commonmodel.exception.ResponseException;
-import com.sang.commonweb.security.AuthorityService;
+import com.sang.nv.education.common.web.security.AuthorityService;
 import com.sang.nv.education.iam.infrastructure.persistence.entity.RoleEntity;
 import com.sang.nv.education.iam.infrastructure.persistence.entity.RolePermissionEntity;
 import com.sang.nv.education.iam.infrastructure.persistence.entity.UserEntity;

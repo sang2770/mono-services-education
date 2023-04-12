@@ -1,6 +1,6 @@
 package com.sang.nv.education;
 
-import com.sang.commonweb.config.AbstractSwaggerConfig;
+import com.sang.nv.education.common.web.config.AbstractSwaggerConfig;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
