@@ -1,7 +1,7 @@
 package com.sang.nv.education.iam.application.service;
 
 
-import com.sang.nv.education.iaminfrastructure.support.exception.BadRequestError;
+import com.sang.nv.education.iam.infrastructure.support.exception.BadRequestError;
 
 public interface AuthFailCacheService {
     String LOGIN_FAIL_COUNT_CACHE = "auth-login-fail-count";

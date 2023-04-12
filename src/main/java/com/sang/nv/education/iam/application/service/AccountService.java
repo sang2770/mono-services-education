@@ -2,11 +2,11 @@ package com.sang.nv.education.iam.application.service;
 
 
 import com.sang.commonmodel.auth.UserAuthority;
-import com.sang.nv.education.iamapplication.dto.request.Auth.LoginRequest;
-import com.sang.nv.education.iamapplication.dto.request.Auth.LogoutRequest;
-import com.sang.nv.education.iamapplication.dto.request.Auth.RefreshTokenRequest;
-import com.sang.nv.education.iamapplication.dto.response.AuthToken;
-import com.sang.nv.education.iamdomain.User;
+import com.sang.nv.education.iam.application.dto.request.Auth.LoginRequest;
+import com.sang.nv.education.iam.application.dto.request.Auth.LogoutRequest;
+import com.sang.nv.education.iam.application.dto.request.Auth.RefreshTokenRequest;
+import com.sang.nv.education.iam.application.dto.response.AuthToken;
+import com.sang.nv.education.iam.domain.User;
 
 public interface AccountService {
 

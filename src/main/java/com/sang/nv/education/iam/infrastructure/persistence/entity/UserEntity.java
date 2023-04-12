@@ -2,10 +2,22 @@ package com.sang.nv.education.iam.infrastructure.persistence.entity;
 
 import com.sang.commonmodel.entity.AuditableEntity;
 import com.sang.commonmodel.validator.ValidateConstraint;
-import com.sang.nv.education.iaminfrastructure.support.enums.UserStatus;
-import com.sang.nv.education.iaminfrastructure.support.enums.UserType;
+import com.sang.nv.education.iam.infrastructure.support.enums.UserStatus;
+import com.sang.nv.education.iam.infrastructure.support.enums.UserType;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.Objects;
 

@@ -1,8 +1,8 @@
 package com.sang.nv.education.iam.infrastructure.persistence.repository;
 
 
-import com.sang.nv.education.iaminfrastructure.persistence.entity.UserEntity;
-import com.sang.nv.education.iaminfrastructure.persistence.repository.custom.UserEntityRepositoryCustom;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.UserEntity;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.custom.UserEntityRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

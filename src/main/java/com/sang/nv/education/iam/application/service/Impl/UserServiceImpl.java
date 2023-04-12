@@ -1,36 +1,39 @@
 package com.sang.nv.education.iam.application.service.Impl;
 
 
-import com.sang.commonclient.client.storage.StorageClient;
-import com.sang.commonclient.domain.FileDTO;
 import com.sang.commonmodel.dto.PageDTO;
 import com.sang.commonmodel.dto.response.Response;
 import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonutil.StrUtils;
 import com.sang.commonutil.StringUtil;
-import com.sang.nv.education.iamapplication.dto.response.ImportResult;
-import com.sang.nv.education.iamapplication.mapper.AutoMapper;
-import com.sang.nv.education.iamapplication.mapper.AutoMapperQuery;
-import com.sang.nv.education.iamapplication.service.ExcelService;
-import com.sang.nv.education.iamapplication.service.UserService;
-import com.sang.nv.education.iamdomain.Role;
-import com.sang.nv.education.iamdomain.User;
-import com.sang.nv.education.iamdomain.command.UserCreateOrUpdateCmd;
-import com.sang.nv.education.iamdomain.query.UserSearchQuery;
-import com.sang.nv.education.iamdomain.repository.UserDomainRepository;
-import com.sang.nv.education.iaminfrastructure.persistence.entity.ClassEntity;
-import com.sang.nv.education.iaminfrastructure.persistence.entity.RoleEntity;
-import com.sang.nv.education.iaminfrastructure.persistence.entity.UserEntity;
-import com.sang.nv.education.iaminfrastructure.persistence.entity.UserRoleEntity;
-import com.sang.nv.education.iaminfrastructure.persistence.mapper.RoleEntityMapper;
-import com.sang.nv.education.iaminfrastructure.persistence.mapper.UserEntityMapper;
-import com.sang.nv.education.iaminfrastructure.persistence.repository.ClassesEntityRepository;
-import com.sang.nv.education.iaminfrastructure.persistence.repository.RoleEntityRepository;
-import com.sang.nv.education.iaminfrastructure.persistence.repository.UserEntityRepository;
-import com.sang.nv.education.iaminfrastructure.persistence.repository.UserRoleEntityRepository;
-import com.sang.nv.education.iaminfrastructure.support.enums.RoleStatus;
-import com.sang.nv.education.iaminfrastructure.support.exception.BadRequestError;
-import com.sang.nv.education.iaminfrastructure.support.exception.NotFoundError;
+import com.sang.nv.education.iam.application.dto.request.User.UserChangePasswordRequest;
+import com.sang.nv.education.iam.application.dto.request.User.UserCreateRequest;
+import com.sang.nv.education.iam.application.dto.request.User.UserExportRequest;
+import com.sang.nv.education.iam.application.dto.request.User.UserSearchRequest;
+import com.sang.nv.education.iam.application.dto.request.User.UserUpdateRequest;
+import com.sang.nv.education.iam.application.dto.response.ImportResult;
+import com.sang.nv.education.iam.application.mapper.IamAutoMapper;
+import com.sang.nv.education.iam.application.mapper.IamAutoMapperQuery;
+import com.sang.nv.education.iam.application.service.ExcelService;
+import com.sang.nv.education.iam.application.service.UserService;
+import com.sang.nv.education.iam.domain.Role;
+import com.sang.nv.education.iam.domain.User;
+import com.sang.nv.education.iam.domain.command.UserCreateOrUpdateCmd;
+import com.sang.nv.education.iam.domain.query.UserSearchQuery;
+import com.sang.nv.education.iam.domain.repository.UserDomainRepository;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.ClassEntity;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.RoleEntity;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.UserEntity;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.UserRoleEntity;
+import com.sang.nv.education.iam.infrastructure.persistence.mapper.RoleEntityMapper;
+import com.sang.nv.education.iam.infrastructure.persistence.mapper.UserEntityMapper;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.ClassesEntityRepository;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.RoleEntityRepository;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.UserEntityRepository;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.UserRoleEntityRepository;
+import com.sang.nv.education.iam.infrastructure.support.enums.RoleStatus;
+import com.sang.nv.education.iam.infrastructure.support.exception.BadRequestError;
+import com.sang.nv.education.iam.infrastructure.support.exception.NotFoundError;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -47,28 +50,26 @@ public class UserServiceImpl implements UserService {
     private final UserEntityRepository userEntityRepository;
     private final UserEntityMapper userEntityMapper;
     private final PasswordEncoder passwordEncoder;
-    private final AutoMapperQuery autoMapperQuery;
+    private final IamAutoMapperQuery iamAutoMapperQuery;
     private final UserDomainRepository userDomainRepository;
-    private final AutoMapper autoMapper;
+    private final IamAutoMapper iamAutoMapper;
     private final UserRoleEntityRepository userRoleEntityRepository;
     private final RoleEntityRepository roleEntityRepository;
     private final ClassesEntityRepository classesEntityRepository;
     private final RoleEntityMapper roleEntityMapper;
-    private final StorageClient storageClient;
     private final ExcelService excelService;
     public UserServiceImpl(UserEntityRepository userEntityRepository, UserEntityMapper userEntityMapper, PasswordEncoder passwordEncoder,
-                           AutoMapperQuery autoMapperQuery, UserDomainRepository userDomainRepository, AutoMapper autoMapper, UserRoleEntityRepository userRoleEntityRepository, RoleEntityRepository roleEntityRepository, ClassesEntityRepository classesEntityRepository, RoleEntityMapper roleEntityMapper, StorageClient storageClient, ExcelService excelService) {
+                           IamAutoMapperQuery iamAutoMapperQuery, UserDomainRepository userDomainRepository, IamAutoMapper iamAutoMapper, UserRoleEntityRepository userRoleEntityRepository, RoleEntityRepository roleEntityRepository, ClassesEntityRepository classesEntityRepository, RoleEntityMapper roleEntityMapper, ExcelService excelService) {
         this.userEntityRepository = userEntityRepository;
         this.userEntityMapper = userEntityMapper;
         this.passwordEncoder = passwordEncoder;
-        this.autoMapperQuery = autoMapperQuery;
+        this.iamAutoMapperQuery = iamAutoMapperQuery;
         this.userDomainRepository = userDomainRepository;
-        this.autoMapper = autoMapper;
+        this.iamAutoMapper = iamAutoMapper;
         this.userRoleEntityRepository = userRoleEntityRepository;
         this.roleEntityRepository = roleEntityRepository;
         this.classesEntityRepository = classesEntityRepository;
         this.roleEntityMapper = roleEntityMapper;
-        this.storageClient = storageClient;
         this.excelService = excelService;
     }
 
@@ -85,7 +86,7 @@ public class UserServiceImpl implements UserService {
         if (userEntityByPhone.isPresent()) {
             throw new ResponseException(BadRequestError.USER_PHONE_NUMBER_EXITED);
         }
-        UserCreateOrUpdateCmd cmd = this.autoMapper.from(request);
+        UserCreateOrUpdateCmd cmd = this.iamAutoMapper.from(request);
         validateBaseInformation(cmd, Optional.empty());
 
         // valid username
@@ -114,7 +115,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(String userId, UserUpdateRequest request) {
         User user = this.ensureExisted(userId);
-        UserCreateOrUpdateCmd cmd = this.autoMapper.from(request);
+        UserCreateOrUpdateCmd cmd = this.iamAutoMapper.from(request);
         validateBaseInformation(cmd, Optional.of(userId));
         this.userDomainRepository.getById(userId);
         List<RoleEntity> roleEntities = roleEntityRepository.findAllByStatus(RoleStatus.ACTIVE);
@@ -132,7 +133,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PageDTO<User> search(UserSearchRequest request) {
-        UserSearchQuery query = this.autoMapperQuery.toQuery(request);
+        UserSearchQuery query = this.iamAutoMapperQuery.toQuery(request);
         if (!CollectionUtils.isEmpty(request.getDepartmentIds()) && CollectionUtils.isEmpty(request.getClassIds()))
         {
             List<ClassEntity> classEntities = this.classesEntityRepository.findAllByDepartmentIds(request.getDepartmentIds());
@@ -202,12 +203,12 @@ public class UserServiceImpl implements UserService {
     public User getUserById(String userId) {
         User user = this.userDomainRepository.getById(userId);
 
-        if (Objects.nonNull(user.getAvatarFileId())) {
-            Response<FileDTO> responseFiles = storageClient.findById(user.getAvatarFileId());
-            if (responseFiles.isSuccess() && Objects.nonNull(responseFiles.getData())) {
-                user.enrichViewUrlFile(responseFiles.getData().getFilePath());
-            }
-        }
+//        if (Objects.nonNull(user.getAvatarFileId())) {
+//            Response<FileDTO> responseFiles = storageClient.findById(user.getAvatarFileId());
+//            if (responseFiles.isSuccess() && Objects.nonNull(responseFiles.getData())) {
+//                user.enrichViewUrlFile(responseFiles.getData().getFilePath());
+//            }
+//        }
         return user;
     }
 
@@ -239,15 +240,15 @@ public class UserServiceImpl implements UserService {
             throw new ResponseException(BadRequestError.USER_EMAIL_EXITED);
         }
 
-        if (Objects.nonNull(request.getAvatarFileId())) {
-            String fileId =request.getAvatarFileId();
-            Response<FileDTO> responseFiles = storageClient.findById(fileId);
-            if (!responseFiles.isSuccess() || Objects.isNull(responseFiles.getData())) {
-                throw new ResponseException(BadRequestError.FILE_NOT_EXISTED);
-            }
-            request.setAvatarFileId(fileId);
-            request.setAvatarFileViewUrl(responseFiles.getData().getFilePath());
-        }
+//        if (Objects.nonNull(request.getAvatarFileId())) {
+//            String fileId =request.getAvatarFileId();
+//            Response<FileDTO> responseFiles = storageClient.findById(fileId);
+//            if (!responseFiles.isSuccess() || Objects.isNull(responseFiles.getData())) {
+//                throw new ResponseException(BadRequestError.FILE_NOT_EXISTED);
+//            }
+//            request.setAvatarFileId(fileId);
+//            request.setAvatarFileViewUrl(responseFiles.getData().getFilePath());
+//        }
     }
 
     @Override

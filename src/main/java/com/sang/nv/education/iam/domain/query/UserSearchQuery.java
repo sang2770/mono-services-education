@@ -1,8 +1,8 @@
 package com.sang.nv.education.iam.domain.query;
 
 import com.sang.commonmodel.query.PagingQuery;
-import com.sang.nv.education.iaminfrastructure.support.enums.UserStatus;
-import com.sang.nv.education.iaminfrastructure.support.enums.UserType;
+import com.sang.nv.education.iam.infrastructure.support.enums.UserStatus;
+import com.sang.nv.education.iam.infrastructure.support.enums.UserType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;

@@ -2,11 +2,25 @@ package com.sang.nv.education.iam.infrastructure.persistence.entity;
 
 import com.sang.commonmodel.entity.AuditableEntity;
 import com.sang.commonmodel.validator.ValidateConstraint;
-import com.sang.nv.education.iaminfrastructure.support.enums.RoleStatus;
+import com.sang.nv.education.iam.infrastructure.support.enums.RoleStatus;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.Objects;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
 @Entity
 @Table(name = "role", indexes = {
         @Index(name = "role_code_idx", columnList = "code"),

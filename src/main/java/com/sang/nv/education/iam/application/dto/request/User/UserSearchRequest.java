@@ -1,8 +1,8 @@
 package com.sang.nv.education.iam.application.dto.request.User;
 
 import com.sang.commonmodel.dto.request.PagingRequest;
-import com.sang.nv.education.iaminfrastructure.support.enums.UserStatus;
-import com.sang.nv.education.iaminfrastructure.support.enums.UserType;
+import com.sang.nv.education.iam.infrastructure.support.enums.UserStatus;
+import com.sang.nv.education.iam.infrastructure.support.enums.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

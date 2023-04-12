@@ -3,10 +3,10 @@ package com.sang.nv.education.iam.application.service;
 
 import com.sang.commonmodel.dto.PageDTO;
 import com.sang.commonmodel.dto.request.FindByIdsRequest;
-import com.sang.nv.education.iamapplication.dto.request.RoleCreateOrUpdateRequest;
-import com.sang.nv.education.iamapplication.dto.request.RoleSearchRequest;
-import com.sang.nv.education.iamdomain.Role;
-import com.sang.nv.education.iamdomain.UserRole;
+import com.sang.nv.education.iam.application.dto.request.RoleCreateOrUpdateRequest;
+import com.sang.nv.education.iam.application.dto.request.RoleSearchRequest;
+import com.sang.nv.education.iam.domain.Role;
+import com.sang.nv.education.iam.domain.UserRole;
 
 import java.util.List;
 

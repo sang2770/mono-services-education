@@ -2,7 +2,7 @@ package com.sang.nv.education.iam.domain;
 
 import com.sang.commonmodel.domain.AuditableDomain;
 import com.sang.commonutil.IdUtils;
-import com.sang.nv.education.iamdomain.command.DepartmentCreateOrUpdateCmd;
+import com.sang.nv.education.iam.domain.command.DepartmentCreateOrUpdateCmd;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

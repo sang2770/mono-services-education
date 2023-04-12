@@ -1,30 +1,29 @@
 package com.sang.nv.education.iam.application.service.Impl;
 
 
-import com.sang.commonclient.client.storage.StorageClient;
 import com.sang.commonmodel.auth.UserAuthority;
 import com.sang.commonmodel.error.enums.AuthenticationError;
 import com.sang.commonmodel.error.enums.NotFoundError;
 import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonweb.security.AuthorityService;
 import com.sang.commonweb.support.SecurityUtils;
-import com.sang.nv.education.iamapplication.config.AuthenticationProperties;
-import com.sang.nv.education.iamapplication.config.TokenProvider;
-import com.sang.nv.education.iamapplication.dto.request.Auth.LoginRequest;
-import com.sang.nv.education.iamapplication.dto.request.Auth.LogoutRequest;
-import com.sang.nv.education.iamapplication.dto.request.Auth.RefreshTokenRequest;
-import com.sang.nv.education.iamapplication.dto.response.AuthToken;
-import com.sang.nv.education.iamapplication.mapper.AutoMapper;
-import com.sang.nv.education.iamapplication.service.AccountService;
-import com.sang.nv.education.iamapplication.service.AuthFailCacheService;
-import com.sang.nv.education.iamdomain.User;
-import com.sang.nv.education.iamdomain.repository.UserDomainRepository;
-import com.sang.nv.education.iaminfrastructure.persistence.entity.UserEntity;
-import com.sang.nv.education.iaminfrastructure.persistence.mapper.UserEntityMapper;
-import com.sang.nv.education.iaminfrastructure.persistence.repository.UserEntityRepository;
-import com.sang.nv.education.iaminfrastructure.support.enums.UserStatus;
-import com.sang.nv.education.iaminfrastructure.support.enums.UserType;
-import com.sang.nv.education.iaminfrastructure.support.exception.BadRequestError;
+import com.sang.nv.education.iam.application.config.AuthenticationProperties;
+import com.sang.nv.education.iam.application.config.TokenProvider;
+import com.sang.nv.education.iam.application.dto.request.Auth.LoginRequest;
+import com.sang.nv.education.iam.application.dto.request.Auth.LogoutRequest;
+import com.sang.nv.education.iam.application.dto.request.Auth.RefreshTokenRequest;
+import com.sang.nv.education.iam.application.dto.response.AuthToken;
+import com.sang.nv.education.iam.application.mapper.IamAutoMapper;
+import com.sang.nv.education.iam.application.service.AccountService;
+import com.sang.nv.education.iam.application.service.AuthFailCacheService;
+import com.sang.nv.education.iam.domain.User;
+import com.sang.nv.education.iam.domain.repository.UserDomainRepository;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.UserEntity;
+import com.sang.nv.education.iam.infrastructure.persistence.mapper.UserEntityMapper;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.UserEntityRepository;
+import com.sang.nv.education.iam.infrastructure.support.enums.UserStatus;
+import com.sang.nv.education.iam.infrastructure.support.enums.UserType;
+import com.sang.nv.education.iam.infrastructure.support.exception.BadRequestError;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -48,13 +47,12 @@ public class AccountServiceImpl implements AccountService {
     private final UserEntityRepository userEntityRepository;
     private final UserEntityMapper userEntityMapper;
     private final PasswordEncoder passwordEncoder;
-    private final AutoMapper autoMapper;
+    private final IamAutoMapper autoMapper;
     private final TokenProvider tokenProvider;
     private final AuthenticationProperties authenticationProperties;
     private final AuthenticationManager authenticationManager;
     private final AuthorityService authorityService;
     private final AuthFailCacheService authFailCacheService;
-    private final StorageClient storageClient;
 
     @Override
     public AuthToken login(LoginRequest request) {

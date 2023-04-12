@@ -1,8 +1,14 @@
 package com.sang.nv.education.exam.domain;
 
-import com.sang.commonclient.domain.UserDTO;
-import com.sang.commonmodel.enums.UserType;
 import com.sang.commonutil.IdUtils;
+import com.sang.nv.education.iam.domain.User;
+import com.sang.nv.education.iam.infrastructure.support.enums.UserType;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Objects;
@@ -21,7 +27,7 @@ public class UserRoom {
     UserType userType;
     String code;
     String fullName;
-    UserDTO userDTO;
+    User userDTO;
     Boolean deleted;
 
     public UserRoom(String userId, String roomId)
@@ -32,7 +38,7 @@ public class UserRoom {
         this.deleted = false;
     }
 
-    public UserRoom(String roomId, UserDTO userDTO)
+    public UserRoom(String roomId, User userDTO)
     {
         this.id = IdUtils.nextId();
         this.roomId = roomId;
@@ -48,7 +54,7 @@ public class UserRoom {
     }
 
 
-    public void enrichUserDTO(UserDTO userDTO){
+    public void enrichUserDTO(User userDTO){
         this.userDTO = userDTO;
     }
 

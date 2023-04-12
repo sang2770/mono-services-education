@@ -1,11 +1,7 @@
 package com.sang.nv.education.exam.infrastructure.domainrepository;
 
-
-import com.sang.commonclient.client.iam.IAMClient;
-import com.sang.commonclient.domain.UserDTO;
 import com.sang.commonmodel.dto.PageDTO;
 import com.sang.commonmodel.dto.request.FindByIdsRequest;
-import com.sang.commonmodel.dto.response.Response;
 import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonweb.support.AbstractDomainRepository;
 import com.sang.nv.education.exam.application.dto.response.UserExamResult;
@@ -21,6 +17,8 @@ import com.sang.nv.education.exam.infrastructure.persistence.mapper.*;
 import com.sang.nv.education.exam.infrastructure.persistence.repository.*;
 import com.sang.nv.education.exam.infrastructure.support.exception.BadRequestError;
 import com.sang.nv.education.exam.infrastructure.support.exception.NotFoundError;
+import com.sang.nv.education.iam.application.service.UserService;
+import com.sang.nv.education.iam.domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,9 +44,9 @@ public class UserExamDomainRepositoryImpl extends AbstractDomainRepository<UserE
     private final PeriodEntityMapper periodEntityMapper;
     private final RoomEntityRepository roomEntityRepository;
     private final RoomEntityMapper roomEntityMapper;
-    private final IAMClient iamClient;
+    private final UserService userService;
 
-    public UserExamDomainRepositoryImpl(UserExamEntityRepository userExamEntityRepository, UserExamInfoEntityRepository userExamInfoEntityRepository, UserExamEntityMapper userExamEntityMapper, UserExamInfoEntityMapper userExamInfoEntityMapper, PeriodEntityRepository periodEntityRepository, ExamEntityRepository examEntityRepository, ExamEntityMapper examEntityMapper, PeriodEntityMapper periodEntityMapper, RoomEntityRepository roomEntityRepository, RoomEntityMapper roomEntityMapper, IAMClient iamClient) {
+    public UserExamDomainRepositoryImpl(UserExamEntityRepository userExamEntityRepository, UserExamInfoEntityRepository userExamInfoEntityRepository, UserExamEntityMapper userExamEntityMapper, UserExamInfoEntityMapper userExamInfoEntityMapper, PeriodEntityRepository periodEntityRepository, ExamEntityRepository examEntityRepository, ExamEntityMapper examEntityMapper, PeriodEntityMapper periodEntityMapper, RoomEntityRepository roomEntityRepository, RoomEntityMapper roomEntityMapper, UserService userService) {
         super(userExamEntityRepository, userExamEntityMapper);
         this.userExamEntityRepository = userExamEntityRepository;
         this.userExamInfoEntityRepository = userExamInfoEntityRepository;
@@ -60,7 +58,7 @@ public class UserExamDomainRepositoryImpl extends AbstractDomainRepository<UserE
         this.periodEntityMapper = periodEntityMapper;
         this.roomEntityRepository = roomEntityRepository;
         this.roomEntityMapper = roomEntityMapper;
-        this.iamClient = iamClient;
+        this.userService = userService;
     }
 
     @Override
@@ -88,13 +86,13 @@ public class UserExamDomainRepositoryImpl extends AbstractDomainRepository<UserE
         userExam.enrichUserExamInfo(this.userExamInfoEntityMapper.toDomain(userExamInfoEntities));
         FindByIdsRequest findByIdsRequest = new FindByIdsRequest();
         findByIdsRequest.setIds(List.of(userExam.getUserId()));
-        Response<List<UserDTO>> userDTOResponse = this.iamClient.getUserByIds(findByIdsRequest);
-        if (userDTOResponse.isSuccess() && userDTOResponse.getData().size() > 0) {
-            List<UserDTO> userDTOS = userDTOResponse.getData();
-            userExam.enrichUser(userDTOS.get(0));
-        } else {
-            throw new ResponseException(BadRequestError.USER_INVALID);
-        }
+//        Response<List<UserDTO>> userDTOResponse = this.iamClient.getUserByIds(findByIdsRequest);
+//        if (userDTOResponse.isSuccess() && userDTOResponse.getData().size() > 0) {
+//            List<UserDTO> userDTOS = userDTOResponse.getData();
+//            userExam.enrichUser(userDTOS.get(0));
+//        } else {
+//            throw new ResponseException(BadRequestError.USER_INVALID);
+//        }
         Period period = this.periodEntityRepository.findById(userExam.getPeriodId()).map(periodEntityMapper::toDomain).orElseThrow(() -> new ResponseException(BadRequestError.PERIOD_NOT_EXISTED));
         userExam.enrichPeriod(period);
         Room room = this.roomEntityRepository.findById(userExam.getRoomId()).map(roomEntityMapper::toDomain).orElseThrow(() -> new ResponseException(BadRequestError.ROOM_NOT_EXISTED));
@@ -106,17 +104,24 @@ public class UserExamDomainRepositoryImpl extends AbstractDomainRepository<UserE
     protected List<UserExam> enrichList(List<UserExam> userExams) {
         FindByIdsRequest findByIdsRequest = new FindByIdsRequest();
         findByIdsRequest.setIds(userExams.stream().map(UserExam::getUserId).collect(Collectors.toList()));
-        Response<List<UserDTO>> userDTOResponse = this.iamClient.getUserByIds(findByIdsRequest);
-        if (userDTOResponse.isSuccess()) {
-            userExams.forEach(userExam -> {
-                Optional<UserDTO> optionalUserDTO = userDTOResponse.getData().stream().filter(userDTO -> userDTO.getId().equals(userExam.getUserId())).findFirst();
-                if (optionalUserDTO.isPresent()) {
-                    userExam.enrichUser(optionalUserDTO.get());
-                }
-            });
-        } else {
-            throw new ResponseException(BadRequestError.USER_INVALID);
-        }
+        List<User> users = this.userService.findByIds(findByIdsRequest.getIds());
+        userExams.forEach(userExam -> {
+            Optional<User> optionalUser = users.stream().filter(user -> user.getId().equals(userExam.getUserId())).findFirst();
+            if (optionalUser.isPresent()) {
+                userExam.enrichUser(optionalUser.get());
+            }
+        });
+//        Response<List<UserDTO>> userDTOResponse = this.iamClient.getUserByIds(findByIdsRequest);
+//        if (userDTOResponse.isSuccess()) {
+//            userExams.forEach(userExam -> {
+//                Optional<UserDTO> optionalUserDTO = userDTOResponse.getData().stream().filter(userDTO -> userDTO.getId().equals(userExam.getUserId())).findFirst();
+//                if (optionalUserDTO.isPresent()) {
+//                    userExam.enrichUser(optionalUserDTO.get());
+//                }
+//            });
+//        } else {
+//            throw new ResponseException(BadRequestError.USER_INVALID);
+//        }
         // Enrich exam
         List<String> examIds = userExams.stream().map(UserExam::getExamId).collect(Collectors.toList());
         List<ExamEntity> examEntities = this.examEntityRepository.findAllByIds(examIds);

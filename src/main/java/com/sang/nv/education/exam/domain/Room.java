@@ -1,11 +1,17 @@
 package com.sang.nv.education.exam.domain;
 
-import com.sang.commonclient.domain.UserDTO;
 import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonutil.IdUtils;
 import com.sang.nv.education.exam.domain.command.RoomCreateOrUpdateCmd;
 import com.sang.nv.education.exam.infrastructure.support.exception.BadRequestError;
 import com.sang.nv.education.exam.infrastructure.support.exception.NotFoundError;
+import com.sang.nv.education.iam.domain.User;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
@@ -62,13 +68,13 @@ public class Room {
         this.periodRooms = periodRooms;
     }
 
-    public void addUser(List<String> userIds, List<UserDTO> userDTOS)
+    public void addUser(List<String> userIds, List<User> userDTOS)
     {
         userIds.forEach(userId -> {
             Optional<UserRoom> userRoomOptional = this.userRooms.stream().filter(userRoom -> Objects.equals(userId, userRoom.getUserId())).findFirst();
             if (userRoomOptional.isEmpty())
             {
-                Optional<UserDTO> optionalUserDTO = userDTOS.stream().filter(userDTO -> Objects.equals(userId, userDTO.getId())).findFirst();
+                Optional<User> optionalUserDTO = userDTOS.stream().filter(userDTO -> Objects.equals(userId, userDTO.getId())).findFirst();
                 if (optionalUserDTO.isEmpty())
                 {
                     throw new ResponseException(NotFoundError.USER_NOT_FOUND);

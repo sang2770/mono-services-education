@@ -2,8 +2,8 @@ package com.sang.nv.education.iam.application.service;
 
 import com.sang.commonmodel.dto.PageDTO;
 import com.sang.commonmodel.dto.request.BaseSearchRequest;
-import com.sang.nv.education.iamapplication.dto.request.DepartmentCreateOrUpdateRequest;
-import com.sang.nv.education.iamdomain.Department;
+import com.sang.nv.education.iam.application.dto.request.DepartmentCreateOrUpdateRequest;
+import com.sang.nv.education.iam.domain.Department;
 
 public interface DepartmentService {
     /**

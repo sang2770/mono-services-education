@@ -6,24 +6,24 @@ import com.sang.commonmodel.dto.request.BaseSearchRequest;
 import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonmodel.mapper.util.PageableMapperUtil;
 import com.sang.commonpersistence.support.SeqRepository;
-import com.sang.nv.education.iamapplication.dto.request.Classes.ClassSearchRequest;
-import com.sang.nv.education.iamapplication.dto.request.Classes.ClassesCreateOrUpdateRequest;
-import com.sang.nv.education.iamapplication.mapper.AutoMapper;
-import com.sang.nv.education.iamapplication.mapper.AutoMapperQuery;
-import com.sang.nv.education.iamapplication.service.ClassesService;
-import com.sang.nv.education.iamdomain.Classes;
-import com.sang.nv.education.iamdomain.command.ClassesCreateOrUpdateCmd;
-import com.sang.nv.education.iamdomain.query.ClassSearchQuery;
-import com.sang.nv.education.iamdomain.repository.ClassesDomainRepository;
-import com.sang.nv.education.iamdomain.repository.KeyDomainRepository;
-import com.sang.nv.education.iaminfrastructure.persistence.entity.ClassEntity;
-import com.sang.nv.education.iaminfrastructure.persistence.entity.DepartmentEntity;
-import com.sang.nv.education.iaminfrastructure.persistence.entity.KeyEntity;
-import com.sang.nv.education.iaminfrastructure.persistence.mapper.ClassesEntityMapper;
-import com.sang.nv.education.iaminfrastructure.persistence.repository.ClassesEntityRepository;
-import com.sang.nv.education.iaminfrastructure.persistence.repository.DepartmentEntityRepository;
-import com.sang.nv.education.iaminfrastructure.persistence.repository.KeyEntityRepository;
-import com.sang.nv.education.iaminfrastructure.support.exception.BadRequestError;
+import com.sang.nv.education.iam.application.dto.request.Classes.ClassSearchRequest;
+import com.sang.nv.education.iam.application.dto.request.Classes.ClassesCreateOrUpdateRequest;
+import com.sang.nv.education.iam.application.mapper.IamAutoMapper;
+import com.sang.nv.education.iam.application.mapper.IamAutoMapperQuery;
+import com.sang.nv.education.iam.application.service.ClassesService;
+import com.sang.nv.education.iam.domain.Classes;
+import com.sang.nv.education.iam.domain.command.ClassesCreateOrUpdateCmd;
+import com.sang.nv.education.iam.domain.query.ClassSearchQuery;
+import com.sang.nv.education.iam.domain.repository.ClassesDomainRepository;
+import com.sang.nv.education.iam.domain.repository.KeyDomainRepository;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.ClassEntity;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.DepartmentEntity;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.KeyEntity;
+import com.sang.nv.education.iam.infrastructure.persistence.mapper.ClassesEntityMapper;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.ClassesEntityRepository;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.DepartmentEntityRepository;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.KeyEntityRepository;
+import com.sang.nv.education.iam.infrastructure.support.exception.BadRequestError;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -34,8 +34,8 @@ import java.util.Optional;
 @Service
 public class ClassesServiceImpl implements ClassesService {
     private final ClassesEntityRepository classesEntityRepository;
-    private final AutoMapper autoMapper;
-    private final AutoMapperQuery autoMapperQuery;
+    private final IamAutoMapper autoMapper;
+    private final IamAutoMapperQuery autoMapperQuery;
     private final ClassesDomainRepository classesDomainRepository;
     private final ClassesEntityMapper ClassesEntityMapper;
     private final KeyDomainRepository keyDomainRepository;
@@ -45,8 +45,7 @@ public class ClassesServiceImpl implements ClassesService {
     private final SeqRepository seqRepository;
 
     public ClassesServiceImpl(ClassesEntityRepository ClassesEntityRepository,
-                              AutoMapper autoMapper,
-                              AutoMapperQuery autoMapperQuery, ClassesDomainRepository classesDomainRepository,
+                              IamAutoMapper autoMapper, IamAutoMapperQuery autoMapperQuery, ClassesDomainRepository classesDomainRepository,
                               ClassesEntityMapper ClassesEntityMapper, KeyDomainRepository keyDomainRepository,
                               KeyEntityRepository keyEntityRepository, ClassesEntityMapper classesEntityMapper,
                               DepartmentEntityRepository departmentEntityRepository, SeqRepository seqRepository) {

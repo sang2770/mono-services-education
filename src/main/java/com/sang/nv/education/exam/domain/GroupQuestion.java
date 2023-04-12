@@ -3,6 +3,12 @@ package com.sang.nv.education.exam.domain;
 import com.sang.commonutil.IdUtils;
 import com.sang.nv.education.exam.domain.command.GroupQuestionCreateOrUpdateCmd;
 import com.sang.nv.education.exam.infrastructure.persistence.entity.GroupQuestionEntity;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;

@@ -1,6 +1,5 @@
 package com.sang.nv.education.exam.domain;
 
-import com.sang.commonclient.domain.UserDTO;
 import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonutil.IdUtils;
 import com.sang.nv.education.exam.application.dto.request.UserExamInfoCreateRequest;
@@ -9,6 +8,7 @@ import com.sang.nv.education.exam.domain.command.UserExamCreateCmd;
 import com.sang.nv.education.exam.domain.command.UserExamInfoCreateCmd;
 import com.sang.nv.education.exam.infrastructure.support.enums.UserExamStatus;
 import com.sang.nv.education.exam.infrastructure.support.exception.NotFoundError;
+import com.sang.nv.education.iam.domain.User;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.util.CollectionUtils;
@@ -42,7 +42,7 @@ public class UserExam {
 
     Exam exam;
     UserExamResult userExamResult;
-    UserDTO user;
+    User user;
 
     Room room;
     Period period;
@@ -134,7 +134,7 @@ public class UserExam {
         this.status = status;
     }
 
-    public void enrichUser(UserDTO user){
+    public void enrichUser(User user){
         this.user = user;
     }
 

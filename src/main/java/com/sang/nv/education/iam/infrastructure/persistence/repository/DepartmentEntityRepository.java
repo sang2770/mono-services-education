@@ -2,7 +2,7 @@ package com.sang.nv.education.iam.infrastructure.persistence.repository;
 
 
 import com.sang.commonpersistence.repository.custom.BaseRepositoryCustom;
-import com.sang.nv.education.iaminfrastructure.persistence.entity.DepartmentEntity;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.DepartmentEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

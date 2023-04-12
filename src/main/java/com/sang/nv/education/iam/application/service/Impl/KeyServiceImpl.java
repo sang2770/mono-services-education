@@ -5,16 +5,16 @@ import com.sang.commonmodel.dto.PageDTO;
 import com.sang.commonmodel.dto.request.BaseSearchRequest;
 import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonmodel.mapper.util.PageableMapperUtil;
-import com.sang.nv.education.iamapplication.dto.request.KeyCreateOrUpdateRequest;
-import com.sang.nv.education.iamapplication.mapper.AutoMapper;
-import com.sang.nv.education.iamapplication.service.KeysService;
-import com.sang.nv.education.iamdomain.Key;
-import com.sang.nv.education.iamdomain.command.KeyCreateOrUpdateCmd;
-import com.sang.nv.education.iamdomain.repository.KeyDomainRepository;
-import com.sang.nv.education.iaminfrastructure.persistence.entity.KeyEntity;
-import com.sang.nv.education.iaminfrastructure.persistence.mapper.KeyEntityMapper;
-import com.sang.nv.education.iaminfrastructure.persistence.repository.KeyEntityRepository;
-import com.sang.nv.education.iaminfrastructure.support.exception.BadRequestError;
+import com.sang.nv.education.iam.application.dto.request.KeyCreateOrUpdateRequest;
+import com.sang.nv.education.iam.application.mapper.IamAutoMapper;
+import com.sang.nv.education.iam.application.service.KeysService;
+import com.sang.nv.education.iam.domain.Key;
+import com.sang.nv.education.iam.domain.command.KeyCreateOrUpdateCmd;
+import com.sang.nv.education.iam.domain.repository.KeyDomainRepository;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.KeyEntity;
+import com.sang.nv.education.iam.infrastructure.persistence.mapper.KeyEntityMapper;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.KeyEntityRepository;
+import com.sang.nv.education.iam.infrastructure.support.exception.BadRequestError;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,12 +26,12 @@ import java.util.stream.Collectors;
 @Service
 public class KeyServiceImpl implements KeysService {
     private final KeyEntityRepository keyEntityRepository;
-    private final AutoMapper autoMapper;
+    private final IamAutoMapper autoMapper;
     private final KeyDomainRepository keyDomainRepository;
     private final KeyEntityMapper keyEntityMapper;
 
     public KeyServiceImpl(KeyEntityRepository KeyEntityRepository,
-                          AutoMapper autoMapper,
+                          IamAutoMapper autoMapper,
                           KeyDomainRepository KeyDomainRepository,
                           KeyEntityMapper KeyEntityMapper) {
         this.keyEntityRepository = KeyEntityRepository;

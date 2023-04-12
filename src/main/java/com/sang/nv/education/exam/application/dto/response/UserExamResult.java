@@ -1,6 +1,7 @@
 package com.sang.nv.education.exam.application.dto.response;
 
-import com.sang.commonclient.domain.UserDTO;
+//import com.sang.commonclient.domain.UserDTO;
+import com.sang.nv.education.iam.domain.User;
 import lombok.Builder;
 import lombok.Data;
 
@@ -15,7 +16,7 @@ public class UserExamResult {
     Boolean deleted;
     String examId;
     String userId;
-    UserDTO user;
+    User user;
     Long totalTimeUsed;
     Float totalTime;
     Float point;

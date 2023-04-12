@@ -3,23 +3,21 @@ package com.sang.nv.education.iam.application.service;
 import com.sang.commonmodel.auth.UserAuthority;
 import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonweb.security.AuthorityService;
-import com.sang.nv.education.iamdomain.Client;
-import com.sang.nv.education.iamdomain.repository.ClientDomainRepository;
-import com.sang.nv.education.iaminfrastructure.persistence.entity.RoleEntity;
-import com.sang.nv.education.iaminfrastructure.persistence.entity.RolePermissionEntity;
-import com.sang.nv.education.iaminfrastructure.persistence.entity.UserEntity;
-import com.sang.nv.education.iaminfrastructure.persistence.entity.UserRoleEntity;
-import com.sang.nv.education.iaminfrastructure.persistence.mapper.RoleEntityMapper;
-import com.sang.nv.education.iaminfrastructure.persistence.mapper.RolePermissionEntityMapper;
-import com.sang.nv.education.iaminfrastructure.persistence.repository.RoleEntityRepository;
-import com.sang.nv.education.iaminfrastructure.persistence.repository.RolePermissionEntityRepository;
-import com.sang.nv.education.iaminfrastructure.persistence.repository.UserEntityRepository;
-import com.sang.nv.education.iaminfrastructure.persistence.repository.UserRoleEntityRepository;
-import com.sang.nv.education.iaminfrastructure.support.enums.RoleStatus;
-import com.sang.nv.education.iaminfrastructure.support.enums.UserStatus;
-import com.sang.nv.education.iaminfrastructure.support.exception.AuthorizationError;
-import com.sang.nv.education.iaminfrastructure.support.exception.BadRequestError;
-import com.sang.nv.education.iaminfrastructure.support.exception.NotFoundError;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.RoleEntity;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.RolePermissionEntity;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.UserEntity;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.UserRoleEntity;
+import com.sang.nv.education.iam.infrastructure.persistence.mapper.RoleEntityMapper;
+import com.sang.nv.education.iam.infrastructure.persistence.mapper.RolePermissionEntityMapper;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.RoleEntityRepository;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.RolePermissionEntityRepository;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.UserEntityRepository;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.UserRoleEntityRepository;
+import com.sang.nv.education.iam.infrastructure.support.enums.RoleStatus;
+import com.sang.nv.education.iam.infrastructure.support.enums.UserStatus;
+import com.sang.nv.education.iam.infrastructure.support.exception.AuthorizationError;
+import com.sang.nv.education.iam.infrastructure.support.exception.BadRequestError;
+import com.sang.nv.education.iam.infrastructure.support.exception.NotFoundError;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -40,9 +38,6 @@ public class AuthorityServiceImpl implements AuthorityService {
     private final RoleEntityRepository roleEntityRepository;
     private final RolePermissionEntityRepository rolePermissionEntityRepository;
     private final UserEntityRepository userEntityRepository;
-    private final ClientDomainRepository clientDomainRepository;
-    private final RolePermissionEntityMapper rolePermissionEntityMapper;
-    private final RoleEntityMapper roleEntityMapper;
 
     @Cacheable(cacheNames = "user-authority", key = "#userId",
             condition = "#userId != null", unless = "#userId == null || #result == null")
@@ -81,40 +76,6 @@ public class AuthorityServiceImpl implements AuthorityService {
                 .userId(userEntity.getId())
                 .build();
     }
-
-    @Cacheable(cacheNames = "client-authority", key = "#clientId",
-            condition = "#clientId != null", unless = "#clientId == null || #result == null")
-    @Override
-    public UserAuthority getClientAuthority(String clientId) {
-        List<String> grantedAuthorities = new ArrayList<>();
-        boolean isRoot = false;
-        Client client = this.clientDomainRepository.getById(clientId);
-//        if (ClientStatus.INACTIVE.equals(client.getStatus())) {
-//            throw new ResponseException(BadRequestError.LOGIN_FAIL_DUE_INACTIVE_ACCOUNT);
-//        }
-//        if (Objects.nonNull(client.getRoleId())) {
-//            Optional<RoleEntity> role = roleEntityRepository.findById(client.getRoleId());
-//            if (role.isPresent()) {
-//                if (RoleStatus.INACTIVE.equals(role.get().getStatus())) {
-//                    throw new ResponseException(BadRequestError.ROLE_INVALID);
-//                }
-//                isRoot = role.get().getIsRoot();
-//                grantedAuthorities = this.getGrantedAuthorityByRoleId(client.getRoleId());
-//            }
-//        } else {
-//            log.info("Client {} don't has role", client);
-////            if (ClientType.INTERNAL.equals(client.getType())) {
-////                isRoot = true;
-////            }
-//        }
-
-        return UserAuthority.builder()
-                .isRoot(isRoot)
-                .userId(clientId)
-                .grantedPermissions(grantedAuthorities)
-                .build();
-    }
-
     private UserEntity ensureUserExisted(String userId) {
         return this.userEntityRepository.findById(userId).orElseThrow(() ->
                 new ResponseException(NotFoundError.USER_NOT_FOUND));

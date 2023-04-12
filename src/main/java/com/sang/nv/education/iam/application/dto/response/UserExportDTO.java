@@ -1,8 +1,8 @@
 package com.sang.nv.education.iam.application.dto.response;
 
-import com.sang.nv.education.iamdomain.Classes;
-import com.sang.nv.education.iamdomain.User;
-import com.sang.nv.education.iaminfrastructure.support.enums.UserType;
+import com.sang.nv.education.iam.domain.Classes;
+import com.sang.nv.education.iam.domain.User;
+import com.sang.nv.education.iam.infrastructure.support.enums.UserType;
 import lombok.Getter;
 import lombok.Setter;
 

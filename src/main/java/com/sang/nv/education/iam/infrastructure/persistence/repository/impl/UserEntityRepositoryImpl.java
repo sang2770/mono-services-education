@@ -3,9 +3,9 @@ package com.sang.nv.education.iam.infrastructure.persistence.repository.impl;
 
 import com.sang.commonpersistence.support.SqlUtils;
 import com.sang.commonutil.StrUtils;
-import com.sang.nv.education.iamdomain.query.UserSearchQuery;
-import com.sang.nv.education.iaminfrastructure.persistence.entity.UserEntity;
-import com.sang.nv.education.iaminfrastructure.persistence.repository.custom.UserEntityRepositoryCustom;
+import com.sang.nv.education.iam.domain.query.UserSearchQuery;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.UserEntity;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.custom.UserEntityRepositoryCustom;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;

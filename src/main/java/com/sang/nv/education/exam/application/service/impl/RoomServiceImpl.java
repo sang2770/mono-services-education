@@ -1,11 +1,8 @@
 package com.sang.nv.education.exam.application.service.impl;
 
 
-import com.sang.commonclient.client.iam.IAMClient;
-import com.sang.commonclient.domain.UserDTO;
 import com.sang.commonmodel.dto.PageDTO;
 import com.sang.commonmodel.dto.request.FindByIdsRequest;
-import com.sang.commonmodel.dto.response.Response;
 import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonmodel.mapper.util.PageableMapperUtil;
 import com.sang.commonpersistence.support.SeqRepository;
@@ -28,6 +25,10 @@ import com.sang.nv.education.exam.infrastructure.persistence.repository.*;
 import com.sang.nv.education.exam.infrastructure.support.enums.UserExamStatus;
 import com.sang.nv.education.exam.infrastructure.support.exception.BadRequestError;
 import com.sang.nv.education.exam.infrastructure.support.exception.NotFoundError;
+import com.sang.nv.education.iam.application.service.UserService;
+import com.sang.nv.education.iam.domain.User;
+import com.sang.nv.education.iam.infrastructure.persistence.mapper.UserEntityMapper;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.UserEntityRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,12 +60,12 @@ public class RoomServiceImpl implements RoomService {
     private final SubjectEntityMapper subjectEntityMapper;
     private final ExamEntityRepository examEntityRepository;
     private final ExamEntityMapper examEntityMapper;
-    private final IAMClient iamClient;
 
     private final SeqRepository seqRepository;
     private final PeriodRoomEntityMapper periodRoomEntityMapper;
     private final PeriodEntityRepository periodEntityRepository;
     private final PeriodEntityMapper periodEntityMapper;
+    private final UserService userService;
 
     public RoomServiceImpl(RoomEntityRepository roomEntityRepository, ExamAutoMapper examAutoMapper,
                            ExamAutoMapperQuery examAutoMapperQuery, RoomDomainRepository RoomDomainRepository,
@@ -76,7 +77,7 @@ public class RoomServiceImpl implements RoomService {
                            SubjectEntityMapper subjectEntityMapper,
                            ExamEntityRepository examEntityRepository,
                            ExamEntityMapper examEntityMapper,
-                           IAMClient iamClient, SeqRepository seqRepository, PeriodRoomEntityMapper periodRoomEntityMapper, PeriodEntityRepository periodEntityRepository, PeriodEntityMapper periodEntityMapper) {
+                           SeqRepository seqRepository, PeriodRoomEntityMapper periodRoomEntityMapper, PeriodEntityRepository periodEntityRepository, PeriodEntityMapper periodEntityMapper, UserService userService) {
         this.examAutoMapper = examAutoMapper;
         this.examAutoMapperQuery = examAutoMapperQuery;
         this.roomDomainRepository = RoomDomainRepository;
@@ -91,11 +92,11 @@ public class RoomServiceImpl implements RoomService {
         this.subjectEntityMapper = subjectEntityMapper;
         this.examEntityRepository = examEntityRepository;
         this.examEntityMapper = examEntityMapper;
-        this.iamClient = iamClient;
         this.seqRepository = seqRepository;
         this.periodRoomEntityMapper = periodRoomEntityMapper;
         this.periodEntityRepository = periodEntityRepository;
         this.periodEntityMapper = periodEntityMapper;
+        this.userService = userService;
     }
 
     @Override
@@ -131,12 +132,17 @@ public class RoomServiceImpl implements RoomService {
     public Room addMemberInRoom(String id, UpdateMemberInRoomRequest request) {
         Room room = this.getById(id);
         if (!CollectionUtils.isEmpty(request.getMemberIds())) {
-            FindByIdsRequest findByIdsRequest = FindByIdsRequest.builder().ids(request.getMemberIds()).build();
-            Response<List<UserDTO>> userDTOResponse = this.iamClient.getUserByIds(findByIdsRequest);
-            if (!userDTOResponse.isSuccess()) {
+            List<User> users = this.userService.findByIds(request.getMemberIds());
+            if (CollectionUtils.isEmpty(users)) {
                 throw new ResponseException(BadRequestError.USER_INVALID);
             }
-            room.addUser(request.getMemberIds(), userDTOResponse.getData());
+            room.addUser(request.getMemberIds(), users);
+//            FindByIdsRequest findByIdsRequest = FindByIdsRequest.builder().ids(request.getMemberIds()).build();
+//            Response<List<UserDTO>> userDTOResponse = this.iamClient.getUserByIds(findByIdsRequest);
+//            if (!userDTOResponse.isSuccess()) {
+//                throw new ResponseException(BadRequestError.USER_INVALID);
+//            }
+//            room.addUser(request.getMemberIds(), userDTOResponse.getData());
             this.roomDomainRepository.save(room);
         }
         return room;
@@ -182,18 +188,25 @@ public class RoomServiceImpl implements RoomService {
         }
         List<UserRoom> userRooms = this.userRoomEntityMapper.toDomain(this.userRoomEntityRepository.search(query));
 //        Enrich User
-        FindByIdsRequest findByIdsRequest = FindByIdsRequest.builder().ids(userRooms.stream().map(UserRoom::getUserId).collect(Collectors.toList())).build();
-        Response<List<UserDTO>> userDTOResponse = this.iamClient.getUserByIds(findByIdsRequest);
-        if (!userDTOResponse.isSuccess()) {
-            throw new ResponseException(BadRequestError.USER_INVALID);
-        }
-        List<UserDTO> userDTOS = userDTOResponse.getData();
+        List<User> users = this.userService.findByIds(userRooms.stream().map(UserRoom::getUserId).collect(Collectors.toList()));
         userRooms.forEach(userRoom -> {
-            Optional<UserDTO> userDTO = userDTOS.stream().filter(userDTO1 -> userDTO1.getId().equals(userRoom.getUserId())).findFirst();
-            if (userDTO.isPresent()) {
-                userRoom.enrichUserDTO(userDTO.get());
+            Optional<User> user = users.stream().filter(user1 -> user1.getId().equals(userRoom.getUserId())).findFirst();
+            if (user.isPresent()) {
+                userRoom.enrichUserDTO(user.get());
             }
         });
+//        FindByIdsRequest findByIdsRequest = FindByIdsRequest.builder().ids(userRooms.stream().map(UserRoom::getUserId).collect(Collectors.toList())).build();
+//        Response<List<UserDTO>> userDTOResponse = this.iamClient.getUserByIds(findByIdsRequest);
+//        if (!userDTOResponse.isSuccess()) {
+//            throw new ResponseException(BadRequestError.USER_INVALID);
+//        }
+//        List<UserDTO> userDTOS = userDTOResponse.getData();
+//        userRooms.forEach(userRoom -> {
+//            Optional<UserDTO> userDTO = userDTOS.stream().filter(userDTO1 -> userDTO1.getId().equals(userRoom.getUserId())).findFirst();
+//            if (userDTO.isPresent()) {
+//                userRoom.enrichUserDTO(userDTO.get());
+//            }
+//        });
         return PageDTO.of(userRooms, request.getPageIndex(), request.getPageSize(), count);
     }
 
@@ -201,7 +214,7 @@ public class RoomServiceImpl implements RoomService {
     public PageDTO<PeriodRoom> getPeriodInRoom(String id, PeriodRoomSearchRequest request) {
         Pageable pageable = PageableMapperUtil.toPageable(request);
 //        log.info("key", SqlUtils.encodeKeyword(request.getKeyword()));
-        Page<PeriodRoomEntity> periodRoomEntities = this.periodRoomEntityRepository.searchByRoomId(id, request.getIds() , request.getKeyword(), pageable);
+        Page<PeriodRoomEntity> periodRoomEntities = this.periodRoomEntityRepository.searchByRoomId(id, request.getIds(), request.getKeyword(), pageable);
         List<String> periodIds = periodRoomEntities.getContent().stream().map(PeriodRoomEntity::getPeriodId).collect(Collectors.toList());
         List<Period> periods = this.periodEntityMapper.toDomain(this.periodEntityRepository.findAllByIds(periodIds));
         List<PeriodRoom> periodRooms = this.periodRoomEntityMapper.toDomain(periodRoomEntities.getContent());
@@ -217,7 +230,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public void sendExamToUser(String id, UserExamCreateRequest request) {
         Room room = this.getById(id);
-        PeriodRoom periodRoom =  this.periodRoomEntityMapper.toDomain(this.periodRoomEntityRepository.findByRoomIdAndPeriodId(id, request.getPeriodId()).orElseThrow(() -> new ResponseException(NotFoundError.PERIOD_NOT_EXISTED_IN_ROOM)));
+        PeriodRoom periodRoom = this.periodRoomEntityMapper.toDomain(this.periodRoomEntityRepository.findByRoomIdAndPeriodId(id, request.getPeriodId()).orElseThrow(() -> new ResponseException(NotFoundError.PERIOD_NOT_EXISTED_IN_ROOM)));
         periodRoom.updateIsSendExam(true);
         Optional<PeriodRoomEntity> periodRoomEntityOptional = this.periodRoomEntityRepository.findByRoomIdAndPeriodId(id, request.getPeriodId());
         if (periodRoomEntityOptional.isEmpty()) {
@@ -251,7 +264,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public void sendExam(String id, SendExamToUserRequest request) {
         Room room = this.getById(id);
-        PeriodRoom periodRoom =  this.periodRoomEntityMapper.toDomain(this.periodRoomEntityRepository.findByRoomIdAndPeriodId(id, request.getPeriodId()).orElseThrow(() -> new ResponseException(NotFoundError.PERIOD_NOT_EXISTED_IN_ROOM)));
+        PeriodRoom periodRoom = this.periodRoomEntityMapper.toDomain(this.periodRoomEntityRepository.findByRoomIdAndPeriodId(id, request.getPeriodId()).orElseThrow(() -> new ResponseException(NotFoundError.PERIOD_NOT_EXISTED_IN_ROOM)));
         periodRoom.updateIsSendExam(true);
         Optional<PeriodRoomEntity> periodRoomEntityOptional = this.periodRoomEntityRepository.findByRoomIdAndPeriodId(id, request.getPeriodId());
         if (periodRoomEntityOptional.isEmpty()) {
@@ -286,16 +299,14 @@ public class RoomServiceImpl implements RoomService {
     public PageDTO<Room> getMyRoom(RoomSearchRequest request) {
         RoomSearchQuery query = this.examAutoMapperQuery.from(request);
         String userId = SecurityUtils.getCurrentUserLoginId().get();
-        if (Objects.isNull(userId))
-        {
+        if (Objects.isNull(userId)) {
             throw new ResponseException(BadRequestError.USER_INVALID);
         }
         query.setUserIds(List.of(userId));
         return this.searchRoom(query);
     }
 
-    private PageDTO<Room> searchRoom(RoomSearchQuery query)
-    {
+    private PageDTO<Room> searchRoom(RoomSearchQuery query) {
         Long count = this.roomEntityRepository.count(query);
         if (count == 0L) {
             return PageDTO.empty();
@@ -304,6 +315,7 @@ public class RoomServiceImpl implements RoomService {
         this.enrichRoom(rooms);
         return PageDTO.of(rooms, query.getPageIndex(), query.getPageSize(), count);
     }
+
     private void enrichRoom(List<Room> room) {
         List<String> subjectIds = room.stream().map(Room::getSubjectId).collect(Collectors.toList());
         List<Subject> subjects = this.subjectEntityRepository.findAllById(subjectIds).stream().map(this.subjectEntityMapper::toDomain).collect(Collectors.toList());

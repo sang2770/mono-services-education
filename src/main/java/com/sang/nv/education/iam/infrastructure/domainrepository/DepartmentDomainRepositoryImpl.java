@@ -3,15 +3,15 @@ package com.sang.nv.education.iam.infrastructure.domainrepository;
 
 import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonweb.support.AbstractDomainRepository;
-import com.sang.nv.education.iamdomain.Classes;
-import com.sang.nv.education.iamdomain.Department;
-import com.sang.nv.education.iamdomain.repository.DepartmentDomainRepository;
-import com.sang.nv.education.iaminfrastructure.persistence.entity.DepartmentEntity;
-import com.sang.nv.education.iaminfrastructure.persistence.mapper.ClassesEntityMapper;
-import com.sang.nv.education.iaminfrastructure.persistence.mapper.DepartmentEntityMapper;
-import com.sang.nv.education.iaminfrastructure.persistence.repository.ClassesEntityRepository;
-import com.sang.nv.education.iaminfrastructure.persistence.repository.DepartmentEntityRepository;
-import com.sang.nv.education.iaminfrastructure.support.exception.BadRequestError;
+import com.sang.nv.education.iam.domain.Classes;
+import com.sang.nv.education.iam.domain.Department;
+import com.sang.nv.education.iam.domain.repository.DepartmentDomainRepository;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.DepartmentEntity;
+import com.sang.nv.education.iam.infrastructure.persistence.mapper.ClassesEntityMapper;
+import com.sang.nv.education.iam.infrastructure.persistence.mapper.DepartmentEntityMapper;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.ClassesEntityRepository;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.DepartmentEntityRepository;
+import com.sang.nv.education.iam.infrastructure.support.exception.BadRequestError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

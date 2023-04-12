@@ -2,7 +2,7 @@ package com.sang.nv.education.iam.application.dto.request;
 
 
 import com.sang.commonmodel.dto.request.PagingRequest;
-import com.sang.nv.education.iaminfrastructure.support.enums.RoleStatus;
+import com.sang.nv.education.iam.infrastructure.support.enums.RoleStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

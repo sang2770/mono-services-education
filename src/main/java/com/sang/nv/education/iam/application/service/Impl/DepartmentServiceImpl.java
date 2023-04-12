@@ -7,16 +7,16 @@ import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonmodel.mapper.util.PageableMapperUtil;
 import com.sang.commonmodel.query.BaseSearchQuery;
 import com.sang.commonpersistence.support.SeqRepository;
-import com.sang.nv.education.iamapplication.dto.request.DepartmentCreateOrUpdateRequest;
-import com.sang.nv.education.iamapplication.mapper.AutoMapper;
-import com.sang.nv.education.iamapplication.service.DepartmentService;
-import com.sang.nv.education.iamdomain.Department;
-import com.sang.nv.education.iamdomain.command.DepartmentCreateOrUpdateCmd;
-import com.sang.nv.education.iamdomain.repository.DepartmentDomainRepository;
-import com.sang.nv.education.iaminfrastructure.persistence.entity.DepartmentEntity;
-import com.sang.nv.education.iaminfrastructure.persistence.mapper.DepartmentEntityMapper;
-import com.sang.nv.education.iaminfrastructure.persistence.repository.DepartmentEntityRepository;
-import com.sang.nv.education.iaminfrastructure.support.exception.BadRequestError;
+import com.sang.nv.education.iam.application.dto.request.DepartmentCreateOrUpdateRequest;
+import com.sang.nv.education.iam.application.mapper.IamAutoMapper;
+import com.sang.nv.education.iam.application.service.DepartmentService;
+import com.sang.nv.education.iam.domain.Department;
+import com.sang.nv.education.iam.domain.command.DepartmentCreateOrUpdateCmd;
+import com.sang.nv.education.iam.domain.repository.DepartmentDomainRepository;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.DepartmentEntity;
+import com.sang.nv.education.iam.infrastructure.persistence.mapper.DepartmentEntityMapper;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.DepartmentEntityRepository;
+import com.sang.nv.education.iam.infrastructure.support.exception.BadRequestError;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,13 +27,13 @@ import java.util.Optional;
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
     private final DepartmentEntityRepository departmentEntityRepository;
-    private final AutoMapper autoMapper;
+    private final IamAutoMapper autoMapper;
     private final DepartmentDomainRepository departmentDomainRepository;
     private final DepartmentEntityMapper departmentEntityMapper;
     private final SeqRepository seqRepository;
 
     public DepartmentServiceImpl(DepartmentEntityRepository departmentEntityRepository,
-                                 AutoMapper autoMapper,
+                                 IamAutoMapper autoMapper,
                                  DepartmentDomainRepository departmentDomainRepository,
                                  DepartmentEntityMapper departmentEntityMapper, SeqRepository seqRepository) {
         this.departmentEntityRepository = departmentEntityRepository;

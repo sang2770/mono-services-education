@@ -1,6 +1,6 @@
 package com.sang.nv.education.iam.domain.command;
 
-import com.sang.nv.education.iaminfrastructure.support.enums.UserType;
+import com.sang.nv.education.iam.infrastructure.support.enums.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

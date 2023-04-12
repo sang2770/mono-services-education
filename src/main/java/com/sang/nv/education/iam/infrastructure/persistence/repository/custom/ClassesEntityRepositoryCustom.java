@@ -2,8 +2,8 @@ package com.sang.nv.education.iam.infrastructure.persistence.repository.custom;
 
 
 
-import com.sang.nv.education.iamdomain.query.ClassSearchQuery;
-import com.sang.nv.education.iaminfrastructure.persistence.entity.ClassEntity;
+import com.sang.nv.education.iam.domain.query.ClassSearchQuery;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.ClassEntity;
 
 import java.util.List;
 

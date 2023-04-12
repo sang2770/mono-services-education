@@ -2,9 +2,9 @@ package com.sang.nv.education.iam.infrastructure.persistence.repository.impl;
 
 import com.sang.commonpersistence.support.SqlUtils;
 import com.sang.commonutil.StrUtils;
-import com.sang.nv.education.iamdomain.query.ClassSearchQuery;
-import com.sang.nv.education.iaminfrastructure.persistence.entity.ClassEntity;
-import com.sang.nv.education.iaminfrastructure.persistence.repository.custom.ClassesEntityRepositoryCustom;
+import com.sang.nv.education.iam.domain.query.ClassSearchQuery;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.ClassEntity;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.custom.ClassesEntityRepositoryCustom;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;

@@ -1,7 +1,7 @@
 package com.sang.nv.education.iam.infrastructure.persistence.repository;
 
 
-import com.sang.nv.education.iaminfrastructure.persistence.entity.UserRoleEntity;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.UserRoleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

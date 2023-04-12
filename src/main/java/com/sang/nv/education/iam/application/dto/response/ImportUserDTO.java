@@ -1,6 +1,6 @@
 package com.sang.nv.education.iam.application.dto.response;
 
-import com.sang.nv.education.iamdomain.command.UserCreateOrUpdateCmd;
+import com.sang.nv.education.iam.domain.command.UserCreateOrUpdateCmd;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
