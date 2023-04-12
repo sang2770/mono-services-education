@@ -73,8 +73,10 @@ public class UserDomainRepositoryImpl extends AbstractDomainRepository<User, Use
 //        Enrich role
         List<UserRole> userRoles = this.userRoleEntityMapper.toDomain(this.userRoleEntityRepository.findAllByUserId(user.getId()));
         List<String> roleIds = userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList());
-        List<Role> roles = this.roleEntityMapper.toDomain(this.roleEntityRepository.findAllByIds(roleIds));
-        user.enrichRoles(roles);
+        if (!Collections.isEmpty(roleIds)) {
+            List<Role> roles = this.roleEntityMapper.toDomain(this.roleEntityRepository.findAllByIds(roleIds));
+            user.enrichRoles(roles);
+        }
         user.enricUserRoles(userRoles);
         return user;
     }

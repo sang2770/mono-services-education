@@ -9,8 +9,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface SubjectEntityRepository extends JpaRepository<SubjectEntity, String>{
     @Query("from SubjectEntity u where u.deleted = false and ( :keyword is null or ( u.name like :keyword))")
     Page<SubjectEntity> search(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query("from SubjectEntity u where u.deleted = false and id in :ids")
+    List<SubjectEntity> findAllByIds(@Param("ids") List<String> ids);
 }

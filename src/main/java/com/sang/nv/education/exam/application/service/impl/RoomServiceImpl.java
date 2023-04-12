@@ -236,7 +236,10 @@ public class RoomServiceImpl implements RoomService {
 //        log.info("key", SqlUtils.encodeKeyword(request.getKeyword()));
         Page<PeriodRoomEntity> periodRoomEntities = this.periodRoomEntityRepository.searchByRoomId(id, request.getIds(), request.getKeyword(), pageable);
         List<String> periodIds = periodRoomEntities.getContent().stream().map(PeriodRoomEntity::getPeriodId).collect(Collectors.toList());
-        List<Period> periods = this.periodEntityMapper.toDomain(this.periodEntityRepository.findAllByIds(periodIds));
+        List<Period> periods = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(periodIds)) {
+             periods.addAll(this.periodEntityMapper.toDomain(this.periodEntityRepository.findAllByIds(periodIds)));
+        }
         List<PeriodRoom> periodRooms = this.periodRoomEntityMapper.toDomain(periodRoomEntities.getContent());
         periodRooms.forEach(periodRoom -> {
             Optional<Period> period = periods.stream().filter(period1 -> period1.getId().equals(periodRoom.getPeriodId())).findFirst();
@@ -338,7 +341,7 @@ public class RoomServiceImpl implements RoomService {
 
     private void enrichRoom(List<Room> room) {
         List<String> subjectIds = room.stream().map(Room::getSubjectId).collect(Collectors.toList());
-        List<Subject> subjects = this.subjectEntityRepository.findAllById(subjectIds).stream().map(this.subjectEntityMapper::toDomain).collect(Collectors.toList());
+        List<Subject> subjects = this.subjectEntityRepository.findAllByIds(subjectIds).stream().map(this.subjectEntityMapper::toDomain).collect(Collectors.toList());
         room.forEach(room1 -> {
             Optional<Subject> subject = subjects.stream().filter(subject1 -> subject1.getId().equals(room1.getSubjectId())).findFirst();
             if (subject.isPresent()) {
