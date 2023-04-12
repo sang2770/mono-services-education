@@ -7,8 +7,6 @@ import com.sang.nv.education.iam.infrastructure.persistence.entity.RoleEntity;
 import com.sang.nv.education.iam.infrastructure.persistence.entity.RolePermissionEntity;
 import com.sang.nv.education.iam.infrastructure.persistence.entity.UserEntity;
 import com.sang.nv.education.iam.infrastructure.persistence.entity.UserRoleEntity;
-import com.sang.nv.education.iam.infrastructure.persistence.mapper.RoleEntityMapper;
-import com.sang.nv.education.iam.infrastructure.persistence.mapper.RolePermissionEntityMapper;
 import com.sang.nv.education.iam.infrastructure.persistence.repository.RoleEntityRepository;
 import com.sang.nv.education.iam.infrastructure.persistence.repository.RolePermissionEntityRepository;
 import com.sang.nv.education.iam.infrastructure.persistence.repository.UserEntityRepository;
