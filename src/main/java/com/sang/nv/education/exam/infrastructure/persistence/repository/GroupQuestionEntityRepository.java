@@ -16,6 +16,6 @@ public interface GroupQuestionEntityRepository extends JpaRepository<GroupQuesti
     @Query("from GroupQuestionEntity u where u.deleted = false and ( :keyword is null or ( u.name like :keyword))")
     Page<GroupQuestionEntity> search(@Param("keyword") String keyword, Pageable pageable);
 
-    @Query("from GroupQuestionEntity u where u.deleted = false and u.id in :ids")
+    @Query("from GroupQuestionEntity u where  u.id in :ids")
     List<GroupQuestionEntity> findAllByIds(@Param("ids") List<String> ids);
 }

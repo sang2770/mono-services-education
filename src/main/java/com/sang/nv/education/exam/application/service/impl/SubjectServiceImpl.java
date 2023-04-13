@@ -74,4 +74,11 @@ public class SubjectServiceImpl implements SubjectService {
                 new ResponseException(NotFoundError.SUBJECT_NOT_EXISTED)));
     }
 
+    @Override
+    public void delete(String id) {
+        Subject Subject = this.getById(id);
+        Subject.deleted();
+        this.subjectEntityRepository.save(this.subjectEntityMapper.toEntity(Subject));
+    }
+
 }

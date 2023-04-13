@@ -28,4 +28,9 @@ public interface SubjectResource {
     @ApiOperation(value = "Get Subject by id")
     @GetMapping("/subjects/{id}")
     Response<Subject> getById(@PathVariable String id);
+
+    @ApiOperation(value = "Delete subject")
+    @PostMapping("/subjects/{id}/delete")
+    Response<Void> delete(@PathVariable String id);
+
 }

@@ -28,4 +28,8 @@ public interface PeriodResource {
     @ApiOperation(value = "Get Period by id")
     @GetMapping("/periods/{id}")
     Response<Period> getById(@PathVariable String id);
+
+    @ApiOperation(value = "Delete Period")
+    @PostMapping("/periods/{id}/delete")
+    Response<Void> delete(@PathVariable String id);
 }

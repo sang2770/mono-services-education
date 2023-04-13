@@ -16,6 +16,6 @@ public interface SubjectEntityRepository extends JpaRepository<SubjectEntity, St
     @Query("from SubjectEntity u where u.deleted = false and ( :keyword is null or ( u.name like :keyword))")
     Page<SubjectEntity> search(@Param("keyword") String keyword, Pageable pageable);
 
-    @Query("from SubjectEntity u where u.deleted = false and id in :ids")
+    @Query("from SubjectEntity u where u.id in :ids")
     List<SubjectEntity> findAllByIds(@Param("ids") List<String> ids);
 }

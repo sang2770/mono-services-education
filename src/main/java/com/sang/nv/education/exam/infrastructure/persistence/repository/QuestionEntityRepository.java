@@ -16,13 +16,13 @@ import java.util.List;
 public interface QuestionEntityRepository extends JpaRepository<QuestionEntity, String>, QuestionEntityRepositoryCustom{
     @Query("from QuestionEntity u where u.deleted = false and ( :keyword is null or ( u.title like :keyword))")
     Page<QuestionEntity> search(@Param("keyword") String keyword, Pageable pageable);
-    @Query("from QuestionEntity u where u.deleted = false and u.groupId = :groupId ")
+    @Query("from QuestionEntity u where  u.groupId = :groupId ")
     List<QuestionEntity> findByGroupId(@Param("groupId") String groupId);
 
-    @Query("from QuestionEntity u where u.deleted = false and u.groupId in :groupIds ")
+    @Query("from QuestionEntity u where u.groupId in :groupIds ")
     List<QuestionEntity> findAllByGroupIds(@Param("groupIds") List<String> groupIds);
 
-    @Query("from QuestionEntity u where u.deleted = false and u.id in :ids order by u.groupId ")
+    @Query("from QuestionEntity u where u.id in :ids order by u.groupId ")
     List<QuestionEntity> findAllById(@Param("ids") List<String> ids);
 
     @Query(value = "FROM QuestionEntity where e.groupId = :groupId ORDER BY RAND() LIMIT :numberOfQuestions", nativeQuery = true)

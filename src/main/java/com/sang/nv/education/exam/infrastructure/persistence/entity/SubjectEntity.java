@@ -28,6 +28,7 @@ public class SubjectEntity extends AuditableEntity {
 
     @Column(name = "code", length = ValidateConstraint.LENGTH.CODE_MAX_LENGTH, nullable = false)
     private String code;
+
     @Column(name = "deleted", nullable = false)
     private Boolean deleted;
 

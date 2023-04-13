@@ -36,4 +36,9 @@ public interface QuestionResource {
     @ApiOperation(value = "Get random question by groupId")
     @GetMapping("/questions/random-question-by-group")
     Response<List<Question>> getRandomQuestionByGroup(@RequestBody GroupQuestionRandomRequest request);
+
+    @ApiOperation(value = "Delete Question")
+    @PostMapping("/questions/{id}/delete")
+    Response<Void> delete(@PathVariable String id);
+
 }

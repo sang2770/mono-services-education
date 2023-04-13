@@ -10,4 +10,6 @@ public interface PeriodService {
     Period update(String id, PeriodCreateOrUpdateRequest request);
     PageDTO<Period> search(BaseSearchRequest request);
     Period getById(String id);
+
+    void delete(String id);
 }

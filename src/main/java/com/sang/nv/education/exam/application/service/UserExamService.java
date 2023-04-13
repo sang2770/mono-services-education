@@ -14,7 +14,7 @@ public interface UserExamService {
      * @param request ExamCreateRequest
      * @return Exam
      */
-    UserExamResult send(String id, UserExamCreateRequest request);
+    UserExamResult send(String roomId, String id, UserExamCreateRequest request);
 
     /**
      * Get detail UserExam

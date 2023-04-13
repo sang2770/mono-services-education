@@ -33,4 +33,8 @@ public interface GroupQuestionResource {
     @GetMapping("/groupQuestions/{id}")
     Response<GroupQuestion> getById(@PathVariable String id);
 
+
+    @ApiOperation(value = "Delete GroupQuestion")
+    @PostMapping("/groupQuestions/{id}/delete")
+    Response<Void> delete(@PathVariable String id);
 }

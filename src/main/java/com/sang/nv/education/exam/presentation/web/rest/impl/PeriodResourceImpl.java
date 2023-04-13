@@ -34,4 +34,10 @@ public class PeriodResourceImpl implements PeriodResource {
     public Response<Period> getById(String id) {
         return Response.of(this.periodsService.getById(id));
     }
+
+    @Override
+    public Response<Void> delete(String id) {
+        this.periodsService.delete(id);
+        return Response.ok();
+    }
 }

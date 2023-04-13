@@ -93,6 +93,11 @@ public class UserExamDomainRepositoryImpl extends AbstractDomainRepository<UserE
 //        } else {
 //            throw new ResponseException(BadRequestError.USER_INVALID);
 //        }
+        List<User> users = this.userService.findByIds(findByIdsRequest.getIds());
+        if (CollectionUtils.isEmpty(users)) {
+            throw new ResponseException(BadRequestError.USER_INVALID);
+        }
+        userExam.enrichUser(users.get(0));
         Period period = this.periodEntityRepository.findById(userExam.getPeriodId()).map(periodEntityMapper::toDomain).orElseThrow(() -> new ResponseException(BadRequestError.PERIOD_NOT_EXISTED));
         userExam.enrichPeriod(period);
         Room room = this.roomEntityRepository.findById(userExam.getRoomId()).map(roomEntityMapper::toDomain).orElseThrow(() -> new ResponseException(BadRequestError.ROOM_NOT_EXISTED));

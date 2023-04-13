@@ -14,8 +14,8 @@ public interface SocketResource {
     @SendTo("/topic/room/{id}")
     Response<Boolean> sendExam(@DestinationVariable String id, @Payload SendExamToUserRequest request);
 
-    @MessageMapping("/user-exams/{id}/test")
-    @SendTo("/topic/user-exams/{id}/test")
-    Response<UserExamResult> sendTest(@DestinationVariable String id, @Payload UserExamCreateRequest request);
+    @MessageMapping("/room/{roomId}/user-exams/{id}/test")
+    @SendTo("/topic/room/{roomId}/user-exams/test")
+    Response<UserExamResult> sendTest(@DestinationVariable String roomId, @DestinationVariable String id, @Payload UserExamCreateRequest request);
 
 }

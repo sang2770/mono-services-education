@@ -43,4 +43,10 @@ public class QuestionResourceImpl implements QuestionResource {
     public Response<List<Question>> getRandomQuestionByGroup(GroupQuestionRandomRequest request) {
         return Response.of(this.QuestionsService.getRandomQuestionByGroup(request));
     }
+
+    @Override
+    public Response<Void> delete(String id) {
+        this.QuestionsService.delete(id);
+        return Response.ok();
+    }
 }

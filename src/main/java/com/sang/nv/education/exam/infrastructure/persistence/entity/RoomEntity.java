@@ -30,8 +30,9 @@ public class RoomEntity extends AuditableEntity {
     private String code;
     @Column(name = "subject_id", length = ValidateConstraint.LENGTH.ID_MAX_LENGTH, nullable = false)
     String subjectId;
-
-    @Column(name = "subject_name", length = ValidateConstraint.LENGTH.NAME_MAX_LENGTH, nullable = false)
+    @Column(name = "description", length = ValidateConstraint.LENGTH.DESC_MAX_LENGTH)
+    private String description;
+    @Column(name = "subject_name", length = ValidateConstraint.LENGTH.NAME_MAX_LENGTH)
     String subjectName;
     @Column(name = "deleted", nullable = false)
     private Boolean deleted;

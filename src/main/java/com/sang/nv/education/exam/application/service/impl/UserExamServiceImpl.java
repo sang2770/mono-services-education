@@ -11,15 +11,18 @@ import com.sang.nv.education.exam.application.dto.response.UserExamResult;
 import com.sang.nv.education.exam.application.mapper.ExamAutoMapper;
 import com.sang.nv.education.exam.application.service.UserExamService;
 import com.sang.nv.education.exam.domain.Exam;
+import com.sang.nv.education.exam.domain.Room;
 import com.sang.nv.education.exam.domain.UserExam;
 import com.sang.nv.education.exam.domain.command.UserExamCreateCmd;
 import com.sang.nv.education.exam.domain.repository.ExamDomainRepository;
 import com.sang.nv.education.exam.domain.repository.UserExamDomainRepository;
+import com.sang.nv.education.exam.infrastructure.persistence.entity.RoomEntity;
 import com.sang.nv.education.exam.infrastructure.persistence.entity.UserExamEntity;
 import com.sang.nv.education.exam.infrastructure.persistence.mapper.UserExamEntityMapper;
 import com.sang.nv.education.exam.infrastructure.persistence.repository.ExamEntityRepository;
 import com.sang.nv.education.exam.infrastructure.persistence.repository.ExamQuestionEntityRepository;
 import com.sang.nv.education.exam.infrastructure.persistence.repository.QuestionEntityRepository;
+import com.sang.nv.education.exam.infrastructure.persistence.repository.RoomEntityRepository;
 import com.sang.nv.education.exam.infrastructure.persistence.repository.UserExamEntityRepository;
 import com.sang.nv.education.exam.infrastructure.support.enums.UserExamStatus;
 import com.sang.nv.education.exam.infrastructure.support.exception.BadRequestError;
@@ -35,6 +38,7 @@ import java.util.Optional;
 @Service
 public class UserExamServiceImpl implements UserExamService {
     private final ExamEntityRepository ExamEntityRepository;
+    private final RoomEntityRepository roomEntityRepository;
     private final ExamQuestionEntityRepository examQuestionEntityRepository;
     private final ExamAutoMapper examAutoMapper;
     private final ExamDomainRepository examDomainRepository;
@@ -44,10 +48,11 @@ public class UserExamServiceImpl implements UserExamService {
 
     public UserExamServiceImpl(ExamEntityRepository ExamEntityRepository,
                                QuestionEntityRepository questionEntityRepository,
-                               ExamQuestionEntityRepository examQuestionEntityRepository,
+                               RoomEntityRepository roomEntityRepository, ExamQuestionEntityRepository examQuestionEntityRepository,
                                ExamAutoMapper examAutoMapper,
                                ExamDomainRepository ExamDomainRepository, UserExamDomainRepository userExamDomainRepository, UserExamEntityRepository examEntityRepository, UserExamEntityMapper userExamEntityMapper) {
         this.ExamEntityRepository = ExamEntityRepository;
+        this.roomEntityRepository = roomEntityRepository;
         this.examQuestionEntityRepository = examQuestionEntityRepository;
         this.examAutoMapper = examAutoMapper;
         this.examDomainRepository = ExamDomainRepository;
@@ -57,12 +62,17 @@ public class UserExamServiceImpl implements UserExamService {
     }
 
     @Override
-    public UserExamResult send(String id, UserExamCreateRequest request) {
+    public UserExamResult send(String roomId, String id, UserExamCreateRequest request) {
         UserExamCreateCmd cmd = this.examAutoMapper.from(request);
         Exam exam = this.examDomainRepository.getById(request.getExamId());
         UserExam userExam = this.userExamDomainRepository.getById(id);
         if (Objects.equals(userExam.getStatus(), UserExamStatus.DONE)) {
             throw new ResponseException(BadRequestError.USER_EXAM_FINISHED);
+        }
+        Optional<RoomEntity> roomEntityOptional = this.roomEntityRepository.findById(roomId);
+        if (roomEntityOptional.isEmpty())
+        {
+            throw new ResponseException(NotFoundError.ROOM_NOT_FOUND);
         }
         userExam.update(cmd, exam.getExamQuestions());
 //        UserExam userExam = new UserExam(cmd, exam.getExamQuestions());
@@ -96,9 +106,11 @@ public class UserExamServiceImpl implements UserExamService {
         if (Objects.equals(userExam.getStatus(), UserExamStatus.DONE)) {
             throw new ResponseException(BadRequestError.USER_EXAM_FINISHED);
         }
-        userExam.startTesting();
-        userExam.updateStatus(UserExamStatus.DOING);
-        this.userExamDomainRepository.save(userExam);
+        if (Objects.equals(userExam.getStatus(), UserExamStatus.WAITING)) {
+            userExam.startTesting();
+            userExam.updateStatus(UserExamStatus.DOING);
+            this.userExamDomainRepository.save(userExam);
+        }
         return userExam;
     }
 

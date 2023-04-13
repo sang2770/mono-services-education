@@ -17,10 +17,10 @@ public class UserExamResourceImpl implements UserExamResource {
 
     private final UserExamService userExamService;
 
-    @Override
-    public Response<UserExamResult> sendTest(String id, UserExamCreateRequest request) {
-        return Response.of(this.userExamService.send(id, request));
-    }
+//    @Override
+//    public Response<UserExamResult> sendTest(String id, UserExamCreateRequest request) {
+//        return Response.of(this.userExamService.send(id, request));
+//    }
 
     @Override
     public Response<UserExam> getById(String id) {

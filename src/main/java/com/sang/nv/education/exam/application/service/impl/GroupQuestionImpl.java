@@ -12,8 +12,11 @@ import com.sang.nv.education.exam.application.service.GroupQuestionService;
 import com.sang.nv.education.exam.domain.GroupQuestion;
 import com.sang.nv.education.exam.domain.command.GroupQuestionCreateOrUpdateCmd;
 import com.sang.nv.education.exam.infrastructure.persistence.entity.GroupQuestionEntity;
+import com.sang.nv.education.exam.infrastructure.persistence.entity.SubjectEntity;
 import com.sang.nv.education.exam.infrastructure.persistence.mapper.GroupQuestionEntityMapper;
 import com.sang.nv.education.exam.infrastructure.persistence.repository.GroupQuestionEntityRepository;
+import com.sang.nv.education.exam.infrastructure.persistence.repository.SubjectEntityRepository;
+import com.sang.nv.education.exam.infrastructure.support.exception.BadRequestError;
 import com.sang.nv.education.exam.infrastructure.support.exception.NotFoundError;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,20 +31,27 @@ public class GroupQuestionImpl implements GroupQuestionService {
     private final GroupQuestionEntityRepository groupQuestionEntityRepository;
     private final ExamAutoMapper examAutoMapper;
     private final GroupQuestionEntityMapper groupQuestionEntityMapper;
+    private final SubjectEntityRepository subjectEntityRepository;
     private final SeqRepository seqRepository;
 
     public GroupQuestionImpl(GroupQuestionEntityRepository GroupQuestionEntityRepository,
                              ExamAutoMapper examAutoMapper,
-                             GroupQuestionEntityMapper GroupQuestionEntityMapper, SeqRepository seqRepository) {
+                             GroupQuestionEntityMapper GroupQuestionEntityMapper, SubjectEntityRepository subjectEntityRepository, SeqRepository seqRepository) {
         this.groupQuestionEntityRepository = GroupQuestionEntityRepository;
         this.examAutoMapper = examAutoMapper;
         this.groupQuestionEntityMapper = GroupQuestionEntityMapper;
+        this.subjectEntityRepository = subjectEntityRepository;
         this.seqRepository = seqRepository;
     }
 
     @Override
     public GroupQuestion create(GroupQuestionCreateOrUpdateRequest request) {
         GroupQuestionCreateOrUpdateCmd cmd = this.examAutoMapper.from(request);
+        Optional<SubjectEntity> subject = this.subjectEntityRepository.findById(cmd.getSubjectId());
+        if (subject.isEmpty())
+        {
+            throw new ResponseException(NotFoundError.SUBJECT_NOT_EXISTED);
+        }
         cmd.setCode(this.seqRepository.generateGroupQuestionCode());
         GroupQuestion GroupQuestion = new GroupQuestion(cmd);
         this.groupQuestionEntityRepository.save(this.groupQuestionEntityMapper.toEntity(GroupQuestion));
@@ -73,6 +83,13 @@ public class GroupQuestionImpl implements GroupQuestionService {
     public GroupQuestion getById(String id) {
         return this.groupQuestionEntityMapper.toDomain(this.groupQuestionEntityRepository.findById(id).orElseThrow(() ->
                 new ResponseException(NotFoundError.GROUP_NOT_EXISTED)));
+    }
+
+    @Override
+    public void delete(String id) {
+        GroupQuestion groupQuestion = this.getById(id);
+        groupQuestion.deleted();
+        this.groupQuestionEntityRepository.save(this.groupQuestionEntityMapper.toEntity(groupQuestion));
     }
 
 }

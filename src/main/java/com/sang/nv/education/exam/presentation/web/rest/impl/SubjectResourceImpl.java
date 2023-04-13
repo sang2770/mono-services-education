@@ -34,4 +34,10 @@ public class SubjectResourceImpl implements SubjectResource {
     public Response<Subject> getById(String id) {
         return Response.of(this.subjectsService.getById(id));
     }
+
+    @Override
+    public Response<Void> delete(String id) {
+        this.subjectsService.delete(id);
+        return Response.ok();
+    }
 }

@@ -88,6 +88,13 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    public void delete(String id) {
+        Question question = this.questionDomainRepository.getById(id);
+        question.deleted();
+        this.questionDomainRepository.save(question);
+    }
+
+    @Override
     public PageDTO<Question> search(QuestionSearchRequest request) {
         QuestionSearchQuery query = this.examAutoMapperQuery.from(request);
         Long count = this.questionEntityRepository.count(query);

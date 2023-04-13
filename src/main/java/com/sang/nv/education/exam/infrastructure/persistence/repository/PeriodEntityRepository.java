@@ -16,7 +16,7 @@ public interface PeriodEntityRepository extends JpaRepository<PeriodEntity, Stri
 
     @Query("from PeriodEntity u where u.deleted = false and ( :keyword is null or ( u.name like :keyword))")
     Page<PeriodEntity> search(@Param("keyword") String keyword, Pageable pageable);
-    @Query("from PeriodEntity u where u.deleted = false and u.id in :ids")
+    @Query("from PeriodEntity u where u.id in :ids")
     List<PeriodEntity> findAllByIds(@Param("ids") List<String> ids);
 
 }

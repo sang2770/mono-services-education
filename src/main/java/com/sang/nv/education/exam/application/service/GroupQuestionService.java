@@ -10,4 +10,6 @@ public interface GroupQuestionService {
     GroupQuestion update(String id, GroupQuestionCreateOrUpdateRequest request);
     PageDTO<GroupQuestion> search(BaseSearchRequest request);
     GroupQuestion getById(String id);
+
+    void delete(String id);
 }

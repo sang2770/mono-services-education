@@ -74,4 +74,11 @@ public class PeriodServiceImpl implements PeriodService {
         return this.periodEntityMapper.toDomain(this.periodEntityRepository.findById(id).orElseThrow(() -> new ResponseException(BadRequestError.PERIOD_NOT_EXISTED)));
     }
 
+    @Override
+    public void delete(String id) {
+        Period period = this.getById(id);
+        period.deleted();
+        this.periodEntityRepository.save(this.periodEntityMapper.toEntity(period));
+    }
+
 }

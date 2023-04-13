@@ -34,4 +34,10 @@ public class GroupQuestionResourceImpl implements GroupQuestionResource {
     public Response<GroupQuestion> getById(String id) {
         return Response.of(this.groupQuestionsService.getById(id));
     }
+
+    @Override
+    public Response<Void> delete(String id) {
+        this.groupQuestionsService.delete(id);
+        return Response.ok();
+    }
 }

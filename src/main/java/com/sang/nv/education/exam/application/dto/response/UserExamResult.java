@@ -4,6 +4,7 @@ package com.sang.nv.education.exam.application.dto.response;
 import com.sang.nv.education.iam.domain.User;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 

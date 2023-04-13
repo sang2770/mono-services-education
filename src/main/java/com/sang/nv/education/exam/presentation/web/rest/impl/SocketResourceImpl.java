@@ -33,12 +33,12 @@ public class SocketResourceImpl implements SocketResource {
     }
 
     @Override
-    public Response<UserExamResult> sendTest(@DestinationVariable String id, @Payload UserExamCreateRequest request) {
+    public Response<UserExamResult> sendTest(@DestinationVariable String roomId, @DestinationVariable String id, @Payload UserExamCreateRequest request) {
         try {
-            UserExamResult userExamResult = this.userExamService.send(id, request);
+            UserExamResult userExamResult = this.userExamService.send(roomId, id, request);
             return Response.of(userExamResult);
         }catch (RuntimeException e){
-            return Response.fail(e);
+            return Response.of(UserExamResult.builder().build());
         }
     }
 }

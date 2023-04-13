@@ -10,4 +10,6 @@ public interface SubjectService {
     Subject update(String id, BaseCreateOrUpdateRequest request);
     PageDTO<Subject> search(BaseSearchRequest request);
     Subject getById(String id);
+
+    void delete(String id);
 }
