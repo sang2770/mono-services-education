@@ -8,6 +8,7 @@ public enum NotFoundError implements ResponseError {
     USER_NOT_FOUND(40401001, "User not found: {0}"),
     EMPLOYEE_NOT_FOUND(40401001, "Employee not found: {0}"),
     ROLE_NOT_FOUND(40401002, "Role not found: {0}"),
+    PERMISSION_NOT_FOUND(40401002, "Permission not found: {0}"),
     ORGANIZATION_NOT_EXITED(40401003, "Organization not exited");
 
     private final Integer code;

@@ -6,9 +6,9 @@ import com.sang.commonmodel.enums.Scope;
 import java.util.List;
 
 public enum ResourceCategory {
-    USER_MANAGEMENT("USER", "USER_MANAGEMENT_TITLE", List.of(Scope.CREATE, Scope.VIEW, Scope.UPDATE), 1),
-    ROLE_MANAGEMENT("ROLE", "ROLE_MANAGEMENT_TITLE", List.of(Scope.CREATE, Scope.VIEW, Scope.UPDATE), 2),
-    DEPARTMENT_MANAGEMENT("DEPARTMENT", "DEPARTMENT_MANAGEMENT_TITLE", List.of(Scope.CREATE, Scope.UPDATE, Scope.VIEW, Scope.DELETE), 3);
+    USER_MANAGEMENT("USER", "Quản lý nguười dùng", List.of(Scope.CREATE, Scope.VIEW, Scope.UPDATE), 1),
+    ROLE_MANAGEMENT("ROLE", "Quản lý vai trò", List.of(Scope.CREATE, Scope.VIEW, Scope.UPDATE), 2),
+    DEPARTMENT_MANAGEMENT("DEPARTMENT", "Quản lý khoa", List.of(Scope.CREATE, Scope.UPDATE, Scope.VIEW, Scope.DELETE), 3);
     String resourceCode;
     String resourceName;
     Integer priority;

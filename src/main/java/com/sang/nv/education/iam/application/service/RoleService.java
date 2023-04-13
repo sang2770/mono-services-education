@@ -3,8 +3,8 @@ package com.sang.nv.education.iam.application.service;
 
 import com.sang.commonmodel.dto.PageDTO;
 import com.sang.commonmodel.dto.request.FindByIdsRequest;
-import com.sang.nv.education.iam.application.dto.request.RoleCreateOrUpdateRequest;
-import com.sang.nv.education.iam.application.dto.request.RoleSearchRequest;
+import com.sang.nv.education.iam.application.dto.request.Role.RoleCreateOrUpdateRequest;
+import com.sang.nv.education.iam.application.dto.request.Role.RoleSearchRequest;
 import com.sang.nv.education.iam.domain.Role;
 import com.sang.nv.education.iam.domain.UserRole;
 

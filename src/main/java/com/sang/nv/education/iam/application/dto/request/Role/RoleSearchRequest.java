@@ -1,4 +1,4 @@
-package com.sang.nv.education.iam.application.dto.request;
+package com.sang.nv.education.iam.application.dto.request.Role;
 
 
 import com.sang.commonmodel.dto.request.PagingRequest;
