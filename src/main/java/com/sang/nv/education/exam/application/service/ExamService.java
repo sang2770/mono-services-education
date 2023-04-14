@@ -6,6 +6,8 @@ import com.sang.nv.education.exam.application.dto.request.ExamSearchRequest;
 import com.sang.nv.education.exam.application.dto.request.ExamUpdateRequest;
 import com.sang.nv.education.exam.domain.Exam;
 
+import java.util.List;
+
 public interface ExamService {
     /**
      * Create exam
@@ -43,4 +45,6 @@ public interface ExamService {
 
     void addQuestionToExam(String examId, String questionId);
     void removeQuestionToExam(String examId, String questionId);
+
+    Integer countExam(List<String> roomIds);
 }

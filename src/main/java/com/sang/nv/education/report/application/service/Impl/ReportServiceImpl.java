@@ -3,10 +3,8 @@ package com.sang.nv.education.report.application.service.Impl;
 import com.sang.nv.education.exam.application.service.ExamService;
 import com.sang.nv.education.exam.application.service.PeriodService;
 import com.sang.nv.education.exam.application.service.RoomService;
-import com.sang.nv.education.exam.domain.Period;
 import com.sang.nv.education.exam.domain.Room;
 import com.sang.nv.education.iam.application.service.UserService;
-import com.sang.nv.education.iam.domain.User;
 import com.sang.nv.education.report.application.dto.request.ReportGeneralRequest;
 import com.sang.nv.education.report.application.service.ReportService;
 import com.sang.nv.education.report.domain.GeneralReport;
@@ -38,7 +36,8 @@ public class ReportServiceImpl implements ReportService {
         return GeneralReport.builder()
                 .numberRoom(rooms.size())
                 .numberPeriod(this.periodService.count(request.getRoomIds()))
-                .numberExam()
+                .numberExam(this.examService.countExam(request.getRoomIds()))
+                .numberUser(this.userService.countUser(request.getRoomIds()))
                 .build();
     }
 }

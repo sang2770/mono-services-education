@@ -268,6 +268,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer countUser(List<String> roomIds) {
-        return null;
+        return this.userEntityRepository.countUser(UserSearchQuery.builder().roomIds(roomIds).build()).intValue();
     }
 }

@@ -42,6 +42,7 @@ public class ExamServiceImpl implements ExamService {
     private final ExamDomainRepository examDomainRepository;
     private final ExamEntityRepository examEntityRepository;
     private final PeriodEntityRepository periodEntityRepository;
+    private final PeriodRoomEntityRepository periodRoomEntityRepository;
     private final ExamEntityMapper ExamEntityMapper;
     private final RoomDomainRepository roomDomainRepository;
     private final SubjectEntityRepository subjectEntityRepository;
@@ -51,7 +52,7 @@ public class ExamServiceImpl implements ExamService {
                            QuestionEntityRepository questionEntityRepository,
                            ExamQuestionEntityRepository examQuestionEntityRepository, ExamAutoMapper examAutoMapper,
                            QuestionEntityMapper questionEntityMapper, ExamAutoMapperQuery examAutoMapperQuery, ExamDomainRepository ExamDomainRepository,
-                           com.sang.nv.education.exam.infrastructure.persistence.repository.ExamEntityRepository examEntityRepository, PeriodEntityRepository periodEntityRepository, ExamEntityMapper ExamEntityMapper, RoomDomainRepository roomDomainRepository, SubjectEntityRepository subjectEntityRepository) {
+                           com.sang.nv.education.exam.infrastructure.persistence.repository.ExamEntityRepository examEntityRepository, PeriodEntityRepository periodEntityRepository, PeriodRoomEntityRepository periodRoomEntityRepository, ExamEntityMapper ExamEntityMapper, RoomDomainRepository roomDomainRepository, SubjectEntityRepository subjectEntityRepository) {
         this.ExamEntityRepository = ExamEntityRepository;
         this.groupQuestionEntityRepository = GroupQuestionEntityRepository;
         this.questionEntityRepository = questionEntityRepository;
@@ -62,6 +63,7 @@ public class ExamServiceImpl implements ExamService {
         this.examDomainRepository = ExamDomainRepository;
         this.examEntityRepository = examEntityRepository;
         this.periodEntityRepository = periodEntityRepository;
+        this.periodRoomEntityRepository = periodRoomEntityRepository;
         this.ExamEntityMapper = ExamEntityMapper;
         this.roomDomainRepository = roomDomainRepository;
         this.subjectEntityRepository = subjectEntityRepository;
@@ -78,8 +80,7 @@ public class ExamServiceImpl implements ExamService {
             throw new ResponseException(BadRequestError.SUBJECT_NOT_EXISTED);
         }
         List<Question> questions = new ArrayList<>();
-        if (!CollectionUtils.isEmpty(request.getQuestionIds()))
-        {
+        if (!CollectionUtils.isEmpty(request.getQuestionIds())) {
             List<QuestionEntity> questionEntities = this.questionEntityRepository.findAllById(request.getQuestionIds());
             questions.addAll(this.questionEntityMapper.toDomain(questionEntities));
         }
@@ -122,7 +123,7 @@ public class ExamServiceImpl implements ExamService {
         Room room = this.roomDomainRepository.getById(roomId);
         List<PeriodRoom> periodRooms = room.getPeriodRooms();
         List<String> periodIds = periodRooms.stream().map(PeriodRoom::getPeriodId).collect(Collectors.toList());
-        Page<ExamEntity> examEntities = this.examEntityRepository.searchByPeriods(periodIds, room.getSubjectId(),pageable);
+        Page<ExamEntity> examEntities = this.examEntityRepository.searchByPeriods(periodIds, room.getSubjectId(), pageable);
         List<Exam> exams = this.ExamEntityMapper.toDomain(examEntities.getContent());
         return PageDTO.of(exams, request.getPageIndex(), request.getPageSize(), examEntities.getTotalElements());
     }
@@ -149,7 +150,7 @@ public class ExamServiceImpl implements ExamService {
         this.examDomainRepository.save(exam);
     }
 
-    private void generateQuestion(){
+    private void generateQuestion() {
         //        request.getExamGroupQuestionRequests().forEach(examGroupQuestionRequest -> {
 //            List<QuestionEntity> questionEntities = this.questionEntityRepository.findRandomQuestions(
 //                    examGroupQuestionRequest.getGroupQuestionId(), examGroupQuestionRequest.getNumberQuestion());
@@ -173,5 +174,11 @@ public class ExamServiceImpl implements ExamService {
 //            }
 //            questionIds.addAll(entityListValid.stream().map(QuestionEntity::getId).collect(Collectors.toList()));
 //        });
+    }
+
+    @Override
+    public Integer countExam(List<String> roomIds) {
+        List<PeriodRoomEntity> periodEntities = this.periodRoomEntityRepository.findAllByRoomId(roomIds);
+        return this.examEntityRepository.count(ExamSearchQuery.builder().periodIds(periodEntities.stream().map(PeriodRoomEntity::getRoomId).collect(Collectors.toList())).build()).intValue();
     }
 }
