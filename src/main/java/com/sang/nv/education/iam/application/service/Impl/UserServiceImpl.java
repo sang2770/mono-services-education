@@ -265,4 +265,9 @@ public class UserServiceImpl implements UserService {
     public ImportResult importUser(MultipartFile file, HttpServletResponse response) {
         return this.excelService.importUser(file, response);
     }
+
+    @Override
+    public Integer countUser(List<String> roomIds) {
+        return null;
+    }
 }

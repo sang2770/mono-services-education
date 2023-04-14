@@ -81,4 +81,8 @@ public class PeriodServiceImpl implements PeriodService {
         this.periodEntityRepository.save(this.periodEntityMapper.toEntity(period));
     }
 
+    @Override
+    public Integer count(List<String> roomIds) {
+        return this.periodEntityRepository.countAll(roomIds);
+    }
 }

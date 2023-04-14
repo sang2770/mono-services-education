@@ -8,6 +8,8 @@ import com.sang.nv.education.exam.domain.PeriodRoom;
 import com.sang.nv.education.exam.domain.Room;
 import com.sang.nv.education.exam.domain.UserRoom;
 
+import java.util.List;
+
 public interface RoomService {
     /**
      * Create Room
@@ -60,5 +62,11 @@ public interface RoomService {
      * @return PageDTO<Room>
      */
     PageDTO<Room> getMyRoom(RoomSearchRequest request);
+
+//    For client
+
+    List<Room> getByIds(List<String> ids);
+
+    List<Room> getAll();
 
 }

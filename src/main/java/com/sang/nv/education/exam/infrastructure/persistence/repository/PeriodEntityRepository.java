@@ -19,4 +19,7 @@ public interface PeriodEntityRepository extends JpaRepository<PeriodEntity, Stri
     @Query("from PeriodEntity u where u.id in :ids")
     List<PeriodEntity> findAllByIds(@Param("ids") List<String> ids);
 
+    @Query("select count(u) from PeriodEntity u left join PeriodRoomEntity p  where u.deleted = false and ( :roomIds is null or p.roomId in :roomIds)")
+    int countAll(@Param("roomIds") List<String> roomIds);
+
 }

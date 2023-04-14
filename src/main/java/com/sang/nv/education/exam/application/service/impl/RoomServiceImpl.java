@@ -329,6 +329,16 @@ public class RoomServiceImpl implements RoomService {
         return this.searchRoom(query);
     }
 
+    @Override
+    public List<Room> getByIds(List<String> ids) {
+        return this.roomEntityMapper.toDomain(this.roomEntityRepository.findAllById(ids));
+    }
+
+    @Override
+    public List<Room> getAll() {
+        return this.roomEntityMapper.toDomain(this.roomEntityRepository.findAll());
+    }
+
     private PageDTO<Room> searchRoom(RoomSearchQuery query) {
         Long count = this.roomEntityRepository.count(query);
         if (count == 0L) {

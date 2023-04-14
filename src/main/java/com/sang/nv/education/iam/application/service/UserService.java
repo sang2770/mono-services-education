@@ -46,4 +46,6 @@ public interface UserService {
     void downloadTemplateImportUsers(HttpServletResponse response);
 
     ImportResult importUser(MultipartFile file, HttpServletResponse response);
+
+    Integer countUser(List<String> roomIds);
 }
