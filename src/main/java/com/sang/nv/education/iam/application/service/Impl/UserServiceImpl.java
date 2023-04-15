@@ -2,7 +2,6 @@ package com.sang.nv.education.iam.application.service.Impl;
 
 
 import com.sang.commonmodel.dto.PageDTO;
-import com.sang.commonmodel.dto.response.Response;
 import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonutil.StrUtils;
 import com.sang.commonutil.StringUtil;
@@ -31,6 +30,7 @@ import com.sang.nv.education.iam.infrastructure.persistence.repository.ClassesEn
 import com.sang.nv.education.iam.infrastructure.persistence.repository.RoleEntityRepository;
 import com.sang.nv.education.iam.infrastructure.persistence.repository.UserEntityRepository;
 import com.sang.nv.education.iam.infrastructure.persistence.repository.UserRoleEntityRepository;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.readmodel.StatisticUser;
 import com.sang.nv.education.iam.infrastructure.support.enums.RoleStatus;
 import com.sang.nv.education.iam.infrastructure.support.exception.BadRequestError;
 import com.sang.nv.education.iam.infrastructure.support.exception.NotFoundError;
@@ -269,5 +269,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Integer countUser(List<String> roomIds) {
         return this.userEntityRepository.countUser(UserSearchQuery.builder().roomIds(roomIds).build()).intValue();
+    }
+
+    @Override
+    public List<StatisticUser> statisticsUser(Integer year) {
+        return this.userEntityRepository.statisticsUser(year);
     }
 }

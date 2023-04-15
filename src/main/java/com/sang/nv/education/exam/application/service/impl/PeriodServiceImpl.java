@@ -13,6 +13,7 @@ import com.sang.nv.education.exam.domain.Period;
 import com.sang.nv.education.exam.domain.command.PeriodCreateOrUpdateCmd;
 import com.sang.nv.education.exam.infrastructure.persistence.entity.PeriodEntity;
 import com.sang.nv.education.exam.infrastructure.persistence.mapper.PeriodEntityMapper;
+import com.sang.nv.education.exam.infrastructure.persistence.readmodel.StatisticPeriod;
 import com.sang.nv.education.exam.infrastructure.persistence.repository.PeriodEntityRepository;
 import com.sang.nv.education.exam.infrastructure.support.exception.BadRequestError;
 import org.springframework.data.domain.Page;
@@ -84,5 +85,10 @@ public class PeriodServiceImpl implements PeriodService {
     @Override
     public Integer count(List<String> roomIds) {
         return this.periodEntityRepository.countAll(roomIds);
+    }
+
+    @Override
+    public List<StatisticPeriod> statisticPeriod(Integer year) {
+        return this.periodEntityRepository.statisticPeriod(year);
     }
 }

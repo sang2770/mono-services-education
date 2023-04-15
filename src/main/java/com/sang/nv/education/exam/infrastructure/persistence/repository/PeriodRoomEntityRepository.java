@@ -21,7 +21,7 @@ public interface PeriodRoomEntityRepository extends JpaRepository<PeriodRoomEnti
     List<PeriodRoomEntity> findAllByRoomId(@Param("roomId") String roomId);
 
     @Query("from PeriodRoomEntity u where u.deleted = false and u.roomId in :roomIds ")
-    List<PeriodRoomEntity> findAllByRoomId(@Param(":roomIds") List<String> roomId);
+    List<PeriodRoomEntity> findAllByRoomId(@Param("roomIds") List<String> roomId);
 
     @Query("select u from PeriodRoomEntity u join PeriodEntity p on u.periodId = p.id where u.deleted = false and u.roomId = :roomId and ( :periodIds is null or ( u.periodId in :periodIds)) and (:keyword is null or (p.name like :keyword)) ")
     Page<PeriodRoomEntity> searchByRoomId(@Param("roomId") String roomId, @Param("periodIds") List<String> periodIds, @Param("keyword") String keyword, Pageable pageable);

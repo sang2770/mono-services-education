@@ -4,6 +4,7 @@ import com.sang.commonmodel.dto.PageDTO;
 import com.sang.commonmodel.dto.request.BaseSearchRequest;
 import com.sang.nv.education.exam.application.dto.request.PeriodCreateOrUpdateRequest;
 import com.sang.nv.education.exam.domain.Period;
+import com.sang.nv.education.exam.infrastructure.persistence.readmodel.StatisticPeriod;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface PeriodService {
     void delete(String id);
 
     Integer count(List<String> roomIds);
+
+    List<StatisticPeriod> statisticPeriod(Integer year);
 }

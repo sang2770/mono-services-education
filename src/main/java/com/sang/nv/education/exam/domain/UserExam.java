@@ -37,6 +37,7 @@ public class UserExam {
     String periodId;
     String roomId;
     String userId;
+    Integer numberOutTab;
     UserExamStatus status;
     List<UserExamInfo> userExamInfos;
 
@@ -61,6 +62,7 @@ public class UserExam {
         this.status = UserExamStatus.WAITING;
 //        this.timeEnd = Instant.now();
         this.deleted = Boolean.FALSE;
+        this.numberOutTab = 0;
         this.userId = cmd.getUserId();
     }
     public UserExam(UserExamCreateCmd cmd, List<ExamQuestion> examQuestions) {
@@ -81,6 +83,7 @@ public class UserExam {
     public void update(UserExamCreateCmd cmd, List<ExamQuestion> examQuestions) {
         this.timeEnd = Instant.now();
         this.status = UserExamStatus.DONE;
+        this.numberOutTab = cmd.getNumberOutTab();
         if (!CollectionUtils.isEmpty(cmd.getUserExamInfoCreateRequests())) {
             this.validateExam(cmd.getUserExamInfoCreateRequests(), examQuestions);
         }

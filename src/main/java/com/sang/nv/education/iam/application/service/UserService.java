@@ -9,6 +9,7 @@ import com.sang.nv.education.iam.application.dto.request.User.UserSearchRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserUpdateRequest;
 import com.sang.nv.education.iam.application.dto.response.ImportResult;
 import com.sang.nv.education.iam.domain.User;
+import com.sang.nv.education.iam.infrastructure.persistence.repository.readmodel.StatisticUser;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -48,4 +49,6 @@ public interface UserService {
     ImportResult importUser(MultipartFile file, HttpServletResponse response);
 
     Integer countUser(List<String> roomIds);
+
+    List<StatisticUser> statisticsUser(Integer year);
 }

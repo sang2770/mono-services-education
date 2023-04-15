@@ -24,4 +24,6 @@ public class UserExamCreateCmd {
     Float maxPoint;
     List<UserExamInfoCreateRequest> userExamInfoCreateRequests;
 
+    Integer numberOutTab;
+
 }

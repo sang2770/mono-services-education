@@ -17,4 +17,6 @@ public class UserExamCreateRequest extends Request {
     String roomId;
     String periodId;
     List<UserExamInfoCreateRequest> userExamInfoCreateRequests;
+
+    Integer numberOutTab;
 }
