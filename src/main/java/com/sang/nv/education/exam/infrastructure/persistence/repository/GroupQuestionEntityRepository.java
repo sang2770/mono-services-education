@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface GroupQuestionEntityRepository extends JpaRepository<GroupQuestionEntity, String> {
@@ -18,4 +19,7 @@ public interface GroupQuestionEntityRepository extends JpaRepository<GroupQuesti
 
     @Query("from GroupQuestionEntity u where  u.id in :ids")
     List<GroupQuestionEntity> findAllByIds(@Param("ids") List<String> ids);
+
+    @Query("from GroupQuestionEntity u where  u.id = :id and u.deleted = false")
+    Optional<GroupQuestionEntity> findById(@Param("id") String id);
 }
