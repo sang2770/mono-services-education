@@ -15,6 +15,7 @@ import javax.persistence.Index;
 import javax.persistence.Table;
 import java.time.Instant;
 import java.util.Objects;
+
 //Bài thi
 @Entity
 @Table(name = "user_exams", indexes = {
@@ -46,6 +47,9 @@ public class UserExamEntity extends AuditableEntity {
     String examId;
     @Column(name = "userId")
     String userId;
+    
+    @Column(name = "numberOutTab")
+    Integer numberOutTab;
 
     @Column(name = "periodId")
     String periodId;

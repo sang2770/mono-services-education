@@ -63,11 +63,13 @@ public class ReportServiceImpl implements ReportService {
         List<NumberUserAndPeriod> numberUserAndPeriods = new ArrayList<>();
         months.stream().forEach(month -> {
             NumberUserAndPeriod numberUserAndPeriod = new NumberUserAndPeriod();
-            Optional<StatisticUser> statisticUserAdmin = statisticUsers.stream().filter(item -> Objects.equals(item.getMonth(), month.getValue()) && Objects.equals(item.getUserType(),  UserType.MANAGER)).findFirst();
+            Optional<StatisticUser> statisticUserAdmin = statisticUsers.stream().filter(item -> Objects.equals(item.getMonth(), month.getValue()) &&
+                    UserType.MANAGER.equals(item.getUserType())).findFirst();
             if (statisticUserAdmin.isPresent()) {
                 numberUserAndPeriod.setNumberUserAdmin(statisticUserAdmin.get().getNumberUser());
             }
-            Optional<StatisticUser> statisticUserClient = statisticUsers.stream().filter(item -> Objects.equals(item.getMonth(), month.getValue()) && Objects.equals(item.getUserType(), UserType.STUDENT)).findFirst();
+            Optional<StatisticUser> statisticUserClient = statisticUsers.stream().filter(item -> Objects.equals(item.getMonth(), month.getValue()) &&
+                    UserType.STUDENT.equals(item.getUserType())).findFirst();
             if (statisticUserClient.isPresent()) {
                 numberUserAndPeriod.setNumberUserAdmin(statisticUserClient.get().getNumberUser());
             }
