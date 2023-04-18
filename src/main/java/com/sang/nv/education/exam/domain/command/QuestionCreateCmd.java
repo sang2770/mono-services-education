@@ -17,4 +17,5 @@ public class QuestionCreateCmd {
 
     List<AnswerCreateOrUpdateCmd> answerCreateOrUpdateCmdList;
     QuestionLevel questionLevel;
+    List<String> questionFileIds;
 }

@@ -16,4 +16,5 @@ public class QuestionUpdateCmd {
     List<Answer> answers;
     QuestionLevel questionLevel;
     List<AnswerCreateOrUpdateCmd> extraAnswer;
+    List<String> questionFileIds;
 }

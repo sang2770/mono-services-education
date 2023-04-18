@@ -5,14 +5,20 @@ import com.sang.commonmodel.exception.ResponseException;
 import com.sang.nv.education.common.web.support.AbstractDomainRepository;
 import com.sang.nv.education.exam.domain.Answer;
 import com.sang.nv.education.exam.domain.Question;
+import com.sang.nv.education.exam.domain.QuestionFile;
 import com.sang.nv.education.exam.domain.repository.QuestionDomainRepository;
 import com.sang.nv.education.exam.infrastructure.persistence.entity.AnswerEntity;
 import com.sang.nv.education.exam.infrastructure.persistence.entity.QuestionEntity;
+import com.sang.nv.education.exam.infrastructure.persistence.entity.QuestionFileEntity;
 import com.sang.nv.education.exam.infrastructure.persistence.mapper.AnswerEntityMapper;
 import com.sang.nv.education.exam.infrastructure.persistence.mapper.QuestionEntityMapper;
+import com.sang.nv.education.exam.infrastructure.persistence.mapper.QuestionFileEntityMapper;
 import com.sang.nv.education.exam.infrastructure.persistence.repository.AnswerEntityRepository;
 import com.sang.nv.education.exam.infrastructure.persistence.repository.QuestionEntityRepository;
+import com.sang.nv.education.exam.infrastructure.persistence.repository.QuestionFileEntityRepository;
 import com.sang.nv.education.exam.infrastructure.support.exception.NotFoundError;
+import com.sang.nv.education.storage.application.service.StorageService;
+import com.sang.nv.education.storage.domain.FileDomain;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -28,14 +34,20 @@ public class QuestionDomainRepositoryImpl extends AbstractDomainRepository<Quest
     private final QuestionEntityMapper questionEntityMapper;
     private final AnswerEntityMapper answerEntityMapper;
     private final AnswerEntityRepository answerEntityRepository;
+    private final QuestionFileEntityRepository questionFileEntityRepository;
+    private final QuestionFileEntityMapper questionFileEntityMapper;
+    private final StorageService  storageService;
 
     public QuestionDomainRepositoryImpl(QuestionEntityRepository questionEntityRepository,
-                                        QuestionEntityMapper questionEntityMapper, AnswerEntityMapper answerEntityMapper, AnswerEntityRepository answerEntityRepository) {
+                                        QuestionEntityMapper questionEntityMapper, AnswerEntityMapper answerEntityMapper, AnswerEntityRepository answerEntityRepository, QuestionFileEntityRepository questionFileEntityRepository, QuestionFileEntityMapper questionFileEntityMapper, StorageService storageService) {
         super(questionEntityRepository, questionEntityMapper);
         this.questionEntityRepository = questionEntityRepository;
         this.questionEntityMapper = questionEntityMapper;
         this.answerEntityMapper = answerEntityMapper;
         this.answerEntityRepository = answerEntityRepository;
+        this.questionFileEntityRepository = questionFileEntityRepository;
+        this.questionFileEntityMapper = questionFileEntityMapper;
+        this.storageService = storageService;
     }
 
     @Override
@@ -61,6 +73,23 @@ public class QuestionDomainRepositoryImpl extends AbstractDomainRepository<Quest
             );
             question.enrichAnswers(answers);
         });
+        List<QuestionFile> questionFiles = this.questionFileEntityMapper.toDomain(this.questionFileEntityRepository.findAllByQuestionIds(questionIds));
+        List<String> fileIds = questionFiles.stream().map(QuestionFile::getFileId).collect(Collectors.toList());
+        List<FileDomain> fileDomains = this.storageService.getByIds(fileIds);
+        questionFiles.forEach(questionFile -> {
+            FileDomain fileDomain = fileDomains.stream().filter(item ->
+                    Objects.equals(item.getId(), questionFile.getFileId())).findFirst().orElse(null);
+            if (Objects.nonNull(fileDomains))
+            {
+                questionFile.enrichViewUrl(fileDomain.getFilePath());
+                questionFile.enrichFileName(fileDomain.getFileName());
+            }
+        });
+        questionList.forEach(question -> {
+            List<QuestionFile> fileList = questionFiles.stream().filter(item ->
+                    Objects.equals(item.getQuestionId(), question.getId())).collect(Collectors.toList());
+            question.enrichFile(fileList);
+        });
         return questionList;
     }
 
@@ -71,6 +100,12 @@ public class QuestionDomainRepositoryImpl extends AbstractDomainRepository<Quest
         {
             List<AnswerEntity> answerEntities = this.answerEntityMapper.toEntity(domain.getAnswers());
             this.answerEntityRepository.saveAll(answerEntities);
+        }
+        // save question file
+        if (!CollectionUtils.isEmpty(domain.getQuestionFiles()))
+        {
+            List<QuestionFileEntity> questionFileEntities = this.questionFileEntityMapper.toEntity(domain.getQuestionFiles());
+            this.questionFileEntityRepository.saveAll(questionFileEntities);
         }
         return super.save(domain);
     }
@@ -93,6 +128,8 @@ public class QuestionDomainRepositoryImpl extends AbstractDomainRepository<Quest
         // enrich answer
         List<AnswerEntity> answerEntities = this.answerEntityRepository.findByQuestionId(question.getId());
         question.enrichAnswers(this.answerEntityMapper.toDomain(answerEntities));
+        List<QuestionFileEntity> questionFileEntities = this.questionFileEntityRepository.findAllByQuestionIds(List.of(question.getId()));
+        question.enrichFile(this.questionFileEntityMapper.toDomain(questionFileEntities));
         return super.enrich(question);
     }
 

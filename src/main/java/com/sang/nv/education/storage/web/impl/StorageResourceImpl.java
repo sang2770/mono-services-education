@@ -2,6 +2,7 @@ package com.sang.nv.education.storage.web.impl;
 
 
 import com.sang.commonmodel.dto.request.BaseSearchRequest;
+import com.sang.commonmodel.dto.request.FindByIdsRequest;
 import com.sang.commonmodel.dto.response.PagingResponse;
 import com.sang.commonmodel.dto.response.Response;
 import com.sang.nv.education.storage.application.service.StorageService;
@@ -30,6 +31,11 @@ public class StorageResourceImpl implements StorageResource {
     @Override
     public Response<FileDomain> findById(String id) {
         return Response.of(this.storageService.getById(id));
+    }
+
+    @Override
+    public Response<List<FileDomain>> findById(FindByIdsRequest request) {
+        return Response.of(this.storageService.getByIds(request.getIds()));
     }
 
     @Override

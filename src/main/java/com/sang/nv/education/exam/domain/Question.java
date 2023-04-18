@@ -6,7 +6,12 @@ import com.sang.nv.education.exam.domain.command.QuestionCreateCmd;
 import com.sang.nv.education.exam.domain.command.QuestionUpdateCmd;
 import com.sang.nv.education.exam.infrastructure.persistence.entity.QuestionEntity;
 import com.sang.nv.education.exam.infrastructure.support.enums.QuestionLevel;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.springframework.util.CollectionUtils;
 
@@ -30,6 +35,8 @@ public class Question {
     Boolean deleted;
     QuestionLevel level;
     List<Answer> answers;
+    List<String> questionFileIds;
+    List<QuestionFile> questionFiles;
 
 
     public Question(QuestionCreateCmd cmd){
@@ -40,6 +47,11 @@ public class Question {
         this.answers = new ArrayList<>();
         this.subjectId = cmd.getSubjectId();
         this.level = cmd.getQuestionLevel();
+        if (!CollectionUtils.isEmpty(cmd.getQuestionFileIds()))
+        {
+            this.questionFileIds = cmd.getQuestionFileIds();
+            this.questionFiles = cmd.getQuestionFileIds().stream().map(item -> new QuestionFile(this.id, item)).collect(Collectors.toList());
+        }
         if (!CollectionUtils.isEmpty(cmd.getAnswerCreateOrUpdateCmdList()))
         {
             this.answers = cmd.getAnswerCreateOrUpdateCmdList().stream().map(item -> new Answer(this.id, item)).collect(Collectors.toList());
@@ -74,6 +86,23 @@ public class Question {
                 this.answers.add(new Answer(this.id, item));
             });
         }
+        if(!CollectionUtils.isEmpty(cmd.getQuestionFileIds()))
+        {
+            this.questionFileIds = cmd.getQuestionFileIds();
+            this.questionFiles.forEach(QuestionFile::deleted);
+            cmd.getQuestionFileIds().stream().forEach(item -> {
+                Optional<QuestionFile> optionalQuestionFile = this.questionFiles.stream().filter(questionFile -> Objects.equals(item, questionFile.fileId)).findFirst();
+                if (optionalQuestionFile.isPresent())
+                {
+                    QuestionFile questionFile = optionalQuestionFile.get();
+                    questionFile.unDelete();
+                }
+                else
+                {
+                    this.questionFiles.add(new QuestionFile(this.id, item));
+                }
+            });
+        }
     }
 
     public void deleted(){
@@ -87,5 +116,11 @@ public class Question {
     public void enrichAnswers(List<Answer> answers)
     {
         this.answers = answers;
+    }
+
+    public void enrichFile(List<QuestionFile> questionFiles)
+    {
+        this.questionFileIds = questionFiles.stream().map(QuestionFile::getFileId).collect(Collectors.toList());
+        this.questionFiles = questionFiles;
     }
 }

@@ -112,6 +112,11 @@ public class StorageServiceImpl implements StorageService {
         return fileDomainList;
     }
 
+    @Override
+    public List<FileDomain> getByIds(List<String> ids) {
+        return this.fileEntityMapper.toDomain(this.fileEntityRepository.findByIds(ids));
+    }
+
     private FileDomain convertResponseToFileDomain(FileFirebaseResponse fileFirebaseResponse){
         FileCmd cmd = FileCmd.builder()
                 .fileName(fileFirebaseResponse.getFileName())

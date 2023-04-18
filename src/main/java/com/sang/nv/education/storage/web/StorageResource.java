@@ -1,6 +1,7 @@
 package com.sang.nv.education.storage.web;
 
 import com.sang.commonmodel.dto.request.BaseSearchRequest;
+import com.sang.commonmodel.dto.request.FindByIdsRequest;
 import com.sang.commonmodel.dto.response.PagingResponse;
 import com.sang.commonmodel.dto.response.Response;
 import com.sang.nv.education.storage.domain.FileDomain;
@@ -21,6 +22,12 @@ public interface StorageResource {
     @ApiOperation("Find file by id")
     @GetMapping("/storages/find-by-id/{id}")
     Response<FileDomain> findById(@PathVariable String id);
+
+    @ApiOperation("Find file by ids")
+    @GetMapping("/storages/find-by-ids")
+    Response<List<FileDomain>> findById(FindByIdsRequest request);
+
+
 
     @ApiOperation("Search file")
     @GetMapping("/storages/search")

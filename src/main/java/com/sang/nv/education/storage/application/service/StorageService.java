@@ -17,4 +17,6 @@ public interface StorageService {
     FileDomain getById(String id);
 
     List<FileDomain> uploadMultipleFile(List<MultipartFile> fileList);
+
+    List<FileDomain> getByIds(List<String> ids);
 }
