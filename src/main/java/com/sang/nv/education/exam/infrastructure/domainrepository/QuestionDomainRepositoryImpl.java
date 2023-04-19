@@ -79,7 +79,7 @@ public class QuestionDomainRepositoryImpl extends AbstractDomainRepository<Quest
         questionFiles.forEach(questionFile -> {
             FileDomain fileDomain = fileDomains.stream().filter(item ->
                     Objects.equals(item.getId(), questionFile.getFileId())).findFirst().orElse(null);
-            if (Objects.nonNull(fileDomains))
+            if (Objects.nonNull(fileDomain))
             {
                 questionFile.enrichViewUrl(fileDomain.getFilePath());
                 questionFile.enrichFileName(fileDomain.getFileName());

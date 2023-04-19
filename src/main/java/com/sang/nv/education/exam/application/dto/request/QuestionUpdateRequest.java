@@ -19,4 +19,5 @@ public class QuestionUpdateRequest extends Request {
     QuestionLevel questionLevel;
     List<Answer> answers;
     List<AnswerCreateOrUpdateRequest> extraAnswer;
+    List<String> questionFileIds;
 }

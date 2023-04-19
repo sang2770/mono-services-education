@@ -3,6 +3,9 @@ spring:
     name: education
   swagger:
     enabled: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
   jpa:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
