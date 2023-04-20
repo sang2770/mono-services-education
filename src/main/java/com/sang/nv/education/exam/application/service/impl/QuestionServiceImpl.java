@@ -13,6 +13,7 @@ import com.sang.nv.education.exam.application.service.QuestionService;
 import com.sang.nv.education.exam.domain.Answer;
 import com.sang.nv.education.exam.domain.GroupQuestion;
 import com.sang.nv.education.exam.domain.Question;
+import com.sang.nv.education.exam.domain.QuestionFile;
 import com.sang.nv.education.exam.domain.command.QuestionCreateCmd;
 import com.sang.nv.education.exam.domain.command.QuestionUpdateCmd;
 import com.sang.nv.education.exam.domain.repository.QuestionDomainRepository;
@@ -29,6 +30,7 @@ import com.sang.nv.education.exam.infrastructure.persistence.repository.Question
 import com.sang.nv.education.exam.infrastructure.support.enums.QuestionLevel;
 import com.sang.nv.education.exam.infrastructure.support.exception.BadRequestError;
 import com.sang.nv.education.exam.infrastructure.support.exception.NotFoundError;
+import com.sang.nv.education.storage.domain.FileDomain;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -125,9 +127,22 @@ public class QuestionServiceImpl implements QuestionService {
         if (Objects.nonNull(request.getNumberLowQuestion()) && request.getNumberLowQuestion() > 0) {
             questions.addAll(this.getQuestionByLevel(questionEntities, QuestionLevel.LOW, request.getNumberHighQuestion()));
         }
+        this.enrichQuestions(questions);
         return questions;
     }
 
+    private void enrichQuestions(List<Question> questions)
+    {
+        List<String> questionIds = questions.stream().map(Question::getId).collect(Collectors.toList());
+        List<AnswerEntity> answerEntities = this.answerEntityRepository.findAllByQuestionIds(questionIds);
+        questions.forEach(question -> {
+            List<Answer> answers = this.answerEntityMapper.toDomain(
+                    answerEntities.stream().filter(item ->
+                            Objects.equals(item.getQuestionId(), question.getId())).collect(Collectors.toList())
+            );
+            question.enrichAnswers(answers);
+        });
+    }
     private List<Question> getQuestionByLevel(List<QuestionEntity> questionEntities, QuestionLevel questionLevel, Integer number) {
         List<QuestionEntity> questions = questionEntities.stream().filter(questionEntity ->
                 Objects.equals(questionEntity.getLevel(), questionLevel)).collect(Collectors.toList());
