@@ -11,7 +11,6 @@ import com.sang.nv.education.exam.application.dto.response.UserExamResult;
 import com.sang.nv.education.exam.application.mapper.ExamAutoMapper;
 import com.sang.nv.education.exam.application.service.UserExamService;
 import com.sang.nv.education.exam.domain.Exam;
-import com.sang.nv.education.exam.domain.Room;
 import com.sang.nv.education.exam.domain.UserExam;
 import com.sang.nv.education.exam.domain.command.UserExamCreateCmd;
 import com.sang.nv.education.exam.domain.repository.ExamDomainRepository;
@@ -79,7 +78,7 @@ public class UserExamServiceImpl implements UserExamService {
         this.userExamDomainRepository.save(userExam);
         Long duration = 0L;
         if (Objects.nonNull(userExam.getTimeStart()) && Objects.nonNull(userExam.getTimeEnd())) {
-            duration = Duration.between(userExam.getTimeStart(), userExam.getTimeEnd()).toMinutes();
+            duration = Duration.between(userExam.getTimeStart(), userExam.getTimeEnd()).toSeconds();
         }
         return UserExamResult.builder()
                 .userId(userExam.getUserId())
