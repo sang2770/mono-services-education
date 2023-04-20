@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public enum BadRequestError implements ResponseError {
     BAD_GROUP_REQUEST(400, "BAD_GROUP_REQUEST"),
-    NUMBER_QUESTION_INVALID(400, "NUMBER_QUESTION_INVALID"),
+    NUMBER_QUESTION_INVALID(400, "Số lượng câu hỏi không đủ"),
     QUESTION_IS_IN_EXAM(400, "QUESTION_IS_IN_EXAM"),
     QUESTION_IS_NOT_IN_EXAM(400, "QUESTION_IS_NOT_IN_EXAM"),
     USER_IS_NOT_IN_GROUP(400, "USER_IS_NOT_IN_GROUP"),
