@@ -15,6 +15,7 @@ import com.sang.nv.education.exam.domain.UserExam;
 import com.sang.nv.education.exam.domain.command.UserExamCreateCmd;
 import com.sang.nv.education.exam.domain.repository.ExamDomainRepository;
 import com.sang.nv.education.exam.domain.repository.UserExamDomainRepository;
+import com.sang.nv.education.exam.infrastructure.persistence.entity.ExamEntity;
 import com.sang.nv.education.exam.infrastructure.persistence.entity.RoomEntity;
 import com.sang.nv.education.exam.infrastructure.persistence.entity.UserExamEntity;
 import com.sang.nv.education.exam.infrastructure.persistence.mapper.UserExamEntityMapper;
@@ -30,9 +31,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import static java.time.temporal.ChronoUnit.SECONDS;
 
 @Service
 public class UserExamServiceImpl implements UserExamService {
@@ -105,7 +110,20 @@ public class UserExamServiceImpl implements UserExamService {
         if (Objects.equals(userExam.getStatus(), UserExamStatus.DONE)) {
             throw new ResponseException(BadRequestError.USER_EXAM_FINISHED);
         }
+
         if (Objects.equals(userExam.getStatus(), UserExamStatus.WAITING)) {
+            ExamEntity examEntity = this.ExamEntityRepository.findById(userExam.getExamId()).orElseThrow(() -> new ResponseException(NotFoundError.EXAM_NOT_EXISTED));
+            Long delayTime = 0L;
+            if (Objects.nonNull(examEntity.getTimeDelay()))
+            {
+                delayTime = examEntity.getTimeDelay();
+            }
+            Long totalTime = Duration.between(userExam.getCreatedAt(), Instant.now()).toSeconds();
+            if (totalTime > Duration.ofMinutes(delayTime).get(SECONDS)) {
+                userExam.overTimeExam();
+                this.userExamDomainRepository.save(userExam);
+                return userExam;
+            }
             userExam.startTesting();
             userExam.updateStatus(UserExamStatus.DOING);
             this.userExamDomainRepository.save(userExam);

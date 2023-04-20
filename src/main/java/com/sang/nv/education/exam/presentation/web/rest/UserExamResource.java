@@ -44,5 +44,4 @@ public interface UserExamResource {
     @ApiOperation(value = "Testing Exam by id")
     @GetMapping("/user-exams/{id}/testing")
     Response<UserExam> testingExam(@PathVariable String id);
-
 }
