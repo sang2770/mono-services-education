@@ -294,6 +294,10 @@ public class RoomServiceImpl implements RoomService {
             throw new ResponseException(NotFoundError.PERIOD_NOT_EXISTED_IN_ROOM);
         }
         List<Exam> exams = this.examEntityMapper.toDomain(this.examEntityRepository.findAllByPeriodAnsSubject(request.getPeriodId(), room.getSubjectId()));
+        if (!CollectionUtils.isEmpty(exams))
+        {
+            throw new ResponseException(BadRequestError.PERIOD_NOT_EXAM);
+        }
         List<UserRoom> userRooms = this.userRoomEntityMapper.toDomain(this.userRoomEntityRepository.findByRoomId(id));
         List<UserExam> userExams = new ArrayList<>();
         AtomicInteger count = new AtomicInteger();

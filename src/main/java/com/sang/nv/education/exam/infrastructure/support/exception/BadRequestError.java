@@ -16,6 +16,7 @@ public enum BadRequestError implements ResponseError {
     ROOM_NOT_EXISTED(400, "Room not existed"),
     SUBJECT_NOT_EXISTED(400, "Subject not existed"),
     USER_EXAM_FINISHED(400, "User exam finished"),
+    PERIOD_NOT_EXAM(400, "PERIOD NOT EXAM"),
 
     USER_INVALID(400, "User invalid")
 

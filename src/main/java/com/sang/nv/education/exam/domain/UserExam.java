@@ -2,6 +2,7 @@ package com.sang.nv.education.exam.domain;
 
 import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonutil.IdUtils;
+import com.sang.commonutil.StrUtils;
 import com.sang.nv.education.exam.application.dto.request.UserExamInfoCreateRequest;
 import com.sang.nv.education.exam.application.dto.response.UserExamResult;
 import com.sang.nv.education.exam.domain.command.UserExamCreateCmd;
@@ -84,6 +85,7 @@ public class UserExam {
         this.timeEnd = Instant.now();
         this.status = UserExamStatus.DONE;
         this.numberOutTab = cmd.getNumberOutTab();
+        this.totalPoint = 0f;
         if (!CollectionUtils.isEmpty(cmd.getUserExamInfoCreateRequests())) {
             this.validateExam(cmd.getUserExamInfoCreateRequests(), examQuestions);
         }
@@ -96,21 +98,26 @@ public class UserExam {
             if (optionalExamQuestion.isEmpty()) {
                 throw new ResponseException(NotFoundError.QUESTION_NOT_EXISTED);
             }
+            Boolean status = Boolean.FALSE;
             ExamQuestion examQuestion = optionalExamQuestion.get();
-            Optional<Answer> optionalAnswer = examQuestion.getQuestion().answers.stream().filter(answer ->
-                    Objects.equals(answer.id, userExamInfoCreateRequest.getAnswerId())).findFirst();
-            if (optionalAnswer.isEmpty()) {
-                throw new ResponseException(NotFoundError.ANSWER_NOT_EXISTED);
+            if (Objects.nonNull(userExamInfoCreateRequest.getAnswerId()) && !StrUtils.isBlank(userExamInfoCreateRequest.getAnswerId())) {
+                Optional<Answer> optionalAnswer = examQuestion.getQuestion().answers.stream().filter(answer ->
+                        Objects.equals(answer.id, userExamInfoCreateRequest.getAnswerId())).findFirst();
+                if (optionalAnswer.isEmpty()) {
+                    throw new ResponseException(NotFoundError.ANSWER_NOT_EXISTED);
+                }
+                Answer answer = optionalAnswer.get();
+                if (answer.getStatus())
+                {
+                    this.totalPoint += examQuestion.point;
+                }
+                status = answer.getStatus();
             }
-            Answer answer = optionalAnswer.get();
-            if (answer.getStatus())
-            {
-                this.totalPoint += examQuestion.point;
-            }
+
             this.userExamInfos.add(new UserExamInfo(UserExamInfoCreateCmd.builder()
                     .answerId(userExamInfoCreateRequest.getAnswerId())
                     .questionId(userExamInfoCreateRequest.getQuestionId())
-                    .status(Objects.equals(answer.getStatus(), Boolean.TRUE) ? Boolean.TRUE : Boolean.FALSE)
+                    .status(status)
                     .point(examQuestion.getPoint())
                     .userExamId(this.id)
                     .build()));
