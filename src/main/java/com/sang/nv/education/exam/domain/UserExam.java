@@ -1,5 +1,6 @@
 package com.sang.nv.education.exam.domain;
 
+import com.sang.commonmodel.domain.AuditableDomain;
 import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonutil.IdUtils;
 import com.sang.commonutil.StrUtils;
@@ -26,7 +27,7 @@ import java.util.Optional;
 @SuperBuilder
 @Setter(AccessLevel.PRIVATE)
 @Getter
-public class UserExam {
+public class UserExam extends AuditableDomain {
     String id;
     String code;
     Float totalPoint;
@@ -160,5 +161,11 @@ public class UserExam {
     }
     public void enrichUserExamResult(UserExamResult userExamResult){
         this.userExamResult = userExamResult;
+    }
+
+    public void overTimeExam(){
+        this.status = UserExamStatus.OVERTIME;
+        this.timeEnd = Instant.now();
+        this.totalPoint = 0f;
     }
 }

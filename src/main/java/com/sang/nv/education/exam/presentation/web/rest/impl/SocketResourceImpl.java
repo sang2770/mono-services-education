@@ -27,6 +27,7 @@ public class SocketResourceImpl implements SocketResource {
         try {
             this.roomService.sendExam(id, request);
         }catch (Exception e){
+            log.error("sendExam", e);
             return Response.of(Boolean.FALSE);
         }
         return Response.of(Boolean.TRUE);
@@ -38,7 +39,7 @@ public class SocketResourceImpl implements SocketResource {
             UserExamResult userExamResult = this.userExamService.send(roomId, id, request);
             return Response.of(userExamResult);
         }catch (RuntimeException e){
-            return Response.of(UserExamResult.builder().build());
+            return Response.fail(e);
         }
     }
 }

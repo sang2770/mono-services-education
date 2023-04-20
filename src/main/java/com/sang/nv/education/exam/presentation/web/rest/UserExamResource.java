@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Api(tags = "Exam Resource")
 @RequestMapping("/api")
 public interface UserExamResource {
-//    @ApiOperation(value = "Create Exam")
-//    @PostMapping("/user-exams/{id}")
-//    Response<UserExamResult> sendTest(@PathVariable String id, @RequestBody UserExamCreateRequest request);
+    @ApiOperation(value = "Create Exam")
+    @PostMapping("/user-exams/room/{roomId}/user-exams/{id}/test")
+    Response<UserExamResult> sendTest(@PathVariable String roomId, @PathVariable String id, @RequestBody UserExamCreateRequest request);
 
     @ApiOperation(value = "Get Exam by id")
     @GetMapping("/user-exams/{id}")
@@ -44,5 +44,4 @@ public interface UserExamResource {
     @ApiOperation(value = "Testing Exam by id")
     @GetMapping("/user-exams/{id}/testing")
     Response<UserExam> testingExam(@PathVariable String id);
-
 }
