@@ -12,4 +12,5 @@ import java.util.List;
 @AllArgsConstructor
 public class ReportGeneralRequest extends Request {
     List<String> roomIds;
+    List<String> userIds;
 }

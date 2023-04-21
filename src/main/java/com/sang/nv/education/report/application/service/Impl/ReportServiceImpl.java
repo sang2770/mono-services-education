@@ -3,6 +3,7 @@ package com.sang.nv.education.report.application.service.Impl;
 import com.sang.commonmodel.enums.UserType;
 import com.sang.commonutil.DateUtils;
 import com.sang.commonutil.ReportingPeriodType;
+import com.sang.nv.education.exam.application.dto.request.RoomSearchRequest;
 import com.sang.nv.education.exam.application.service.ExamService;
 import com.sang.nv.education.exam.application.service.PeriodService;
 import com.sang.nv.education.exam.application.service.RoomService;
@@ -41,14 +42,12 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public GeneralReport generalReport(ReportGeneralRequest request) {
-        List<Room> rooms = new ArrayList<>();
-        if (!CollectionUtils.isEmpty(request.getRoomIds())) {
-            rooms.addAll(roomService.getByIds(request.getRoomIds()));
-        } else {
-            rooms.addAll(roomService.getAll());
+        RoomSearchRequest roomSearchRequest = RoomSearchRequest.builder().build();
+        if (!CollectionUtils.isEmpty(request.getUserIds())) {
+            roomSearchRequest.setUserIds(request.getUserIds());
         }
         return GeneralReport.builder()
-                .numberRoom(rooms.size())
+                .numberRoom(roomService.search(roomSearchRequest).getData().size())
                 .numberPeriod(this.periodService.count(request.getRoomIds()))
                 .numberExam(this.examService.countExam(request.getRoomIds()))
                 .numberUser(this.userService.countUser(request.getRoomIds()))

@@ -71,6 +71,11 @@ public class RoomEntityRepositoryImpl implements RoomEntityRepositoryCustom {
             sql.append(" and ( EN.subjectId in :subjectIds )");
             values.put("subjectIds", query.getSubjectIds());
         }
+
+        if (!CollectionUtils.isEmpty(query.getIds())) {
+            sql.append(" and ( EN.id in :roomIds )");
+            values.put("roomIds", query.getIds());
+        }
         return sql;
     }
 

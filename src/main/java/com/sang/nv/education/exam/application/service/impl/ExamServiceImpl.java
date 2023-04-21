@@ -178,7 +178,7 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     public Integer countExam(List<String> roomIds) {
-        List<PeriodRoomEntity> periodEntities = this.periodRoomEntityRepository.findAllByRoomId(roomIds);
+        List<PeriodRoomEntity> periodEntities = this.periodRoomEntityRepository.findAllByRoomIds(roomIds);
         return this.examEntityRepository.count(ExamSearchQuery.builder().periodIds(periodEntities.stream().map(PeriodRoomEntity::getRoomId).collect(Collectors.toList())).build()).intValue();
     }
 }

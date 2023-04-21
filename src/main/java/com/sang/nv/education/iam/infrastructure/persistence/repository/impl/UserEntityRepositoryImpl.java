@@ -32,6 +32,10 @@ public class UserEntityRepositoryImpl implements UserEntityRepositoryCustom {
         {
             sql.append("left join UserRoleEntity UR on UR.userId = U.id ");
         }
+        if (!CollectionUtils.isEmpty(querySearch.getRoomIds()))
+        {
+            sql.append(" left join UserRoomEntity UB on UB.userId = U.id ");
+        }
         sql.append(createWhereQuery(querySearch, values));
         sql.append(createOrderQuery(querySearch.getSortBy()));
         Query query = entityManager.createQuery(sql.toString(), UserEntity.class);
@@ -49,6 +53,10 @@ public class UserEntityRepositoryImpl implements UserEntityRepositoryCustom {
         if (!CollectionUtils.isEmpty(querySearch.getRoleIds()))
         {
             sql.append(" left join UserRoleEntity UR on UR.userId = U.id ");
+        }
+        if (!CollectionUtils.isEmpty(querySearch.getRoomIds()))
+        {
+            sql.append(" left join UserRoomEntity UB on UB.userId = U.id ");
         }
         sql.append(createWhereQuery(querySearch, values));
         Query query = entityManager.createQuery(sql.toString(), Long.class);
@@ -84,6 +92,11 @@ public class UserEntityRepositoryImpl implements UserEntityRepositoryCustom {
         {
             sql.append(" and U.classId IN :classIds ");
             values.put("classIds", querySearch.getClassIds());
+        }
+        if (!CollectionUtils.isEmpty(querySearch.getRoomIds()))
+        {
+            sql.append(" and UB.roomId IN :roomIds ");
+            values.put("roomIds", querySearch.getRoomIds());
         }
         return sql;
     }

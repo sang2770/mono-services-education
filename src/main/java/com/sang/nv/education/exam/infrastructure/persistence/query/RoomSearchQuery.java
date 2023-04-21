@@ -13,4 +13,5 @@ import java.util.List;
 public class RoomSearchQuery extends PagingQuery {
     List<String> subjectIds;
     List<String> userIds;
+    List<String> ids;
 }

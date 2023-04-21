@@ -70,7 +70,7 @@ public class RoomDomainRepositoryImpl extends AbstractDomainRepository<Room, Roo
         // enrich UserRoom
         List<UserRoom> UserRooms = this.UserRoomEntityMapper.toDomain(this.UserRoomEntityRepository.findByRoomId(Room.getId()));
         Room.enrichUser(UserRooms);
-        List<PeriodRoom> periodRooms = this.periodRoomEntityMapper.toDomain(this.periodRoomEntityRepository.findAllByRoomId(Room.getId()));
+        List<PeriodRoom> periodRooms = this.periodRoomEntityMapper.toDomain(this.periodRoomEntityRepository.findAllByRoomIds(Room.getId()));
         Room.enrichExam(periodRooms);
         return super.enrich(Room);
     }
