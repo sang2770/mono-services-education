@@ -5,6 +5,9 @@ import com.sang.nv.education.exam.application.dto.request.UserExamCreateRequest;
 import com.sang.nv.education.exam.application.dto.request.UserRoomSearchRequest;
 import com.sang.nv.education.exam.application.dto.response.UserExamResult;
 import com.sang.nv.education.exam.domain.UserExam;
+import com.sang.nv.education.report.application.dto.request.UserExamReportRequest;
+
+import java.util.List;
 
 public interface UserExamService {
     /**
@@ -29,4 +32,7 @@ public interface UserExamService {
 
     PageDTO<UserExam> searchByRoomAndPeriod(String roomId, String periodId, UserRoomSearchRequest request);
     PageDTO<UserExam> getMyExamByRoomAndPeriod(String roomId, String periodId, UserRoomSearchRequest request);
+
+    List<UserExamResult> statisticResult(UserExamReportRequest request);
+
 }

@@ -22,4 +22,5 @@ public class UserExamResult {
     Float totalTime;
     Float point;
     String userExamId;
+    Instant createdAt;
 }

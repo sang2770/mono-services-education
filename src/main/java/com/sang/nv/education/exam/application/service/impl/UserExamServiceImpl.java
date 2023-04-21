@@ -27,6 +27,7 @@ import com.sang.nv.education.exam.infrastructure.persistence.repository.UserExam
 import com.sang.nv.education.exam.infrastructure.support.enums.UserExamStatus;
 import com.sang.nv.education.exam.infrastructure.support.exception.BadRequestError;
 import com.sang.nv.education.exam.infrastructure.support.exception.NotFoundError;
+import com.sang.nv.education.report.application.dto.request.UserExamReportRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,7 @@ import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 
@@ -74,8 +76,7 @@ public class UserExamServiceImpl implements UserExamService {
             throw new ResponseException(BadRequestError.USER_EXAM_FINISHED);
         }
         Optional<RoomEntity> roomEntityOptional = this.roomEntityRepository.findById(roomId);
-        if (roomEntityOptional.isEmpty())
-        {
+        if (roomEntityOptional.isEmpty()) {
             throw new ResponseException(NotFoundError.ROOM_NOT_FOUND);
         }
         userExam.update(cmd, exam.getExamQuestions());
@@ -114,8 +115,7 @@ public class UserExamServiceImpl implements UserExamService {
         if (Objects.equals(userExam.getStatus(), UserExamStatus.WAITING)) {
             ExamEntity examEntity = this.ExamEntityRepository.findById(userExam.getExamId()).orElseThrow(() -> new ResponseException(NotFoundError.EXAM_NOT_EXISTED));
             Long delayTime = 0L;
-            if (Objects.nonNull(examEntity.getTimeDelay()))
-            {
+            if (Objects.nonNull(examEntity.getTimeDelay())) {
                 delayTime = examEntity.getTimeDelay();
             }
             Long totalTime = Duration.between(userExam.getCreatedAt(), Instant.now()).toSeconds();
@@ -151,5 +151,28 @@ public class UserExamServiceImpl implements UserExamService {
         }
         request.setUserIds(List.of(userId.get()));
         return this.userExamDomainRepository.getMyExam(roomId, periodId, request.getUserIds(), pageable);
+    }
+
+    @Override
+    public List<UserExamResult> statisticResult(UserExamReportRequest request) {
+        List<UserExam> userExams = this.userExamEntityMapper.toDomain(this.userExamEntityRepository.statisticResult(List.of(UserExamStatus.DONE, UserExamStatus.OVERTIME), request.getUserIds(), request.getFromDate(), request.getToDate()));
+        return userExams.stream().map(userExam -> {
+            Long duration = 0L;
+            if (Objects.nonNull(userExam.getTimeStart()) && Objects.nonNull(userExam.getTimeEnd())) {
+                duration = Duration.between(userExam.getTimeStart(), userExam.getTimeEnd()).toSeconds();
+            }
+            return UserExamResult.builder()
+                    .userId(userExam.getUserId())
+                    .examId(userExam.getExamId())
+                    .point(userExam.getTotalPoint())
+                    .totalPoint(userExam.getMaxPoint())
+                    .user(userExam.getUser())
+                    .timeStart(userExam.getTimeStart())
+                    .timeEnd(userExam.getTimeEnd())
+                    .totalTimeUsed(duration)
+                    .userExamId(userExam.getId())
+                    .createdAt(userExam.getCreatedAt())
+                    .build();
+        }).collect(Collectors.toList());
     }
 }

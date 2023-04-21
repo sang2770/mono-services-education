@@ -3,7 +3,7 @@ package com.sang.nv.education.report.application.service.Impl;
 import com.sang.commonutil.DateUtils;
 import com.sang.commonutil.ReportingPeriodType;
 import com.sang.nv.education.exam.application.dto.request.RoomSearchRequest;
-import com.sang.nv.education.exam.application.service.ExamService;
+import com.sang.nv.education.exam.application.dto.response.UserExamResult;
 import com.sang.nv.education.exam.application.service.PeriodService;
 import com.sang.nv.education.exam.application.service.RoomService;
 import com.sang.nv.education.exam.application.service.UserExamService;
@@ -14,7 +14,7 @@ import com.sang.nv.education.iam.infrastructure.persistence.repository.readmodel
 import com.sang.nv.education.iam.infrastructure.support.enums.UserType;
 import com.sang.nv.education.report.application.dto.request.NumberUserAndPeriodReportRequest;
 import com.sang.nv.education.report.application.dto.request.ReportGeneralRequest;
-import com.sang.nv.education.report.application.mapper.ReportAutoMapper;
+import com.sang.nv.education.report.application.dto.request.UserExamReportRequest;
 import com.sang.nv.education.report.application.service.ReportService;
 import com.sang.nv.education.report.domain.GeneralReport;
 import com.sang.nv.education.report.domain.NumberUserAndPeriod;
@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -35,10 +36,8 @@ import java.util.Optional;
 public class ReportServiceImpl implements ReportService {
     private final RoomService roomService;
     private final UserService userService;
-    private final ExamService examService;
     private final PeriodService periodService;
     private final UserExamService userExamService;
-    private final ReportAutoMapper reportAutoMapper;
 
     @Override
     public GeneralReport generalReport(ReportGeneralRequest request) {
@@ -46,11 +45,13 @@ public class ReportServiceImpl implements ReportService {
         if (!CollectionUtils.isEmpty(request.getUserIds())) {
             roomSearchRequest.setUserIds(request.getUserIds());
         }
+        List<Room> rooms = roomService.search(roomSearchRequest).getData();
+        List<String> roomIds = rooms.stream().map(Room::getId).collect(Collectors.toList());
         return GeneralReport.builder()
-                .numberRoom(roomService.search(roomSearchRequest).getData().size())
-                .numberPeriod(this.periodService.count(request.getRoomIds()))
-                .numberExam(this.examService.countExam(request.getRoomIds()))
-                .numberUser(this.userService.countUser(request.getRoomIds()))
+                .numberRoom(rooms.size())
+                .numberPeriod(this.periodService.count(roomIds))
+                .numberExam(this.periodService.count(roomIds))
+                .numberUser(this.periodService.count(roomIds))
                 .build();
     }
 
@@ -75,6 +76,11 @@ public class ReportServiceImpl implements ReportService {
             numberUserAndPeriods.add(numberUserAndPeriod);
         });
         return numberUserAndPeriods;
+    }
+
+    @Override
+    public List<UserExamResult> userExamReport(UserExamReportRequest request) {
+        return userExamService.statisticResult(request);
     }
 
 

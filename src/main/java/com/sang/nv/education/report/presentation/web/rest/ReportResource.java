@@ -2,8 +2,10 @@ package com.sang.nv.education.report.presentation.web.rest;
 
 
 import com.sang.commonmodel.dto.response.Response;
+import com.sang.nv.education.exam.application.dto.response.UserExamResult;
 import com.sang.nv.education.report.application.dto.request.NumberUserAndPeriodReportRequest;
 import com.sang.nv.education.report.application.dto.request.ReportGeneralRequest;
+import com.sang.nv.education.report.application.dto.request.UserExamReportRequest;
 import com.sang.nv.education.report.domain.GeneralReport;
 import com.sang.nv.education.report.domain.NumberUserAndPeriod;
 import io.swagger.annotations.Api;
@@ -26,4 +28,9 @@ public interface ReportResource {
     @ApiOperation(value = "Report number user")
     @GetMapping("/report/number-users")
     Response<List<NumberUserAndPeriod>> numberUserAndPeriodReport(NumberUserAndPeriodReportRequest request);
+
+    // Thong ke ket qua thi
+    @ApiOperation(value = "Report user exam")
+    @GetMapping("/report/user-exams")
+    Response<List<UserExamResult>> userExamReport(UserExamReportRequest request);
 }
