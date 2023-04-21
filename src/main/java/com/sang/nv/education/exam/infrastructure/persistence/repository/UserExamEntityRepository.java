@@ -33,8 +33,8 @@ public interface UserExamEntityRepository extends JpaRepository<UserExamEntity, 
 
     @Query("from UserExamEntity u where u.deleted = false and u.status in :statuses " +
             "and (:userIds is null or u.userId in :userIds) " +
-            "and (:fromDate is null or u.createdAt >= :fromDate) " +
-            "and (:toDate is null or u.createdAt <= :toDate)")
+            "and (cast(:fromDate as timestamp) is null or u.createdAt >= :fromDate) " +
+            "and (cast(:fromDate as timestamp) is null or u.createdAt <= :toDate)")
     List<UserExamEntity> statisticResult(@Param("statuses") List<UserExamStatus> status,
                                          @Param("userIds") List<String> userIds,
                                          @Param("fromDate") Instant fromDate,

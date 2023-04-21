@@ -33,7 +33,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -155,7 +154,9 @@ public class UserExamServiceImpl implements UserExamService {
 
     @Override
     public List<UserExamResult> statisticResult(UserExamReportRequest request) {
-        List<UserExam> userExams = this.userExamEntityMapper.toDomain(this.userExamEntityRepository.statisticResult(List.of(UserExamStatus.DONE, UserExamStatus.OVERTIME), request.getUserIds(), request.getFromDate(), request.getToDate()));
+        List<UserExam> userExams = this.userExamEntityMapper.toDomain(
+                this.userExamEntityRepository.statisticResult(List.of(UserExamStatus.DONE, UserExamStatus.OVERTIME),
+                        request.getUserIds(), request.getFromDate(), request.getToDate()));
         return userExams.stream().map(userExam -> {
             Long duration = 0L;
             if (Objects.nonNull(userExam.getTimeStart()) && Objects.nonNull(userExam.getTimeEnd())) {
