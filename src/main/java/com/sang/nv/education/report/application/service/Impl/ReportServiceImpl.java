@@ -1,6 +1,5 @@
 package com.sang.nv.education.report.application.service.Impl;
 
-import com.sang.commonmodel.enums.UserType;
 import com.sang.commonutil.DateUtils;
 import com.sang.commonutil.ReportingPeriodType;
 import com.sang.nv.education.exam.application.dto.request.RoomSearchRequest;
@@ -12,6 +11,7 @@ import com.sang.nv.education.exam.domain.Room;
 import com.sang.nv.education.exam.infrastructure.persistence.readmodel.StatisticPeriod;
 import com.sang.nv.education.iam.application.service.UserService;
 import com.sang.nv.education.iam.infrastructure.persistence.repository.readmodel.StatisticUser;
+import com.sang.nv.education.iam.infrastructure.support.enums.UserType;
 import com.sang.nv.education.report.application.dto.request.NumberUserAndPeriodReportRequest;
 import com.sang.nv.education.report.application.dto.request.ReportGeneralRequest;
 import com.sang.nv.education.report.application.mapper.ReportAutoMapper;
@@ -42,7 +42,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public GeneralReport generalReport(ReportGeneralRequest request) {
-        RoomSearchRequest roomSearchRequest = RoomSearchRequest.builder().build();
+        RoomSearchRequest roomSearchRequest = new RoomSearchRequest();
         if (!CollectionUtils.isEmpty(request.getUserIds())) {
             roomSearchRequest.setUserIds(request.getUserIds());
         }
@@ -60,22 +60,17 @@ public class ReportServiceImpl implements ReportService {
         List<StatisticPeriod> statisticPeriods = this.periodService.statisticPeriod(request.getYear());
         List<StatisticUser> statisticUsers = this.userService.statisticsUser(request.getYear());
         List<NumberUserAndPeriod> numberUserAndPeriods = new ArrayList<>();
-        months.stream().forEach(month -> {
+        months.forEach(month -> {
             NumberUserAndPeriod numberUserAndPeriod = new NumberUserAndPeriod();
-            Optional<StatisticUser> statisticUserAdmin = statisticUsers.stream().filter(item -> Objects.equals(item.getMonth(), month.getValue()) &&
-                    UserType.MANAGER.equals(item.getUserType())).findFirst();
-            if (statisticUserAdmin.isPresent()) {
-                numberUserAndPeriod.setNumberUserAdmin(statisticUserAdmin.get().getNumberUser());
-            }
+            Optional<StatisticUser> statisticUserAdmin = statisticUsers.stream().filter(item ->
+                    Objects.equals(item.getMonth(), month.getValue()) &&
+                            UserType.MANAGER.equals(item.getUserType())).findFirst();
+            statisticUserAdmin.ifPresent(statisticUser -> numberUserAndPeriod.setNumberUserAdmin(statisticUser.getNumberUser()));
             Optional<StatisticUser> statisticUserClient = statisticUsers.stream().filter(item -> Objects.equals(item.getMonth(), month.getValue()) &&
                     UserType.STUDENT.equals(item.getUserType())).findFirst();
-            if (statisticUserClient.isPresent()) {
-                numberUserAndPeriod.setNumberUserAdmin(statisticUserClient.get().getNumberUser());
-            }
+            statisticUserClient.ifPresent(statisticUser -> numberUserAndPeriod.setNumberUserAdmin(statisticUser.getNumberUser()));
             Optional<StatisticPeriod> statisticPeriod = statisticPeriods.stream().filter(item -> Objects.equals(item.getMonth(), month.getValue())).findFirst();
-            if (statisticPeriod.isPresent()) {
-                numberUserAndPeriod.setNumberPeriod(statisticPeriod.get().getNumberPeriod());
-            }
+            statisticPeriod.ifPresent(period -> numberUserAndPeriod.setNumberPeriod(period.getNumberPeriod()));
             numberUserAndPeriod.setMonth(month.getValue());
             numberUserAndPeriods.add(numberUserAndPeriod);
         });

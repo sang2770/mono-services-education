@@ -11,7 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Builder
 public class RoomSearchRequest extends BaseSearchRequest {
     List<String> subjectIds;
     List<String> userIds;
