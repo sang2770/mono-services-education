@@ -1,9 +1,9 @@
 package com.sang.nv.education.exam.application.service;
 
 import com.sang.commonmodel.dto.PageDTO;
-import com.sang.nv.education.exam.application.dto.request.ExamCreateRequest;
-import com.sang.nv.education.exam.application.dto.request.ExamSearchRequest;
-import com.sang.nv.education.exam.application.dto.request.ExamUpdateRequest;
+import com.sang.nv.education.exam.application.dto.request.exam.ExamCreateRequest;
+import com.sang.nv.education.exam.application.dto.request.exam.ExamSearchRequest;
+import com.sang.nv.education.exam.application.dto.request.exam.ExamUpdateRequest;
 import com.sang.nv.education.exam.domain.Exam;
 
 import java.util.List;

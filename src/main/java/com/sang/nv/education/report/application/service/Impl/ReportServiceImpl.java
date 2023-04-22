@@ -2,7 +2,7 @@ package com.sang.nv.education.report.application.service.Impl;
 
 import com.sang.commonutil.DateUtils;
 import com.sang.commonutil.ReportingPeriodType;
-import com.sang.nv.education.exam.application.dto.request.RoomSearchRequest;
+import com.sang.nv.education.exam.application.dto.request.room.RoomSearchRequest;
 import com.sang.nv.education.exam.application.dto.response.UserExamResult;
 import com.sang.nv.education.exam.application.service.PeriodService;
 import com.sang.nv.education.exam.application.service.RoomService;

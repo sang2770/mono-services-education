@@ -3,6 +3,13 @@ package com.sang.nv.education.exam.application.mapper;
 
 import com.sang.commonmodel.mapper.BaseAutoMapper;
 import com.sang.nv.education.exam.application.dto.request.*;
+import com.sang.nv.education.exam.application.dto.request.exam.ExamCreateRequest;
+import com.sang.nv.education.exam.application.dto.request.exam.ExamUpdateRequest;
+import com.sang.nv.education.exam.application.dto.request.question.AnswerCreateOrUpdateRequest;
+import com.sang.nv.education.exam.application.dto.request.question.GroupQuestionCreateOrUpdateRequest;
+import com.sang.nv.education.exam.application.dto.request.room.QuestionCreateRequest;
+import com.sang.nv.education.exam.application.dto.request.room.QuestionUpdateRequest;
+import com.sang.nv.education.exam.application.dto.request.room.RoomCreateOrUpdateRequest;
 import com.sang.nv.education.exam.domain.command.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -2,10 +2,10 @@ package com.sang.nv.education.exam.presentation.web.rest.impl;
 
 import com.sang.commonmodel.dto.response.PagingResponse;
 import com.sang.commonmodel.dto.response.Response;
-import com.sang.nv.education.exam.application.dto.request.GroupQuestionRandomRequest;
-import com.sang.nv.education.exam.application.dto.request.QuestionCreateRequest;
-import com.sang.nv.education.exam.application.dto.request.QuestionSearchRequest;
-import com.sang.nv.education.exam.application.dto.request.QuestionUpdateRequest;
+import com.sang.nv.education.exam.application.dto.request.question.GroupQuestionRandomRequest;
+import com.sang.nv.education.exam.application.dto.request.room.QuestionCreateRequest;
+import com.sang.nv.education.exam.application.dto.request.room.QuestionSearchRequest;
+import com.sang.nv.education.exam.application.dto.request.room.QuestionUpdateRequest;
 import com.sang.nv.education.exam.application.service.QuestionService;
 import com.sang.nv.education.exam.domain.Question;
 import com.sang.nv.education.exam.presentation.web.rest.QuestionResource;

@@ -6,7 +6,8 @@ import com.sang.commonmodel.dto.request.BaseSearchRequest;
 import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonmodel.mapper.util.PageableMapperUtil;
 import com.sang.commonpersistence.support.SeqRepository;
-import com.sang.nv.education.exam.application.dto.request.GroupQuestionCreateOrUpdateRequest;
+import com.sang.commonpersistence.support.SqlUtils;
+import com.sang.nv.education.exam.application.dto.request.question.GroupQuestionCreateOrUpdateRequest;
 import com.sang.nv.education.exam.application.mapper.ExamAutoMapper;
 import com.sang.nv.education.exam.application.service.GroupQuestionService;
 import com.sang.nv.education.exam.domain.GroupQuestion;
@@ -16,7 +17,6 @@ import com.sang.nv.education.exam.infrastructure.persistence.entity.SubjectEntit
 import com.sang.nv.education.exam.infrastructure.persistence.mapper.GroupQuestionEntityMapper;
 import com.sang.nv.education.exam.infrastructure.persistence.repository.GroupQuestionEntityRepository;
 import com.sang.nv.education.exam.infrastructure.persistence.repository.SubjectEntityRepository;
-import com.sang.nv.education.exam.infrastructure.support.exception.BadRequestError;
 import com.sang.nv.education.exam.infrastructure.support.exception.NotFoundError;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -74,7 +74,7 @@ public class GroupQuestionImpl implements GroupQuestionService {
     @Override
     public PageDTO<GroupQuestion> search(BaseSearchRequest request) {
         Pageable pageable = PageableMapperUtil.toPageable(request);
-        Page<GroupQuestionEntity> GroupQuestionEntityPage = this.groupQuestionEntityRepository.search(request.getKeyword(), pageable);
+        Page<GroupQuestionEntity> GroupQuestionEntityPage = this.groupQuestionEntityRepository.search(SqlUtils.encodeKeyword(request.getKeyword()), request.getSubjectIds(), pageable);
         List<GroupQuestion> GroupQuestion = GroupQuestionEntityPage.getContent().stream().map(GroupQuestion::new).collect(Collectors.toList());
         return PageDTO.of(GroupQuestion, request.getPageIndex(), request.getPageSize(), GroupQuestionEntityPage.getTotalElements());
     }

@@ -3,6 +3,8 @@ package com.sang.nv.education.exam.application.service;
 import com.sang.commonmodel.dto.PageDTO;
 import com.sang.nv.education.exam.application.dto.request.*;
 import com.sang.nv.education.exam.application.dto.request.room.PeriodRoomSearchRequest;
+import com.sang.nv.education.exam.application.dto.request.room.RoomCreateOrUpdateRequest;
+import com.sang.nv.education.exam.application.dto.request.room.RoomSearchRequest;
 import com.sang.nv.education.exam.application.dto.request.room.SendExamToUserRequest;
 import com.sang.nv.education.exam.domain.PeriodRoom;
 import com.sang.nv.education.exam.domain.Room;

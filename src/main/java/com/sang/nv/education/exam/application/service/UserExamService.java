@@ -26,7 +26,8 @@ public interface UserExamService {
      * @return UserExam
      */
     UserExam getById(String id);
-    UserExam testingExam(String id);
+    UserExam
+    testingExam(String id);
 
     UserExam getByExamIdAndPeriodId(String examId, String periodId);
 

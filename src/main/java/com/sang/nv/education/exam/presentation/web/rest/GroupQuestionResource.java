@@ -4,7 +4,7 @@ package com.sang.nv.education.exam.presentation.web.rest;
 import com.sang.commonmodel.dto.request.BaseSearchRequest;
 import com.sang.commonmodel.dto.response.PagingResponse;
 import com.sang.commonmodel.dto.response.Response;
-import com.sang.nv.education.exam.application.dto.request.GroupQuestionCreateOrUpdateRequest;
+import com.sang.nv.education.exam.application.dto.request.question.GroupQuestionCreateOrUpdateRequest;
 import com.sang.nv.education.exam.domain.GroupQuestion;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

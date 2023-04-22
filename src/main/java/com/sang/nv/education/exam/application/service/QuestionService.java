@@ -1,10 +1,10 @@
 package com.sang.nv.education.exam.application.service;
 
 import com.sang.commonmodel.dto.PageDTO;
-import com.sang.nv.education.exam.application.dto.request.GroupQuestionRandomRequest;
-import com.sang.nv.education.exam.application.dto.request.QuestionCreateRequest;
-import com.sang.nv.education.exam.application.dto.request.QuestionSearchRequest;
-import com.sang.nv.education.exam.application.dto.request.QuestionUpdateRequest;
+import com.sang.nv.education.exam.application.dto.request.question.GroupQuestionRandomRequest;
+import com.sang.nv.education.exam.application.dto.request.room.QuestionCreateRequest;
+import com.sang.nv.education.exam.application.dto.request.room.QuestionSearchRequest;
+import com.sang.nv.education.exam.application.dto.request.room.QuestionUpdateRequest;
 import com.sang.nv.education.exam.domain.Question;
 
 import java.util.List;

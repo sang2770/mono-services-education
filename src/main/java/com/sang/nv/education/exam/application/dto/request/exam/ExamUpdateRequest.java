@@ -1,4 +1,4 @@
-package com.sang.nv.education.exam.application.dto.request;
+package com.sang.nv.education.exam.application.dto.request.exam;
 
 import com.sang.commonmodel.dto.request.Request;
 import lombok.Data;

@@ -5,6 +5,8 @@ import com.sang.commonmodel.dto.response.PagingResponse;
 import com.sang.commonmodel.dto.response.Response;
 import com.sang.nv.education.exam.application.dto.request.*;
 import com.sang.nv.education.exam.application.dto.request.room.PeriodRoomSearchRequest;
+import com.sang.nv.education.exam.application.dto.request.room.RoomCreateOrUpdateRequest;
+import com.sang.nv.education.exam.application.dto.request.room.RoomSearchRequest;
 import com.sang.nv.education.exam.domain.PeriodRoom;
 import com.sang.nv.education.exam.domain.Room;
 import com.sang.nv.education.exam.domain.UserRoom;

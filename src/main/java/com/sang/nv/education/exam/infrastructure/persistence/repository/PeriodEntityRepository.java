@@ -2,7 +2,6 @@ package com.sang.nv.education.exam.infrastructure.persistence.repository;
 
 
 import com.sang.nv.education.exam.infrastructure.persistence.entity.PeriodEntity;
-import com.sang.nv.education.exam.infrastructure.persistence.entity.PeriodRoomEntity;
 import com.sang.nv.education.exam.infrastructure.persistence.readmodel.StatisticPeriod;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +20,7 @@ public interface PeriodEntityRepository extends JpaRepository<PeriodEntity, Stri
     @Query("from PeriodEntity u where u.id in :ids")
     List<PeriodEntity> findAllByIds(@Param("ids") List<String> ids);
 
-    @Query("select count(u) from PeriodEntity u left join PeriodRoomEntity p on u.id = p.periodId  where u.deleted = false and ( :roomIds is null or p.roomId in :roomIds)")
+    @Query("select count(u.id) from PeriodEntity u left join PeriodRoomEntity p on u.id = p.periodId  where u.deleted = false and ( (:roomIds) is null or p.roomId in :roomIds)")
     int countAll(@Param("roomIds") List<String> roomIds);
 
     @Query("select new com.sang.nv.education.exam.infrastructure.persistence.readmodel.StatisticPeriod(YEAR(p.createdAt), MONTH(p.createdAt), COUNT(*)) " +

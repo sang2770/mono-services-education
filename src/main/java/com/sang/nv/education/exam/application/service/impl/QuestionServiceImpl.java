@@ -3,17 +3,16 @@ package com.sang.nv.education.exam.application.service.impl;
 
 import com.sang.commonmodel.dto.PageDTO;
 import com.sang.commonmodel.exception.ResponseException;
-import com.sang.nv.education.exam.application.dto.request.GroupQuestionRandomRequest;
-import com.sang.nv.education.exam.application.dto.request.QuestionCreateRequest;
-import com.sang.nv.education.exam.application.dto.request.QuestionSearchRequest;
-import com.sang.nv.education.exam.application.dto.request.QuestionUpdateRequest;
+import com.sang.nv.education.exam.application.dto.request.question.GroupQuestionRandomRequest;
+import com.sang.nv.education.exam.application.dto.request.room.QuestionCreateRequest;
+import com.sang.nv.education.exam.application.dto.request.room.QuestionSearchRequest;
+import com.sang.nv.education.exam.application.dto.request.room.QuestionUpdateRequest;
 import com.sang.nv.education.exam.application.mapper.ExamAutoMapper;
 import com.sang.nv.education.exam.application.mapper.ExamAutoMapperQuery;
 import com.sang.nv.education.exam.application.service.QuestionService;
 import com.sang.nv.education.exam.domain.Answer;
 import com.sang.nv.education.exam.domain.GroupQuestion;
 import com.sang.nv.education.exam.domain.Question;
-import com.sang.nv.education.exam.domain.QuestionFile;
 import com.sang.nv.education.exam.domain.command.QuestionCreateCmd;
 import com.sang.nv.education.exam.domain.command.QuestionUpdateCmd;
 import com.sang.nv.education.exam.domain.repository.QuestionDomainRepository;
@@ -30,7 +29,6 @@ import com.sang.nv.education.exam.infrastructure.persistence.repository.Question
 import com.sang.nv.education.exam.infrastructure.support.enums.QuestionLevel;
 import com.sang.nv.education.exam.infrastructure.support.exception.BadRequestError;
 import com.sang.nv.education.exam.infrastructure.support.exception.NotFoundError;
-import com.sang.nv.education.storage.domain.FileDomain;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

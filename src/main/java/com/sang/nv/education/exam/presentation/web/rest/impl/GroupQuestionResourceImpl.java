@@ -3,7 +3,7 @@ package com.sang.nv.education.exam.presentation.web.rest.impl;
 import com.sang.commonmodel.dto.request.BaseSearchRequest;
 import com.sang.commonmodel.dto.response.PagingResponse;
 import com.sang.commonmodel.dto.response.Response;
-import com.sang.nv.education.exam.application.dto.request.GroupQuestionCreateOrUpdateRequest;
+import com.sang.nv.education.exam.application.dto.request.question.GroupQuestionCreateOrUpdateRequest;
 import com.sang.nv.education.exam.application.service.GroupQuestionService;
 import com.sang.nv.education.exam.domain.GroupQuestion;
 import com.sang.nv.education.exam.presentation.web.rest.GroupQuestionResource;

@@ -61,6 +61,7 @@ public class User extends AuditableDomain {
     private UserType userType;
 
     private Classes classes;
+    private List<String> grantedPermissions;
 
 
     public User(UserCreateOrUpdateCmd cmd) {

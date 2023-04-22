@@ -2,9 +2,9 @@ package com.sang.nv.education.exam.application.mapper;
 
 
 import com.sang.commonmodel.mapper.BaseAutoMapper;
-import com.sang.nv.education.exam.application.dto.request.ExamSearchRequest;
-import com.sang.nv.education.exam.application.dto.request.QuestionSearchRequest;
-import com.sang.nv.education.exam.application.dto.request.RoomSearchRequest;
+import com.sang.nv.education.exam.application.dto.request.exam.ExamSearchRequest;
+import com.sang.nv.education.exam.application.dto.request.room.QuestionSearchRequest;
+import com.sang.nv.education.exam.application.dto.request.room.RoomSearchRequest;
 import com.sang.nv.education.exam.application.dto.request.UserRoomSearchRequest;
 import com.sang.nv.education.exam.infrastructure.persistence.query.ExamSearchQuery;
 import com.sang.nv.education.exam.infrastructure.persistence.query.QuestionSearchQuery;

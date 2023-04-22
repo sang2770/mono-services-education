@@ -6,8 +6,8 @@ import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonmodel.mapper.util.PageableMapperUtil;
 import com.sang.commonpersistence.support.SeqRepository;
 import com.sang.nv.education.common.web.support.SecurityUtils;
-import com.sang.nv.education.exam.application.dto.request.RoomCreateOrUpdateRequest;
-import com.sang.nv.education.exam.application.dto.request.RoomSearchRequest;
+import com.sang.nv.education.exam.application.dto.request.room.RoomCreateOrUpdateRequest;
+import com.sang.nv.education.exam.application.dto.request.room.RoomSearchRequest;
 import com.sang.nv.education.exam.application.dto.request.UpdateMemberInRoomRequest;
 import com.sang.nv.education.exam.application.dto.request.UpdatePeriodInRoomRequest;
 import com.sang.nv.education.exam.application.dto.request.UserExamCreateRequest;
@@ -134,6 +134,7 @@ public class RoomServiceImpl implements RoomService {
     public Room update(String id, RoomCreateOrUpdateRequest request) {
         Room Room = this.getById(id);
         Room.update(this.examAutoMapper.from(request));
+        this.roomDomainRepository.save(Room);
         return Room;
     }
 
