@@ -15,6 +15,10 @@ public interface UserRoomEntityRepository extends JpaRepository<UserRoomEntity, 
     @Query("from UserRoomEntity u where u.deleted = false and u.roomId = :roomId ")
     List<UserRoomEntity> findByRoomId(@Param("roomId") String roomId);
 
+    @Query("from UserRoomEntity u where u.deleted = false and u.userId in :userIds ")
+    List<UserRoomEntity> findByUserIds(@Param("userIds") List<String> userIds);
+
+
     @Query("from UserRoomEntity u where u.deleted = false and u.roomId in :roomIds ")
     List<UserRoomEntity> findAllByRoomIds(@Param("roomIds") List<String> roomIds);
 }

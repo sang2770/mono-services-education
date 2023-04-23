@@ -12,6 +12,7 @@ import com.sang.nv.education.exam.domain.Room;
 import com.sang.nv.education.exam.domain.UserRoom;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,11 +40,13 @@ public interface RoomResource {
 
     @ApiOperation(value = "Update Room")
     @PostMapping("/rooms/{id}/add-members")
+    @PreAuthorize("hasPermission(null, 'room:update_user')")
     Response<Room> addMember(@PathVariable String id, @RequestBody UpdateMemberInRoomRequest request);
 
 
     @ApiOperation(value = "remove Member Room")
-    @PostMapping("/rooms/{id}/remove-members")
+
+
     Response<Room> removeMember(@PathVariable String id, @RequestBody UpdateMemberInRoomRequest request);
 
 
@@ -68,6 +71,7 @@ public interface RoomResource {
 
     @ApiOperation(value = "Send exam to user Room")
     @PostMapping("/rooms/{id}/send-exam-to-user")
+    @PreAuthorize("hasPermission(null, 'room:send_exam')")
     Response<Void> sendExamToUser(@PathVariable String id, @RequestBody UserExamCreateRequest request);
 
 //    For client

@@ -1,6 +1,7 @@
 package com.sang.nv.education.exam.application.service.impl;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sang.commonmodel.dto.PageDTO;
 import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonmodel.mapper.util.PageableMapperUtil;
@@ -28,6 +29,7 @@ import com.sang.nv.education.exam.domain.command.RoomCreateOrUpdateCmd;
 import com.sang.nv.education.exam.domain.command.UserExamCreateCmd;
 import com.sang.nv.education.exam.domain.repository.RoomDomainRepository;
 import com.sang.nv.education.exam.infrastructure.persistence.entity.PeriodRoomEntity;
+import com.sang.nv.education.exam.infrastructure.persistence.entity.UserRoomEntity;
 import com.sang.nv.education.exam.infrastructure.persistence.mapper.ExamEntityMapper;
 import com.sang.nv.education.exam.infrastructure.persistence.mapper.PeriodEntityMapper;
 import com.sang.nv.education.exam.infrastructure.persistence.mapper.PeriodRoomEntityMapper;
@@ -86,6 +88,7 @@ public class RoomServiceImpl implements RoomService {
     private final PeriodEntityRepository periodEntityRepository;
     private final PeriodEntityMapper periodEntityMapper;
     private final UserService userService;
+    private final ObjectMapper objectMapper;
 
     public RoomServiceImpl(RoomEntityRepository roomEntityRepository, ExamAutoMapper examAutoMapper,
                            ExamAutoMapperQuery examAutoMapperQuery, RoomDomainRepository RoomDomainRepository,
@@ -97,7 +100,7 @@ public class RoomServiceImpl implements RoomService {
                            SubjectEntityMapper subjectEntityMapper,
                            ExamEntityRepository examEntityRepository,
                            ExamEntityMapper examEntityMapper,
-                           SeqRepository seqRepository, PeriodRoomEntityMapper periodRoomEntityMapper, PeriodEntityRepository periodEntityRepository, PeriodEntityMapper periodEntityMapper, UserService userService) {
+                           SeqRepository seqRepository, PeriodRoomEntityMapper periodRoomEntityMapper, PeriodEntityRepository periodEntityRepository, PeriodEntityMapper periodEntityMapper, UserService userService, ObjectMapper objectMapper) {
         this.examAutoMapper = examAutoMapper;
         this.examAutoMapperQuery = examAutoMapperQuery;
         this.roomDomainRepository = RoomDomainRepository;
@@ -117,6 +120,7 @@ public class RoomServiceImpl implements RoomService {
         this.periodEntityRepository = periodEntityRepository;
         this.periodEntityMapper = periodEntityMapper;
         this.userService = userService;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -253,6 +257,12 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public void sendExamToUser(String id, UserExamCreateRequest request) {
+        // check permision
+        User user = this.objectMapper.convertValue(SecurityUtils.getCurrentUser().get(), User.class);
+        List<UserRoomEntity> userRoomEntity = this.userRoomEntityRepository.findByUserIds(List.of(user.getId()));
+        if (CollectionUtils.isEmpty(userRoomEntity) && !user.getIsRoot()) {
+            throw new ResponseException(BadRequestError.PERMISSION_DENY);
+        }
         Room room = this.getById(id);
         PeriodRoom periodRoom = this.periodRoomEntityMapper.toDomain(this.periodRoomEntityRepository.findByRoomIdAndPeriodId(id, request.getPeriodId()).orElseThrow(() -> new ResponseException(NotFoundError.PERIOD_NOT_EXISTED_IN_ROOM)));
         periodRoom.updateIsSendExam(true);

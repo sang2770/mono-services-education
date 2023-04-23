@@ -84,14 +84,16 @@ public class SeedDatabaseRunner implements CommandLineRunner {
         String scopeName = "Xem";
         if (Scope.VIEW.equals(scope)) {
             scopeName = "Xem";
-        } else if (Scope.REPORT.equals(scope)) {
-            scopeName = "Báo cáo";
         } else if (Scope.CREATE.equals(scope)) {
             scopeName = "Tạo";
         } else if (Scope.UPDATE.equals(scope)) {
             scopeName = "Cập nhật";
         } else if (Scope.DELETE.equals(scope)) {
             scopeName = "Xóa";
+        } else if (Scope.UPDATE_USER.equals(scope)) {
+            scopeName = "Cập nhật người dùng";
+        } else if (Scope.SEND_EXAM.equals(scope)) {
+            scopeName = "Gửi bài thi";
         }
         return scopeName;
     }

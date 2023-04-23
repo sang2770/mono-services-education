@@ -12,7 +12,7 @@ public enum ResourceCategory {
     QUESTION_MANAGEMENT("QUESTION", "Quản lý câu hỏi", List.of(Scope.CREATE, Scope.VIEW, Scope.UPDATE, Scope.DELETE), 4),
     GROUP_QUESTION_MANAGEMENT("GROUP_QUESTION", "Quản lý nhóm câu hỏi", List.of(Scope.CREATE, Scope.VIEW, Scope.UPDATE, Scope.DELETE), 5),
     EXAM_MANAGEMENT("EXAM", "Quản lý đề thi", List.of(Scope.CREATE, Scope.VIEW, Scope.UPDATE, Scope.DELETE), 6),
-    ROOM_MANAGEMENT("ROOM", "Quản lý phòng thi", List.of(Scope.CREATE, Scope.VIEW, Scope.UPDATE, Scope.DELETE), 7),
+    ROOM_MANAGEMENT("ROOM", "Quản lý phòng thi", List.of(Scope.CREATE, Scope.VIEW, Scope.UPDATE, Scope.DELETE, Scope.SEND_EXAM, Scope.UPDATE_USER), 7),
     CLASSES_MANAGEMENT("CATEGORY", "Quản lý lớp", List.of(Scope.CREATE, Scope.VIEW, Scope.UPDATE, Scope.DELETE), 8),
     DEPARTMENT_MANAGEMENT("DEPARTMENT", "Quản lý khoa", List.of(Scope.CREATE, Scope.UPDATE, Scope.VIEW, Scope.DELETE), 9),
     COURSE_MANAGEMENT("COURSE", "Quản lý khóa học", List.of(Scope.CREATE, Scope.UPDATE, Scope.VIEW, Scope.DELETE), 10),
