@@ -6,7 +6,7 @@ import com.sang.commonmodel.dto.request.FindByIdsRequest;
 import com.sang.commonmodel.dto.response.PagingResponse;
 import com.sang.commonmodel.dto.response.Response;
 import com.sang.commonmodel.validator.anotations.ValidatePaging;
-import com.sang.nv.education.iam.application.dto.request.User.UserChangePasswordRequest;
+import com.sang.nv.education.iam.application.dto.request.User.ChangePasswordRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserCreateRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserExportRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserSearchRequest;
@@ -64,7 +64,7 @@ public interface UserResource {
 
     @ApiOperation(value = "Change password internal user")
     @PostMapping("/users/{userId}/change-password")
-    Response<User> changePassword(@PathVariable String userId, @RequestBody @Valid UserChangePasswordRequest request);
+    Response<User> changePassword(@PathVariable String userId, @RequestBody @Valid ChangePasswordRequest request);
 
     @ApiOperation(value = "Search User auto complete")
     @GetMapping("/users/auto-complete")

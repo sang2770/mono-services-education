@@ -5,7 +5,7 @@ import com.sang.commonmodel.dto.PageDTO;
 import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonutil.StrUtils;
 import com.sang.commonutil.StringUtil;
-import com.sang.nv.education.iam.application.dto.request.User.UserChangePasswordRequest;
+import com.sang.nv.education.iam.application.dto.request.User.ChangePasswordRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserCreateRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserExportRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserSearchRequest;
@@ -144,8 +144,9 @@ public class UserServiceImpl implements UserService {
         if (count == 0L) {
             return PageDTO.empty();
         }
-        List<User> basePrices = this.userEntityMapper.toDomain(this.userEntityRepository.search(query));
-        return PageDTO.of(basePrices, request.getPageIndex(), request.getPageSize(), count);
+        List<User> users = this.userEntityMapper.toDomain(this.userEntityRepository.search(query));
+        this.enrichUser(users);
+        return PageDTO.of(users, request.getPageIndex(), request.getPageSize(), count);
     }
 
     @Override
@@ -166,12 +167,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findByIds(List<String> ids) {
         List<UserEntity> userEntities = this.userEntityRepository.findByIds(ids);
-
-        List<UserRoleEntity> userRoleEntities = this.userRoleEntityRepository.findAllByUserIds(ids);
         List<User> users = this.userEntityMapper.toDomain(userEntities);
+        this.enrichUser(users);
+        return users;
+    }
+
+    private void enrichUser(List<User> users){
+        List<String> userIds = users.stream().map(User::getId).collect(Collectors.toList());
         // enrich roles
         List<RoleEntity> roleEntities = this.roleEntityRepository.findAllByStatus(RoleStatus.ACTIVE);
         List<Role> roles = this.roleEntityMapper.toDomain(roleEntities);
+        List<UserRoleEntity> userRoleEntities = this.userRoleEntityRepository.findAllByUserIds(userIds);
         users.forEach(user -> {
             // enrich role
             List<String> roleIdsOfUser = userRoleEntities.stream()
@@ -182,9 +188,7 @@ public class UserServiceImpl implements UserService {
                     .filter(role -> roleIdsOfUser.contains(role.getId())).collect(Collectors.toList());
             user.enrichRoles(rolesOfUser);
         });
-        return users;
     }
-
     @Override
     public void active(String userId) {
         User user = ensureExisted(userId);
@@ -213,7 +217,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User changePassword(String userId, UserChangePasswordRequest request) {
+    public User changePassword(String userId, ChangePasswordRequest request) {
         User user = this.ensureExisted(userId);
         String newEncodedPassword = this.passwordEncoder.encode(request.getNewPassword());
         user.changePassword(newEncodedPassword);

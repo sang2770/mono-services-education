@@ -2,7 +2,7 @@ package com.sang.nv.education.iam.application.service;
 
 
 import com.sang.commonmodel.dto.PageDTO;
-import com.sang.nv.education.iam.application.dto.request.User.UserChangePasswordRequest;
+import com.sang.nv.education.iam.application.dto.request.User.ChangePasswordRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserCreateRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserExportRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserSearchRequest;
@@ -38,7 +38,7 @@ public interface UserService {
 
     User getUserById(String userId);
 
-    User changePassword(String userId, UserChangePasswordRequest request);
+    User changePassword(String userId, ChangePasswordRequest request);
 
 
     PageDTO<User> autoComplete(UserSearchRequest request);

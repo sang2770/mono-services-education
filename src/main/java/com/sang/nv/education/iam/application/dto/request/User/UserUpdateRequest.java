@@ -35,6 +35,7 @@ public class UserUpdateRequest extends Request {
     private String code;
     private List<String> roleIds;
     private String avatarFileId;
+    private String avatarFileViewUrl;
     private String repeatPassword;
 
     @NotNull(message = "USER_TYPE_REQUIRED")

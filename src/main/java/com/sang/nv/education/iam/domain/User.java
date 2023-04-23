@@ -122,7 +122,10 @@ public class User extends AuditableDomain {
         this.status = UserStatus.ACTIVE;
         this.classId = cmd.getClassId();
         this.code = cmd.getCode();
-        this.assignRoles(cmd.getRoleIds(), existedRoles);
+        if (!CollectionUtils.isEmpty(cmd.getRoleIds()))
+        {
+            this.assignRoles(cmd.getRoleIds(), existedRoles);
+        }
         this.userType = cmd.getUserType();
         this.avatarFileId = cmd.getAvatarFileId();
         this.avatarFileViewUrl = cmd.getAvatarFileViewUrl();

@@ -5,7 +5,7 @@ import com.sang.commonmodel.dto.request.FindByIdsRequest;
 import com.sang.commonmodel.dto.response.PagingResponse;
 import com.sang.commonmodel.dto.response.Response;
 import com.sang.nv.education.common.web.security.AuthorityService;
-import com.sang.nv.education.iam.application.dto.request.User.UserChangePasswordRequest;
+import com.sang.nv.education.iam.application.dto.request.User.ChangePasswordRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserCreateRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserExportRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserSearchRequest;
@@ -70,8 +70,8 @@ public class UserResourceImpl implements UserResource {
     }
 
     @Override
-    public Response<User> changePassword(String userId, UserChangePasswordRequest request) {
-        return null;
+    public Response<User> changePassword(String userId, ChangePasswordRequest request) {
+        return Response.of(this.userService.changePassword(userId, request));
     }
 
     @Override
