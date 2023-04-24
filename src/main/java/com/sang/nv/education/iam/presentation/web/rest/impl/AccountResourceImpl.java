@@ -6,10 +6,13 @@ import com.sang.commonmodel.dto.response.Response;
 import com.sang.nv.education.iam.application.dto.request.Auth.LoginRequest;
 import com.sang.nv.education.iam.application.dto.request.Auth.LogoutRequest;
 import com.sang.nv.education.iam.application.dto.request.Auth.RefreshTokenRequest;
+import com.sang.nv.education.iam.application.dto.request.User.EmailForgotPasswordRequest;
+import com.sang.nv.education.iam.application.dto.request.User.ForgotPasswordRequest;
 import com.sang.nv.education.iam.application.dto.response.AuthToken;
 import com.sang.nv.education.iam.application.service.AccountService;
 import com.sang.nv.education.iam.domain.User;
 import com.sang.nv.education.iam.presentation.web.rest.AccountResource;
+import org.springframework.messaging.MessagingException;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -56,5 +59,17 @@ public class AccountResourceImpl implements AccountResource {
     public Response<Boolean> logout(LogoutRequest request) {
         this.accountService.logout(request);
         return Response.of(Boolean.TRUE);
+    }
+
+    @Override
+    public Response<Boolean> initResetPassword(EmailForgotPasswordRequest request) throws MessagingException {
+        this.accountService.forgotPassword(request);
+        return Response.ok();
+    }
+
+    @Override
+    public Response<Boolean> resetPassword(ForgotPasswordRequest request) {
+        this.accountService.resetPassword(request);
+        return Response.ok();
     }
 }

@@ -7,6 +7,8 @@ import com.sang.commonmodel.dto.response.PagingResponse;
 import com.sang.commonmodel.dto.response.Response;
 import com.sang.commonmodel.validator.anotations.ValidatePaging;
 import com.sang.nv.education.iam.application.dto.request.User.ChangePasswordRequest;
+import com.sang.nv.education.iam.application.dto.request.User.EmailForgotPasswordRequest;
+import com.sang.nv.education.iam.application.dto.request.User.ForgotPasswordRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserCreateRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserExportRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserSearchRequest;
@@ -15,6 +17,7 @@ import com.sang.nv.education.iam.application.dto.response.ImportResult;
 import com.sang.nv.education.iam.domain.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.messaging.MessagingException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -96,5 +99,7 @@ public interface UserResource {
     @PostMapping("/users/import")
     Response<ImportResult> importUsers(@RequestParam("file") MultipartFile file,
                                        HttpServletResponse response);
+
+
 
 }
