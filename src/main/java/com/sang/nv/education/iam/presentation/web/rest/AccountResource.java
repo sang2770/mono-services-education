@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Api(tags = "Account Resource")
@@ -61,5 +64,10 @@ public interface AccountResource {
     @PostMapping("/account/reset-password/finish")
     Response<Boolean> resetPassword(@RequestBody @Valid ForgotPasswordRequest request);
 
+    @ApiOperation(value = "Link redirect reset password")
+    @GetMapping("/account/reset-password/redirect")
+    RedirectView redirect(
+            @RequestParam(name = "resetPasswordToken") String resetPasswordToken,
+            HttpServletResponse response);
 
 }
