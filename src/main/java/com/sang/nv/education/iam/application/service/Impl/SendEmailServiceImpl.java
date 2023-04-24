@@ -1,15 +1,12 @@
 package com.sang.nv.education.iam.application.service.Impl;
 
-import com.mbamc.common.email.MailService;
+import com.sang.common.email.MailService;
 import com.sang.nv.education.iam.application.service.SendEmailService;
 import com.sang.nv.education.iam.domain.User;
-import com.sang.nv.education.iam.infrastructure.support.util.Const;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
@@ -23,27 +20,17 @@ public class SendEmailServiceImpl implements SendEmailService {
     private static final String USER = "user";
     private static final String TOKEN = "token";
     private static final String LINK = "redirectLink";
-
+    @Value("${app.iam.domain}")
+    private String domain;
     private final MailService mailService;
     private final SpringTemplateEngine templateEngine;
-    private final MessageSource messageSource;
-    private final String redirectLink;
+    private final String redirectLink = "reset-password";
 
     public SendEmailServiceImpl(
             MailService mailService,
-            SpringTemplateEngine templateEngine,
-            @Value("${app.iam.domain}") String domain,
-            MessageSource messageSource) {
+            SpringTemplateEngine templateEngine) {
         this.mailService = mailService;
         this.templateEngine = templateEngine;
-        this.messageSource = messageSource;
-        if (StringUtils.hasText(domain)) {
-            redirectLink = String.format("%s%s", domain, Const.REDIRECT_LINK_CHANGE_PASSWORD);
-        } else {
-            redirectLink =
-                    String.format(
-                            "%s%s", Const.DEFAULT_DOMAIN, Const.REDIRECT_LINK_CHANGE_PASSWORD);
-        }
     }
 
     @Override
@@ -57,9 +44,8 @@ public class SendEmailServiceImpl implements SendEmailService {
         Context context = new Context(locale);
         context.setVariable(USER, user);
         context.setVariable(TOKEN, token);
-        context.setVariable(LINK, redirectLink);
+        context.setVariable(LINK, String.format("%s/%s", domain, redirectLink));
         String content = templateEngine.process(templateName, context);
-        String subject = messageSource.getMessage(titleKey, null, locale);
-        mailService.sendHtmlMail(user.getEmail(), subject, content);
+        mailService.sendHtmlMail(user.getEmail(), titleKey, content);
     }
 }

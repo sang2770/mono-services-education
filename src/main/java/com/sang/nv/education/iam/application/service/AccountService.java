@@ -26,7 +26,7 @@ public interface AccountService {
 
     void logout(LogoutRequest request);
 
-    void forgotPassword(EmailForgotPasswordRequest request) throws MessagingException;
+    void forgotPassword(EmailForgotPasswordRequest request) throws MessagingException, javax.mail.MessagingException;
 
     void resetPassword(ForgotPasswordRequest request);
 

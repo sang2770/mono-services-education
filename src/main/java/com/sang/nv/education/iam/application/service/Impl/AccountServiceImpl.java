@@ -46,8 +46,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
 
-    private static final String TITLE_KEY = "EMAIL_RESET_PASSWORD";
-    private static final String TEMPLATE_NAME = "mail/passwordResetEmail";
+    private static final String TITLE_KEY = "Khôi phục mật khẩu";
+    private static final String TEMPLATE_NAME = "/templates/mail/passwordResetEmail";
     private final UserDomainRepository userDomainRepository;
     private final UserEntityRepository userEntityRepository;
     private final UserEntityMapper userEntityMapper;
@@ -209,7 +209,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void forgotPassword(EmailForgotPasswordRequest request) throws MessagingException {
+    public void forgotPassword(EmailForgotPasswordRequest request) throws MessagingException, javax.mail.MessagingException {
         Optional<UserEntity> userEntityByEmail =
                 userEntityRepository.findByEmail(request.getEmail());
         if (userEntityByEmail.isEmpty()) {
