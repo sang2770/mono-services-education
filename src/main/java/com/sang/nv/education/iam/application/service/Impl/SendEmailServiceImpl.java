@@ -1,7 +1,9 @@
 package com.sang.nv.education.iam.application.service.Impl;
 
+import com.mbamc.common.email.MailService;
 import com.sang.nv.education.iam.application.service.SendEmailService;
 import com.sang.nv.education.iam.domain.User;
+import com.sang.nv.education.iam.infrastructure.support.util.Const;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -46,8 +48,7 @@ public class SendEmailServiceImpl implements SendEmailService {
 
     @Override
     @Async
-    public void send(User user, String templateName, String titleKey, String token)
-            throws MessagingException {
+    public void send(User user, String templateName, String titleKey, String token) throws MessagingException {
         if (user.getEmail() == null) {
             log.debug("Email doesn't exist for user '{}'", user.getUsername());
             return;

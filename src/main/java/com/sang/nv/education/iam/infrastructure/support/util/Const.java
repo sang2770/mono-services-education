@@ -13,6 +13,8 @@ public class Const {
     public static final String USER_STUDENT = "student";
     public static final String CLASS_NOT_FOUND = "Không tìm thấy lớp học";
     public static final String INVALID = "Không hợp lệ";
+    public static final String REDIRECT_LINK_CHANGE_PASSWORD = "/iam/api/account/reset-password/redirect";
+    public static final String DEFAULT_DOMAIN = "";
 
 
     private Const() {

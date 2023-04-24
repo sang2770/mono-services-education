@@ -173,14 +173,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>1.5.0-b01</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+			<groupId>com.sang</groupId>
+			<artifactId>common-email</artifactId>
+			<version>${common.version}</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>

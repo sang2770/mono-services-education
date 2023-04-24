@@ -7,5 +7,5 @@ import org.springframework.messaging.MessagingException;
 public interface SendEmailService {
 
     void send(User user, String templateName, String titleKey, String token)
-            throws MessagingException;
+            throws MessagingException, javax.mail.MessagingException;
 }
