@@ -12,10 +12,13 @@ import com.sang.nv.education.iam.application.config.TokenProvider;
 import com.sang.nv.education.iam.application.dto.request.Auth.LoginRequest;
 import com.sang.nv.education.iam.application.dto.request.Auth.LogoutRequest;
 import com.sang.nv.education.iam.application.dto.request.Auth.RefreshTokenRequest;
+import com.sang.nv.education.iam.application.dto.request.User.EmailForgotPasswordRequest;
+import com.sang.nv.education.iam.application.dto.request.User.ForgotPasswordRequest;
 import com.sang.nv.education.iam.application.dto.response.AuthToken;
 import com.sang.nv.education.iam.application.mapper.IamAutoMapper;
 import com.sang.nv.education.iam.application.service.AccountService;
 import com.sang.nv.education.iam.application.service.AuthFailCacheService;
+import com.sang.nv.education.iam.application.service.SendEmailService;
 import com.sang.nv.education.iam.domain.User;
 import com.sang.nv.education.iam.domain.repository.UserDomainRepository;
 import com.sang.nv.education.iam.infrastructure.persistence.entity.UserEntity;
@@ -26,6 +29,7 @@ import com.sang.nv.education.iam.infrastructure.support.enums.UserType;
 import com.sang.nv.education.iam.infrastructure.support.exception.BadRequestError;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.MessagingException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,7 +46,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
 
-
+    private static final String TITLE_KEY = "EMAIL_RESET_PASSWORD";
+    private static final String TEMPLATE_NAME = "mail/passwordResetEmail";
     private final UserDomainRepository userDomainRepository;
     private final UserEntityRepository userEntityRepository;
     private final UserEntityMapper userEntityMapper;
@@ -53,6 +58,7 @@ public class AccountServiceImpl implements AccountService {
     private final AuthenticationManager authenticationManager;
     private final AuthorityService authorityService;
     private final AuthFailCacheService authFailCacheService;
+    private final SendEmailService sendEmailService;
 
     @Override
     public AuthToken login(LoginRequest request) {
@@ -200,5 +206,33 @@ public class AccountServiceImpl implements AccountService {
                 .tokenType(AuthToken.TOKEN_TYPE_BEARER)
                 .expiresIn(expiresIn)
                 .build();
+    }
+
+    @Override
+    public void forgotPassword(EmailForgotPasswordRequest request) throws MessagingException {
+        Optional<UserEntity> userEntityByEmail =
+                userEntityRepository.findByEmail(request.getEmail());
+        if (userEntityByEmail.isEmpty()) {
+            log.warn("Password reset requested for non existing mail '{}'", request.getEmail());
+            throw new ResponseException(BadRequestError.EMAIL_NOT_EXISTED_IN_SYSTEM);
+        }
+        User user = userEntityMapper.toDomain(userEntityByEmail.get());
+        String token = tokenProvider.createTokenSendEmail(user.getId(), request.getEmail());
+        sendEmailService.send(user, TEMPLATE_NAME, TITLE_KEY, token);
+    }
+
+    @Override
+    public void resetPassword(ForgotPasswordRequest request) {
+        String userId = tokenProvider.validateEmailToken(request.getToken());
+        if (Objects.isNull(userId)) {
+            throw new ResponseException(BadRequestError.USER_INVALID);
+        }
+        User user = this.userDomainRepository.getById(userId);
+        if (!Objects.equals(request.getPassword(), request.getRepeatPassword())) {
+            throw new ResponseException(BadRequestError.REPEAT_PASSWORD_DOES_NOT_MATCH);
+        }
+        String encodedPassword = this.passwordEncoder.encode(request.getPassword());
+        user.changePassword(encodedPassword);
+        this.userDomainRepository.save(user);
     }
 }

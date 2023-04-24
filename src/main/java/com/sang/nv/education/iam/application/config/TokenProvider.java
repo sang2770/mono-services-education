@@ -178,4 +178,35 @@ public class TokenProvider implements InitializingBean {
         }
     }
 
+
+    public String createTokenSendEmail(String userId, String email) {
+        long now = Instant.now().toEpochMilli();
+        Date validity = new Date(now + this.emailTokenExpiresIn);
+
+        return Jwts.builder()
+                .setSubject(userId)
+                .claim(EMAIL, email)
+                .signWith(keyPair.getPrivate(), SignatureAlgorithm.RS256)
+                .setIssuedAt(new Date(now))
+                .setExpiration(validity)
+                .compact();
+    }
+
+    public String validateEmailToken(String authToken) {
+        try {
+            Claims claims =
+                    Jwts.parserBuilder()
+                            .setSigningKey(keyPair.getPublic())
+                            .build()
+                            .parseClaimsJws(authToken)
+                            .getBody();
+            return claims.getSubject();
+        } catch (ExpiredJwtException exception) {
+            log.info("Expired JWT token.");
+        } catch (Exception e) {
+            log.warn("Invalid JWT signature.", e);
+        }
+        return null;
+    }
+
 }
