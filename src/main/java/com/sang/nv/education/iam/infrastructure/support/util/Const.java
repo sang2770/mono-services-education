@@ -15,6 +15,8 @@ public class Const {
     public static final String INVALID = "Không hợp lệ";
     public static final String REDIRECT_LINK_CHANGE_PASSWORD = "/iam/api/account/reset-password/redirect";
     public static final String DEFAULT_DOMAIN = "";
+    public static final String DEFAULT_LINK_RESET_PASSWORD = "mbamc://reset-password";
+    public static final int REDIRECTION_CODE = 302;
 
 
     private Const() {

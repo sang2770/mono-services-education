@@ -61,6 +61,7 @@ server:
 #      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8081}/eureka/
 app:
   iam:
+    reset-password-deep-link: ${RESET_PASSWORD_DEEP_LINK:https://mbamcqltn.page.link?amv=0&apn=com.mbamc.building.dev&ibi=com.mbamc.building.dev&link=https://mbamcqltn.page.link/newpassword?resetPasswordToken=%s}
     client:
       authenticate-uri: /api/client/authenticate
       client-id: 46fa7bd2-eb87-41f7-82e5-576d9dee258b
