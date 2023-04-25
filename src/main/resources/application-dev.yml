@@ -16,7 +16,7 @@ spring:
       resourceserver:
 
         jwt:
-          jwk-set-uri: ${JWK_URI:http://localhost:9999/api/certificate/.well-known/jwks.json}
+          jwk-set-uri: ${JWK_URI:http://localhost:8080/api/certificate/.well-known/jwks.json}
 firebase:
   bucket-name: storage-df647.appspot.com
   image-url: https://firebasestorage.googleapis.com/v0/b/${firebase.bucket-name}/o/%s?alt=media&token=%s
