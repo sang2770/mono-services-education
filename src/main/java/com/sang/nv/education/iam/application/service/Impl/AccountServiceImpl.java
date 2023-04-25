@@ -47,7 +47,7 @@ import java.util.Optional;
 public class AccountServiceImpl implements AccountService {
 
     private static final String TITLE_KEY = "Khôi phục mật khẩu";
-    private static final String TEMPLATE_NAME = "/templates/mail/passwordResetEmail";
+    private static final String TEMPLATE_NAME = "email/passwordResetEmail";
     private final UserDomainRepository userDomainRepository;
     private final UserEntityRepository userEntityRepository;
     private final UserEntityMapper userEntityMapper;

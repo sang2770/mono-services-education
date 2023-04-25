@@ -16,6 +16,7 @@ spring:
     properties.mail.smtp:
       auth: true
       starttls.enable: true
+    default-encoding: UTF-8
 
   jpa:
     database: postgresql
@@ -55,7 +56,7 @@ security:
       email-token-expires-in: 10m
 
 server:
-  port: ${PORT:8080}
+  port: ${PORT:9999}
 
 #feign:
 #  circuitbreaker:
@@ -72,8 +73,7 @@ server:
 #      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8081}/eureka/
 app:
   iam:
-    domain: http://localhost:8080
-    reset-password-deep-link: ${RESET_PASSWORD_DEEP_LINK:https://mbamcqltn.page.link?amv=0&apn=com.mbamc.building.dev&ibi=com.mbamc.building.dev&link=https://mbamcqltn.page.link/newpassword?resetPasswordToken=%s}
+    domain: http://localhost:4200
     client:
       authenticate-uri: /api/client/authenticate
       client-id: 46fa7bd2-eb87-41f7-82e5-576d9dee258b
