@@ -24,7 +24,7 @@ public class SendEmailServiceImpl implements SendEmailService {
     private String domain;
     private final MailService mailService;
     private final SpringTemplateEngine templateEngine;
-    private final String redirectLink = "reset-password";
+    private final String redirectLink = "authentication/reset-password";
 
     public SendEmailServiceImpl(
             MailService mailService,
@@ -44,7 +44,7 @@ public class SendEmailServiceImpl implements SendEmailService {
         Context context = new Context(locale);
         context.setVariable(USER, user);
         context.setVariable(TOKEN, token);
-        context.setVariable(LINK, String.format("%s/%s", domain, redirectLink));
+        context.setVariable(LINK, String.format("%s/#/%s", domain, redirectLink));
         String content = templateEngine.process(templateName, context);
         mailService.sendHtmlMail(user.getEmail(), titleKey, content);
     }
