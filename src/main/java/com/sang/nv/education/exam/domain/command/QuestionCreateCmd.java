@@ -14,7 +14,6 @@ public class QuestionCreateCmd {
     String title;
     String groupId;
     String subjectId;
-
     List<AnswerCreateOrUpdateCmd> answerCreateOrUpdateCmdList;
     QuestionLevel questionLevel;
     List<String> questionFileIds;

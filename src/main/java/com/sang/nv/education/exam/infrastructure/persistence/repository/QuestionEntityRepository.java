@@ -3,6 +3,7 @@ package com.sang.nv.education.exam.infrastructure.persistence.repository;
 
 import com.sang.nv.education.exam.infrastructure.persistence.entity.QuestionEntity;
 import com.sang.nv.education.exam.infrastructure.persistence.repository.custom.QuestionEntityRepositoryCustom;
+import com.sang.nv.education.iam.infrastructure.persistence.entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

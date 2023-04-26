@@ -20,6 +20,7 @@ public enum BadRequestError implements ResponseError {
     USER_EMAIL_EXITED(400, "Email exited"),
     USER_USERNAME_EXITED(400, "Username exited"),
     USER_INVALID(400, "User invalid: {0}"),
+    QUESTION_INVALID(400, "Question invalid: {0}"),
     STATUS_INVALID(400, "Status invalid: {0}"),
     IDS_IS_REQUIRED(400, "Ids is required"),
     CLIENT_NOT_EXISTED(400, "Client not exited"),

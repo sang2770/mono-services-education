@@ -22,4 +22,8 @@ public interface GroupQuestionEntityRepository extends JpaRepository<GroupQuesti
 
     @Query("from GroupQuestionEntity u where  u.id = :id and u.deleted = false")
     Optional<GroupQuestionEntity> findById(@Param("id") String id);
+
+    @Query("from GroupQuestionEntity u where  u.code = :code and u.deleted = false")
+    Optional<GroupQuestionEntity> findByCode(@Param("code") String code);
+
 }

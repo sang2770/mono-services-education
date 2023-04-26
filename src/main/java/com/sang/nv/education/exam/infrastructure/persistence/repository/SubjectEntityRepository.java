@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SubjectEntityRepository extends JpaRepository<SubjectEntity, String>{
@@ -18,4 +19,7 @@ public interface SubjectEntityRepository extends JpaRepository<SubjectEntity, St
 
     @Query("from SubjectEntity u where u.id in :ids")
     List<SubjectEntity> findAllByIds(@Param("ids") List<String> ids);
+
+    @Query("from SubjectEntity u where u.id = :code and u.deleted = false")
+    Optional<SubjectEntity> findByCode(@Param("code") String code);
 }

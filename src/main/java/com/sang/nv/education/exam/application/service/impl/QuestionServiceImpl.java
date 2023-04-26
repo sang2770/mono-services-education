@@ -7,8 +7,10 @@ import com.sang.nv.education.exam.application.dto.request.question.GroupQuestion
 import com.sang.nv.education.exam.application.dto.request.room.QuestionCreateRequest;
 import com.sang.nv.education.exam.application.dto.request.room.QuestionSearchRequest;
 import com.sang.nv.education.exam.application.dto.request.room.QuestionUpdateRequest;
+import com.sang.nv.education.exam.application.dto.response.ImportQuestionResult;
 import com.sang.nv.education.exam.application.mapper.ExamAutoMapper;
 import com.sang.nv.education.exam.application.mapper.ExamAutoMapperQuery;
+import com.sang.nv.education.exam.application.service.ExcelService;
 import com.sang.nv.education.exam.application.service.QuestionService;
 import com.sang.nv.education.exam.domain.Answer;
 import com.sang.nv.education.exam.domain.GroupQuestion;
@@ -30,7 +32,9 @@ import com.sang.nv.education.exam.infrastructure.support.enums.QuestionLevel;
 import com.sang.nv.education.exam.infrastructure.support.exception.BadRequestError;
 import com.sang.nv.education.exam.infrastructure.support.exception.NotFoundError;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -47,11 +51,12 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final AnswerEntityRepository answerEntityRepository;
     private final AnswerEntityMapper answerEntityMapper;
+    private final ExcelService excelService;
     public QuestionServiceImpl(QuestionEntityRepository questionEntityRepository,
                                GroupQuestionEntityRepository groupQuestionEntityRepository, ExamAutoMapper examAutoMapper,
                                ExamAutoMapperQuery examAutoMapperQuery, QuestionDomainRepository questionDomainRepository,
                                QuestionEntityMapper questionEntityMapper,
-                               GroupQuestionEntityMapper groupQuestionEntityMapper, AnswerEntityRepository answerEntityRepository, AnswerEntityMapper answerEntityMapper) {
+                               GroupQuestionEntityMapper groupQuestionEntityMapper, AnswerEntityRepository answerEntityRepository, AnswerEntityMapper answerEntityMapper, ExcelService excelService) {
         this.questionEntityRepository = questionEntityRepository;
         this.groupQuestionEntityRepository = groupQuestionEntityRepository;
         this.examAutoMapper = examAutoMapper;
@@ -61,6 +66,7 @@ public class QuestionServiceImpl implements QuestionService {
         this.groupQuestionEntityMapper = groupQuestionEntityMapper;
         this.answerEntityRepository = answerEntityRepository;
         this.answerEntityMapper = answerEntityMapper;
+        this.excelService = excelService;
     }
 
     @Override
@@ -127,6 +133,16 @@ public class QuestionServiceImpl implements QuestionService {
         }
         this.enrichQuestions(questions);
         return questions;
+    }
+
+    @Override
+    public void downloadTemplateImportQuestions(HttpServletResponse response) {
+        this.excelService.downloadQuestionTemplate(response);
+    }
+
+    @Override
+    public ImportQuestionResult importQuestion(MultipartFile file, HttpServletResponse response) {
+        return this.excelService.importQuestions(file, response);
     }
 
     private void enrichQuestions(List<Question> questions)
