@@ -8,7 +8,7 @@ import com.sang.commonutil.StringPool;
 import com.sang.nv.education.exam.application.config.TemplateQuestionProperties;
 import com.sang.nv.education.exam.application.dto.response.ImportQuestionDTO;
 import com.sang.nv.education.exam.application.dto.response.ImportQuestionResult;
-import com.sang.nv.education.exam.application.service.ExcelService;
+import com.sang.nv.education.exam.application.service.ExamExcelService;
 import com.sang.nv.education.exam.domain.GroupQuestion;
 import com.sang.nv.education.exam.domain.Question;
 import com.sang.nv.education.exam.domain.Subject;
@@ -26,7 +26,6 @@ import com.sang.nv.education.exam.infrastructure.support.enums.QuestionLevel;
 import com.sang.nv.education.exam.infrastructure.support.utils.Const;
 import com.sang.nv.education.iam.infrastructure.support.exception.BadRequestError;
 import com.sang.nv.education.iam.infrastructure.support.util.ExcelUtils;
-import io.swagger.models.auth.In;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
@@ -54,7 +53,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class ExcelServiceImpl implements ExcelService {
+public class ExamExcelServiceImpl implements ExamExcelService {
     static int ROW_NUMBER = 1;
     static int COL_NUMBER = 8;
 
@@ -169,7 +168,7 @@ public class ExcelServiceImpl implements ExcelService {
                                 if (!StrUtils.isBlank(value)) {
                                     Optional<SubjectEntity> subjectEntity = this.subjectEntityRepository.findByCode(value);
                                     if (subjectEntity.isPresent()) {
-                                        cmd.setGroupId(subjectEntity.get().getId());
+                                        cmd.setSubjectId(subjectEntity.get().getId());
                                     } else {
                                         error.append(Const.COL_SUBJECT_QUESTION_NOT_FOUND).append(StringPool.COMMA);
                                     }
@@ -184,7 +183,7 @@ public class ExcelServiceImpl implements ExcelService {
                                 break;
                             case 5:
                                 if (!StrUtils.isBlank(value)) {
-                                    answerIndex = Integer.parseInt(value);
+                                    answerIndex = (int) Float.parseFloat(value);
                                 }
                                 break;
                             case 6:
@@ -216,7 +215,7 @@ public class ExcelServiceImpl implements ExcelService {
                         }
                     }
                 }
-
+                cmd.setAnswerCreateOrUpdateCmdList(answerCreateOrUpdateCmds);
                 if (error.length() <= 0) {
                     importQuestionDTO.setCheck(true);
                     importQuestionDTO.setValue(cmd);

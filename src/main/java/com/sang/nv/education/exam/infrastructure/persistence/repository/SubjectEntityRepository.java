@@ -20,6 +20,6 @@ public interface SubjectEntityRepository extends JpaRepository<SubjectEntity, St
     @Query("from SubjectEntity u where u.id in :ids")
     List<SubjectEntity> findAllByIds(@Param("ids") List<String> ids);
 
-    @Query("from SubjectEntity u where u.id = :code and u.deleted = false")
+    @Query("from SubjectEntity u where u.code = :code and u.deleted = false")
     Optional<SubjectEntity> findByCode(@Param("code") String code);
 }

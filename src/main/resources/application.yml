@@ -86,3 +86,10 @@ template:
   user:
     exportFileName: 'user_export_template.xlsx'
     importFileName: 'user_import_template.xlsx'
+  question:
+    importFileName: 'question_import_template.xlsx'
+
+question-template:
+  folder: 'templates/excel'
+  question:
+    importFileName: 'question_import_template.xlsx'

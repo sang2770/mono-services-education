@@ -10,7 +10,7 @@ import com.sang.nv.education.exam.application.dto.request.room.QuestionUpdateReq
 import com.sang.nv.education.exam.application.dto.response.ImportQuestionResult;
 import com.sang.nv.education.exam.application.mapper.ExamAutoMapper;
 import com.sang.nv.education.exam.application.mapper.ExamAutoMapperQuery;
-import com.sang.nv.education.exam.application.service.ExcelService;
+import com.sang.nv.education.exam.application.service.ExamExcelService;
 import com.sang.nv.education.exam.application.service.QuestionService;
 import com.sang.nv.education.exam.domain.Answer;
 import com.sang.nv.education.exam.domain.GroupQuestion;
@@ -51,12 +51,12 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final AnswerEntityRepository answerEntityRepository;
     private final AnswerEntityMapper answerEntityMapper;
-    private final ExcelService excelService;
+    private final ExamExcelService examExcelService;
     public QuestionServiceImpl(QuestionEntityRepository questionEntityRepository,
                                GroupQuestionEntityRepository groupQuestionEntityRepository, ExamAutoMapper examAutoMapper,
                                ExamAutoMapperQuery examAutoMapperQuery, QuestionDomainRepository questionDomainRepository,
                                QuestionEntityMapper questionEntityMapper,
-                               GroupQuestionEntityMapper groupQuestionEntityMapper, AnswerEntityRepository answerEntityRepository, AnswerEntityMapper answerEntityMapper, ExcelService excelService) {
+                               GroupQuestionEntityMapper groupQuestionEntityMapper, AnswerEntityRepository answerEntityRepository, AnswerEntityMapper answerEntityMapper, ExamExcelService examExcelService) {
         this.questionEntityRepository = questionEntityRepository;
         this.groupQuestionEntityRepository = groupQuestionEntityRepository;
         this.examAutoMapper = examAutoMapper;
@@ -66,7 +66,7 @@ public class QuestionServiceImpl implements QuestionService {
         this.groupQuestionEntityMapper = groupQuestionEntityMapper;
         this.answerEntityRepository = answerEntityRepository;
         this.answerEntityMapper = answerEntityMapper;
-        this.excelService = excelService;
+        this.examExcelService = examExcelService;
     }
 
     @Override
@@ -137,12 +137,12 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public void downloadTemplateImportQuestions(HttpServletResponse response) {
-        this.excelService.downloadQuestionTemplate(response);
+        this.examExcelService.downloadQuestionTemplate(response);
     }
 
     @Override
     public ImportQuestionResult importQuestion(MultipartFile file, HttpServletResponse response) {
-        return this.excelService.importQuestions(file, response);
+        return this.examExcelService.importQuestions(file, response);
     }
 
     private void enrichQuestions(List<Question> questions)
