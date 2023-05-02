@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -116,6 +117,14 @@ public class RoleServiceImpl implements RoleService {
         return this.roleDomainRepository.getById(id);
     }
 
+    @Override
+    public List<Role> findByUserId(String userId) {
+        List<UserRoleEntity> userRoles = this.userRoleEntityRepository.findAllByUserIds(List.of(userId));
+        List<String> roleIds = userRoles.stream().map(UserRoleEntity::getRoleId).collect(Collectors.toList());
+        List<RoleEntity> roleEntities = this.roleEntityRepository.findAllByIds(roleIds);
+        return this.roleEntityMapper.toDomain(roleEntities);
+    }
+
     private List<Permission> existedPermissions() {
         List<PermissionEntity> permissionEntities = this.permissionEntityRepository.findAllActivated();
         if (permissionEntities == null) {
@@ -123,4 +132,6 @@ public class RoleServiceImpl implements RoleService {
         }
         return this.permissionEntityMapper.toDomain(permissionEntities);
     }
+
+
 }

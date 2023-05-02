@@ -21,4 +21,5 @@ public interface RoleService {
     void inactive(String id);
     List<UserRole> findUserRoleByRoleIds(FindByIdsRequest request);
 
+    List<Role> findByUserId(String userId);
 }

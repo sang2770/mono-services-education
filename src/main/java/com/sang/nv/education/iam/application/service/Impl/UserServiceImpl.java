@@ -10,6 +10,7 @@ import com.sang.nv.education.iam.application.dto.request.User.UserCreateRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserExportRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserSearchRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserUpdateRequest;
+import com.sang.nv.education.iam.application.dto.request.User.UserUpdateRoleRequest;
 import com.sang.nv.education.iam.application.dto.response.ImportResult;
 import com.sang.nv.education.iam.application.mapper.IamAutoMapper;
 import com.sang.nv.education.iam.application.mapper.IamAutoMapperQuery;
@@ -58,6 +59,7 @@ public class UserServiceImpl implements UserService {
     private final ClassesEntityRepository classesEntityRepository;
     private final RoleEntityMapper roleEntityMapper;
     private final ExcelService excelService;
+
     public UserServiceImpl(UserEntityRepository userEntityRepository, UserEntityMapper userEntityMapper, PasswordEncoder passwordEncoder,
                            IamAutoMapperQuery iamAutoMapperQuery, UserDomainRepository userDomainRepository, IamAutoMapper iamAutoMapper, UserRoleEntityRepository userRoleEntityRepository, RoleEntityRepository roleEntityRepository, ClassesEntityRepository classesEntityRepository, RoleEntityMapper roleEntityMapper, ExcelService excelService) {
         this.userEntityRepository = userEntityRepository;
@@ -134,8 +136,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public PageDTO<User> search(UserSearchRequest request) {
         UserSearchQuery query = this.iamAutoMapperQuery.toQuery(request);
-        if (!CollectionUtils.isEmpty(request.getDepartmentIds()) && CollectionUtils.isEmpty(request.getClassIds()))
-        {
+        if (!CollectionUtils.isEmpty(request.getDepartmentIds()) && CollectionUtils.isEmpty(request.getClassIds())) {
             List<ClassEntity> classEntities = this.classesEntityRepository.findAllByDepartmentIds(request.getDepartmentIds());
             List<String> classIds = classEntities.stream().map(ClassEntity::getId).collect(Collectors.toList());
             query.setClassIds(classIds);
@@ -172,7 +173,7 @@ public class UserServiceImpl implements UserService {
         return users;
     }
 
-    private void enrichUser(List<User> users){
+    private void enrichUser(List<User> users) {
         List<String> userIds = users.stream().map(User::getId).collect(Collectors.toList());
         // enrich roles
         List<RoleEntity> roleEntities = this.roleEntityRepository.findAllByStatus(RoleStatus.ACTIVE);
@@ -189,6 +190,7 @@ public class UserServiceImpl implements UserService {
             user.enrichRoles(rolesOfUser);
         });
     }
+
     @Override
     public void active(String userId) {
         User user = ensureExisted(userId);
@@ -278,5 +280,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<StatisticUser> statisticsUser(Integer year) {
         return this.userEntityRepository.statisticsUser(year);
+    }
+
+    @Override
+    public User updateRole(String id, UserUpdateRoleRequest request) {
+        User user = this.ensureExisted(id);
+        List<RoleEntity> roleEntities = roleEntityRepository.findAllByStatus(RoleStatus.ACTIVE);
+        user.updateRole(request.getRoleIds(), roleEntityMapper.toDomain(roleEntities));
+        this.userDomainRepository.save(user);
+        return user;
     }
 }

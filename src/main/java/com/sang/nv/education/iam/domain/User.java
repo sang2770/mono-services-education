@@ -114,6 +114,13 @@ public class User extends AuditableDomain {
         this.deleted = false;
     }
 
+    public void updateRole(List<String> roleIds, List<Role> existedRoles) {
+        if (!CollectionUtils.isEmpty(roleIds)) {
+            this.assignRoles(roleIds, existedRoles);
+        }
+        this.deleted = false;
+    }
+
     public void update(UserCreateOrUpdateCmd cmd, List<Role> existedRoles)
     {
         this.fullName = cmd.getFullName();

@@ -69,4 +69,8 @@ public class RoleResourceImpl implements RoleResource {
         return Response.of(roleService.findUserRoleByRoleIds(request));
     }
 
+    @Override
+    public Response<List<Role>> findByUserId(String userId) {
+        return Response.of(roleService.findByUserId(userId));
+    }
 }

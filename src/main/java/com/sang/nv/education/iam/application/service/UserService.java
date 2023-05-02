@@ -7,6 +7,7 @@ import com.sang.nv.education.iam.application.dto.request.User.UserCreateRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserExportRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserSearchRequest;
 import com.sang.nv.education.iam.application.dto.request.User.UserUpdateRequest;
+import com.sang.nv.education.iam.application.dto.request.User.UserUpdateRoleRequest;
 import com.sang.nv.education.iam.application.dto.response.ImportResult;
 import com.sang.nv.education.iam.domain.User;
 import com.sang.nv.education.iam.infrastructure.persistence.repository.readmodel.StatisticUser;
@@ -51,4 +52,6 @@ public interface UserService {
     Integer countUser(List<String> roomIds);
 
     List<StatisticUser> statisticsUser(Integer year);
+
+    User updateRole(String id, UserUpdateRoleRequest request);
 }

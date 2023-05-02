@@ -63,4 +63,10 @@ public interface RoleResource {
     @PreAuthorize("hasPermission(null, 'role:view')")
     Response<List<UserRole>> findALlByRoleIds(@RequestBody FindByIdsRequest request);
 
+
+    @ApiOperation(value = "Find role by userId")
+    @GetMapping("/roles/{userId}/user-roles")
+    @PreAuthorize("hasPermission(null, 'role:view')")
+    Response<List<Role>> findByUserId(@PathVariable String userId);
+
 }
