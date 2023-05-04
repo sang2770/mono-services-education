@@ -1,10 +1,14 @@
 package com.sang.nv.education.iam.application.service.Impl;
 
 
+import com.sang.common.captcha.service.CaptchaService;
+import com.sang.common.captcha.service.LoginAttemptService;
+import com.sang.common.captcha.utils.CaptchaConstants;
 import com.sang.commonmodel.auth.UserAuthority;
 import com.sang.commonmodel.error.enums.AuthenticationError;
 import com.sang.commonmodel.error.enums.NotFoundError;
 import com.sang.commonmodel.exception.ResponseException;
+import com.sang.commonutil.StrUtils;
 import com.sang.nv.education.common.web.security.AuthorityService;
 import com.sang.nv.education.common.web.support.SecurityUtils;
 import com.sang.nv.education.iam.application.config.AuthenticationProperties;
@@ -36,8 +40,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -59,6 +67,8 @@ public class AccountServiceImpl implements AccountService {
     private final AuthorityService authorityService;
     private final AuthFailCacheService authFailCacheService;
     private final SendEmailService sendEmailService;
+    private final LoginAttemptService loginAttemptService;
+    private final CaptchaService captchaService;
 
     @Override
     public AuthToken login(LoginRequest request) {
@@ -157,6 +167,7 @@ public class AccountServiceImpl implements AccountService {
 
         // check account was locked
         if (authFailCacheService.isBlockedUser(request.getUsername())) {
+            loginAttemptService.loginFailed(request.getUsername().toLowerCase());
             log.warn("User {} is blocked", request.getUsername());
             throw new ResponseException(BadRequestError.LOGIN_FAIL_BLOCK_ACCOUNT);
         }
@@ -169,7 +180,26 @@ public class AccountServiceImpl implements AccountService {
             if (error == null) {
                 throw new BadCredentialsException("Bad credential!");
             } else {
+                loginAttemptService.loginFailed(request.getUsername().toLowerCase());
                 throw new ResponseException(error.getMessage(), error);
+            }
+        }
+
+        if (loginAttemptService.isRequiredCaptcha(request.getUsername().toLowerCase())) {
+            HttpServletRequest httpServletRequest =
+                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+                            .getRequest();
+
+            String captcha = httpServletRequest.getHeader(CaptchaConstants.X_CAPTCHA_HEADER);
+            String transactionId =
+                    httpServletRequest.getHeader(CaptchaConstants.X_TRANSACTION_ID);
+            log.info("Captcha: {} transaction id: {}", captcha, transactionId);
+            if (StrUtils.isBlank(captcha)
+                    || StrUtils.isBlank(transactionId)
+                    || !passwordEncoder.matches(captcha, transactionId)
+                    || !captchaService.validate(transactionId, captcha)) {
+                Map<String, Object> params = captchaService.generateRequired();
+                throw new ResponseException(BadRequestError.INCORRECT_CAPTCHA, params);
             }
         }
 
@@ -177,6 +207,7 @@ public class AccountServiceImpl implements AccountService {
         if (!UserStatus.ACTIVE.equals(userEntity.getStatus())) {
             log.warn("User login not activated: {}", request.getUsername());
             authFailCacheService.checkLoginFail(userEntity.getUsername());
+            loginAttemptService.loginFailed(request.getUsername().toLowerCase());
             throw new ResponseException(BadRequestError.LOGIN_FAIL_BLOCK_ACCOUNT);
         }
 
@@ -184,6 +215,7 @@ public class AccountServiceImpl implements AccountService {
         {
             log.warn("User login not manager: {}", request.getUsername());
             authFailCacheService.checkLoginFail(userEntity.getUsername());
+            loginAttemptService.loginFailed(request.getUsername().toLowerCase());
             throw new ResponseException(BadRequestError.USER_NOT_PERMISSION_FAIL_ACCOUNT);
         }
 

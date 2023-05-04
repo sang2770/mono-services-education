@@ -40,6 +40,9 @@ public enum BadRequestError implements ResponseError {
 //    Classes
     CLASSES_NOT_EXISTED(400, "Classes not existed"),
     IO_EXCEPTION(400, "IO Exception"),
+
+    INCORRECT_CAPTCHA(400, "Incorrect captcha"),
+
     KEYS_NOT_EXISTED(400, "Keys not existed");
     private final Integer code;
     private final String message;
