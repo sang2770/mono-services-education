@@ -109,6 +109,7 @@ public class User extends AuditableDomain {
         this.userType = cmd.getUserType();
         if (!CollectionUtils.isEmpty(cmd.getRoleIds()))
         {
+            this.userRoles = new ArrayList<>();
             this.assignRoles(cmd.getRoleIds(), existedRoles);
         }
         this.deleted = false;
@@ -155,7 +156,6 @@ public class User extends AuditableDomain {
 
     private void assignRoles(List<String> roleIds, List<Role> existedRoles)
     {
-        this.userRoles = new ArrayList<>();
         if (Collections.isEmpty(existedRoles))
         {
             throw new ResponseException(BadRequestError.ROLE_INVALID);
