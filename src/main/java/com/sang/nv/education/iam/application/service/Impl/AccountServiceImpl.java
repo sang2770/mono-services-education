@@ -1,6 +1,7 @@
 package com.sang.nv.education.iam.application.service.Impl;
 
 
+import com.sang.common.captcha.dto.CaptchaDTO;
 import com.sang.common.captcha.service.CaptchaService;
 import com.sang.common.captcha.service.LoginAttemptService;
 import com.sang.common.captcha.utils.CaptchaConstants;
@@ -19,6 +20,7 @@ import com.sang.nv.education.iam.application.dto.request.Auth.RefreshTokenReques
 import com.sang.nv.education.iam.application.dto.request.User.EmailForgotPasswordRequest;
 import com.sang.nv.education.iam.application.dto.request.User.ForgotPasswordRequest;
 import com.sang.nv.education.iam.application.dto.response.AuthToken;
+import com.sang.nv.education.iam.application.dto.response.CaptchaResponse;
 import com.sang.nv.education.iam.application.mapper.IamAutoMapper;
 import com.sang.nv.education.iam.application.service.AccountService;
 import com.sang.nv.education.iam.application.service.AuthFailCacheService;
@@ -268,5 +270,10 @@ public class AccountServiceImpl implements AccountService {
         String encodedPassword = this.passwordEncoder.encode(request.getPassword());
         user.changePassword(encodedPassword);
         this.userDomainRepository.save(user);
+    }
+
+    @Override
+    public CaptchaDTO refreshCaptcha() {
+        return this.captchaService.generate();
     }
 }
