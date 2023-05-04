@@ -172,22 +172,9 @@ public class AccountServiceImpl implements AccountService {
             throw new ResponseException(BadRequestError.LOGIN_FAIL_BLOCK_ACCOUNT);
         }
 
-        // check user
-        Optional<UserEntity> optionalUserEntity = this.userEntityRepository.findByUsername(request.getUsername());
-        if (optionalUserEntity.isEmpty()) {
-            BadRequestError error = authFailCacheService.checkLoginFail(request.getUsername());
-            log.warn("User login not found: {}", request.getUsername());
-            if (error == null) {
-                throw new BadCredentialsException("Bad credential!");
-            } else {
-                loginAttemptService.loginFailed(request.getUsername().toLowerCase());
-                throw new ResponseException(error.getMessage(), error);
-            }
-        }
-
         if (loginAttemptService.isRequiredCaptcha(request.getUsername().toLowerCase())) {
             HttpServletRequest httpServletRequest =
-                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+                    ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes()))
                             .getRequest();
 
             String captcha = httpServletRequest.getHeader(CaptchaConstants.X_CAPTCHA_HEADER);
@@ -199,9 +186,25 @@ public class AccountServiceImpl implements AccountService {
                     || !passwordEncoder.matches(captcha, transactionId)
                     || !captchaService.validate(transactionId, captcha)) {
                 Map<String, Object> params = captchaService.generateRequired();
+                log.warn("zzz");
                 throw new ResponseException(BadRequestError.INCORRECT_CAPTCHA, params);
             }
         }
+
+        // check user
+        Optional<UserEntity> optionalUserEntity = this.userEntityRepository.findByUsername(request.getUsername());
+        if (optionalUserEntity.isEmpty()) {
+            BadRequestError error = authFailCacheService.checkLoginFail(request.getUsername());
+            log.warn("User login not found: {}", request.getUsername());
+            if (error == null) {
+                loginAttemptService.loginFailed(request.getUsername().toLowerCase());
+                throw new BadCredentialsException("Bad credential!");
+            } else {
+                loginAttemptService.loginFailed(request.getUsername().toLowerCase());
+                throw new ResponseException(error.getMessage(), error);
+            }
+        }
+
 
         UserEntity userEntity = optionalUserEntity.get();
         if (!UserStatus.ACTIVE.equals(userEntity.getStatus())) {
@@ -211,8 +214,7 @@ public class AccountServiceImpl implements AccountService {
             throw new ResponseException(BadRequestError.LOGIN_FAIL_BLOCK_ACCOUNT);
         }
 
-        if (Objects.equals(userEntity.getIsRoot(), false) && isManager && !Objects.equals(userEntity.getUserType(), UserType.MANAGER))
-        {
+        if (Boolean.TRUE.equals(Objects.equals(userEntity.getIsRoot(), false) && isManager) && !Objects.equals(userEntity.getUserType(), UserType.MANAGER)) {
             log.warn("User login not manager: {}", request.getUsername());
             authFailCacheService.checkLoginFail(userEntity.getUsername());
             loginAttemptService.loginFailed(request.getUsername().toLowerCase());
