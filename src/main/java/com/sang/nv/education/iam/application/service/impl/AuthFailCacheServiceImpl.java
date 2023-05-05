@@ -1,4 +1,4 @@
-package com.sang.nv.education.iam.application.service.Impl;
+package com.sang.nv.education.iam.application.service.impl;
 
 
 import com.sang.nv.education.iam.application.service.AuthFailCacheService;
@@ -34,7 +34,7 @@ public class AuthFailCacheServiceImpl implements AuthFailCacheService {
                                 Optional.ofNullable(cacheManager.getCache(LOGIN_FAIL_COUNT_CACHE))
                                         .map(cache -> cache.get(username))
                                         .filter(valueWrapper -> Objects.nonNull(valueWrapper.get()))
-                                        .get()
+                                        .orElse(() -> 0L)
                                         .get();
 
                 if (loginFailCount == null) {

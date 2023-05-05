@@ -1,4 +1,4 @@
-package com.sang.nv.education.iam.application.service.Impl;
+package com.sang.nv.education.iam.application.service.impl;
 
 
 import com.sang.common.captcha.dto.CaptchaDTO;
@@ -20,7 +20,6 @@ import com.sang.nv.education.iam.application.dto.request.Auth.RefreshTokenReques
 import com.sang.nv.education.iam.application.dto.request.User.EmailForgotPasswordRequest;
 import com.sang.nv.education.iam.application.dto.request.User.ForgotPasswordRequest;
 import com.sang.nv.education.iam.application.dto.response.AuthToken;
-import com.sang.nv.education.iam.application.dto.response.CaptchaResponse;
 import com.sang.nv.education.iam.application.mapper.IamAutoMapper;
 import com.sang.nv.education.iam.application.service.AccountService;
 import com.sang.nv.education.iam.application.service.AuthFailCacheService;
@@ -168,11 +167,11 @@ public class AccountServiceImpl implements AccountService {
         log.warn("User {} start login", request.getUsername());
 
         // check account was locked
-        if (authFailCacheService.isBlockedUser(request.getUsername())) {
-            loginAttemptService.loginFailed(request.getUsername().toLowerCase());
-            log.warn("User {} is blocked", request.getUsername());
-            throw new ResponseException(BadRequestError.LOGIN_FAIL_BLOCK_ACCOUNT);
-        }
+//        if (authFailCacheService.isBlockedUser(request.getUsername())) {
+//            loginAttemptService.loginFailed(request.getUsername().toLowerCase());
+//            log.warn("User {} is blocked", request.getUsername());
+//            throw new ResponseException(BadRequestError.LOGIN_FAIL_BLOCK_ACCOUNT);
+//        }
 
         if (loginAttemptService.isRequiredCaptcha(request.getUsername().toLowerCase())) {
             HttpServletRequest httpServletRequest =
@@ -243,6 +242,7 @@ public class AccountServiceImpl implements AccountService {
         log.warn("User {} login success", request.getUsername());
 
         authFailCacheService.resetLoginFail(request.getUsername());
+        this.loginAttemptService.loginSucceeded(request.getUsername());
         return AuthToken.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
