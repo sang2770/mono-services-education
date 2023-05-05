@@ -225,7 +225,14 @@ public class AccountServiceImpl implements AccountService {
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(request.getUsername().toLowerCase(),
                 request.getPassword(), new ArrayList<>());
-        authentication = authenticationManager.authenticate(authentication);
+        try {
+            authenticationManager.authenticate(authentication);
+        } catch (Exception e) {
+            log.warn("User login fail: {}", request.getUsername());
+            authFailCacheService.checkLoginFail(userEntity.getUsername());
+            loginAttemptService.loginFailed(request.getUsername().toLowerCase());
+            throw new BadCredentialsException("Bad credential!");
+        }
 
         String accessToken = this.tokenProvider.createToken(authentication, userEntity.getId());
         long expiresIn = this.authenticationProperties.getAccessTokenExpiresIn().toSeconds();

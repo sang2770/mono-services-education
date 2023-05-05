@@ -77,7 +77,7 @@ public class HttpSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/register").permitAll()
                 .antMatchers("/api/activate").permitAll()
                 .antMatchers("/api/account/reset-password/init").permitAll()
-                .antMatchers("/api/account/refresh-captcha").permitAll()
+                .antMatchers("/api/refresh-captcha").permitAll()
                 .antMatchers("/api/account/reset-password/confirm").permitAll()
                 .antMatchers("/api/account/reset-password/finish").permitAll()
                 .antMatchers("/api/client/authenticate").permitAll()
