@@ -295,6 +295,7 @@ public class ExceptionHandleAdvice {
                 .body(ErrorResponse.builder()
                         .code(error.getCode())
                         .error(error.getName())
+                        .data(e.getParams())
                         .message(message)
                         .build());
     }

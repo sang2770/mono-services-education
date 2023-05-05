@@ -177,6 +177,11 @@
 			<artifactId>common-email</artifactId>
 			<version>${common.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.sang</groupId>
+			<artifactId>common-captcha</artifactId>
+			<version>${common.version}</version>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 	</dependencyManagement>

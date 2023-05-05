@@ -1,6 +1,7 @@
 package com.sang.nv.education.iam.presentation.web.rest.impl;
 
 
+import com.sang.common.captcha.dto.CaptchaDTO;
 import com.sang.commonmodel.auth.UserAuthority;
 import com.sang.commonmodel.dto.response.Response;
 import com.sang.nv.education.iam.application.dto.request.Auth.LoginRequest;
@@ -9,6 +10,7 @@ import com.sang.nv.education.iam.application.dto.request.Auth.RefreshTokenReques
 import com.sang.nv.education.iam.application.dto.request.User.EmailForgotPasswordRequest;
 import com.sang.nv.education.iam.application.dto.request.User.ForgotPasswordRequest;
 import com.sang.nv.education.iam.application.dto.response.AuthToken;
+import com.sang.nv.education.iam.application.dto.response.CaptchaResponse;
 import com.sang.nv.education.iam.application.service.AccountService;
 import com.sang.nv.education.iam.domain.User;
 import com.sang.nv.education.iam.presentation.web.rest.AccountResource;
@@ -70,5 +72,10 @@ public class AccountResourceImpl implements AccountResource {
     public Response<Boolean> resetPassword(ForgotPasswordRequest request) {
         this.accountService.resetPassword(request);
         return Response.ok();
+    }
+
+    @Override
+    public Response<CaptchaDTO> refreshCaptcha() {
+        return Response.of(this.accountService.refreshCaptcha());
     }
 }
