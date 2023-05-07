@@ -56,7 +56,7 @@ security:
       email-token-expires-in: 10m
 
 server:
-  port: ${PORT:8080}
+  port: ${PORT:9999}
 
 #feign:
 #  circuitbreaker:

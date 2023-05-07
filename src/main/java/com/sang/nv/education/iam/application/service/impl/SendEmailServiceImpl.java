@@ -1,4 +1,4 @@
-package com.sang.nv.education.iam.application.service.Impl;
+package com.sang.nv.education.iam.application.service.impl;
 
 import com.sang.common.email.MailService;
 import com.sang.nv.education.iam.application.service.SendEmailService;

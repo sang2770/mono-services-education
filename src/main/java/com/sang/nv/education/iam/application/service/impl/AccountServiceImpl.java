@@ -1,10 +1,15 @@
-package com.sang.nv.education.iam.application.service.Impl;
+package com.sang.nv.education.iam.application.service.impl;
 
 
+import com.sang.common.captcha.dto.CaptchaDTO;
+import com.sang.common.captcha.service.CaptchaService;
+import com.sang.common.captcha.service.LoginAttemptService;
+import com.sang.common.captcha.utils.CaptchaConstants;
 import com.sang.commonmodel.auth.UserAuthority;
 import com.sang.commonmodel.error.enums.AuthenticationError;
 import com.sang.commonmodel.error.enums.NotFoundError;
 import com.sang.commonmodel.exception.ResponseException;
+import com.sang.commonutil.StrUtils;
 import com.sang.nv.education.common.web.security.AuthorityService;
 import com.sang.nv.education.common.web.support.SecurityUtils;
 import com.sang.nv.education.iam.application.config.AuthenticationProperties;
@@ -36,8 +41,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -59,6 +68,8 @@ public class AccountServiceImpl implements AccountService {
     private final AuthorityService authorityService;
     private final AuthFailCacheService authFailCacheService;
     private final SendEmailService sendEmailService;
+    private final LoginAttemptService loginAttemptService;
+    private final CaptchaService captchaService;
 
     @Override
     public AuthToken login(LoginRequest request) {
@@ -156,9 +167,29 @@ public class AccountServiceImpl implements AccountService {
         log.warn("User {} start login", request.getUsername());
 
         // check account was locked
-        if (authFailCacheService.isBlockedUser(request.getUsername())) {
-            log.warn("User {} is blocked", request.getUsername());
-            throw new ResponseException(BadRequestError.LOGIN_FAIL_BLOCK_ACCOUNT);
+//        if (authFailCacheService.isBlockedUser(request.getUsername())) {
+//            loginAttemptService.loginFailed(request.getUsername().toLowerCase());
+//            log.warn("User {} is blocked", request.getUsername());
+//            throw new ResponseException(BadRequestError.LOGIN_FAIL_BLOCK_ACCOUNT);
+//        }
+
+        if (loginAttemptService.isRequiredCaptcha(request.getUsername().toLowerCase())) {
+            HttpServletRequest httpServletRequest =
+                    ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes()))
+                            .getRequest();
+
+            String captcha = httpServletRequest.getHeader(CaptchaConstants.X_CAPTCHA_HEADER);
+            String transactionId =
+                    httpServletRequest.getHeader(CaptchaConstants.X_TRANSACTION_ID);
+            log.info("Captcha: {} transaction id: {}", captcha, transactionId);
+            if (StrUtils.isBlank(captcha)
+                    || StrUtils.isBlank(transactionId)
+                    || !passwordEncoder.matches(captcha, transactionId)
+                    || !captchaService.validate(transactionId, captcha)) {
+                Map<String, Object> params = captchaService.generateRequired();
+                log.warn("zzz");
+                throw new ResponseException(BadRequestError.INCORRECT_CAPTCHA, params);
+            }
         }
 
         // check user
@@ -167,29 +198,40 @@ public class AccountServiceImpl implements AccountService {
             BadRequestError error = authFailCacheService.checkLoginFail(request.getUsername());
             log.warn("User login not found: {}", request.getUsername());
             if (error == null) {
+                loginAttemptService.loginFailed(request.getUsername().toLowerCase());
                 throw new BadCredentialsException("Bad credential!");
             } else {
+                loginAttemptService.loginFailed(request.getUsername().toLowerCase());
                 throw new ResponseException(error.getMessage(), error);
             }
         }
+
 
         UserEntity userEntity = optionalUserEntity.get();
         if (!UserStatus.ACTIVE.equals(userEntity.getStatus())) {
             log.warn("User login not activated: {}", request.getUsername());
             authFailCacheService.checkLoginFail(userEntity.getUsername());
+            loginAttemptService.loginFailed(request.getUsername().toLowerCase());
             throw new ResponseException(BadRequestError.LOGIN_FAIL_BLOCK_ACCOUNT);
         }
 
-        if (Objects.equals(userEntity.getIsRoot(), false) && isManager && !Objects.equals(userEntity.getUserType(), UserType.MANAGER))
-        {
+        if (Boolean.TRUE.equals(Objects.equals(userEntity.getIsRoot(), false) && isManager) && !Objects.equals(userEntity.getUserType(), UserType.MANAGER)) {
             log.warn("User login not manager: {}", request.getUsername());
             authFailCacheService.checkLoginFail(userEntity.getUsername());
+            loginAttemptService.loginFailed(request.getUsername().toLowerCase());
             throw new ResponseException(BadRequestError.USER_NOT_PERMISSION_FAIL_ACCOUNT);
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(request.getUsername().toLowerCase(),
                 request.getPassword(), new ArrayList<>());
-        authentication = authenticationManager.authenticate(authentication);
+        try {
+            authenticationManager.authenticate(authentication);
+        } catch (Exception e) {
+            log.warn("User login fail: {}", request.getUsername());
+            authFailCacheService.checkLoginFail(userEntity.getUsername());
+            loginAttemptService.loginFailed(request.getUsername().toLowerCase());
+            throw new BadCredentialsException("Bad credential!");
+        }
 
         String accessToken = this.tokenProvider.createToken(authentication, userEntity.getId());
         long expiresIn = this.authenticationProperties.getAccessTokenExpiresIn().toSeconds();
@@ -200,6 +242,7 @@ public class AccountServiceImpl implements AccountService {
         log.warn("User {} login success", request.getUsername());
 
         authFailCacheService.resetLoginFail(request.getUsername());
+        this.loginAttemptService.loginSucceeded(request.getUsername());
         return AuthToken.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
@@ -234,5 +277,10 @@ public class AccountServiceImpl implements AccountService {
         String encodedPassword = this.passwordEncoder.encode(request.getPassword());
         user.changePassword(encodedPassword);
         this.userDomainRepository.save(user);
+    }
+
+    @Override
+    public CaptchaDTO refreshCaptcha() {
+        return this.captchaService.generate();
     }
 }

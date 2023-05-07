@@ -1,5 +1,6 @@
 package com.sang.nv.education.iam.presentation.web.rest;
 
+import com.sang.common.captcha.dto.CaptchaDTO;
 import com.sang.commonmodel.auth.UserAuthority;
 import com.sang.commonmodel.dto.response.Response;
 import com.sang.nv.education.iam.application.dto.request.Auth.LoginRequest;
@@ -60,5 +61,11 @@ public interface AccountResource {
     @ApiOperation(value = "Reset password")
     @PostMapping("/account/reset-password/finish")
     Response<Boolean> resetPassword(@RequestBody @Valid ForgotPasswordRequest request);
+
+
+    @ApiOperation(value = "Refresh captcha")
+    @GetMapping("/refresh-captcha")
+    Response<CaptchaDTO> refreshCaptcha();
+
 
 }

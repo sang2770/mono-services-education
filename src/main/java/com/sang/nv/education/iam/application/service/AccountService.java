@@ -1,6 +1,7 @@
 package com.sang.nv.education.iam.application.service;
 
 
+import com.sang.common.captcha.dto.CaptchaDTO;
 import com.sang.commonmodel.auth.UserAuthority;
 import com.sang.nv.education.iam.application.dto.request.Auth.LoginRequest;
 import com.sang.nv.education.iam.application.dto.request.Auth.LogoutRequest;
@@ -31,4 +32,5 @@ public interface AccountService {
     void resetPassword(ForgotPasswordRequest request);
 
 
+    CaptchaDTO refreshCaptcha();
 }

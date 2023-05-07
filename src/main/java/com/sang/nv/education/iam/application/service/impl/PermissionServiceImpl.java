@@ -1,4 +1,4 @@
-package com.sang.nv.education.iam.application.service.Impl;
+package com.sang.nv.education.iam.application.service.impl;
 
 import com.sang.commonmodel.exception.ResponseException;
 import com.sang.nv.education.common.web.i18n.LocaleStringService;
