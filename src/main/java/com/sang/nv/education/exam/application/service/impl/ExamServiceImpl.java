@@ -4,21 +4,35 @@ package com.sang.nv.education.exam.application.service.impl;
 import com.sang.commonmodel.dto.PageDTO;
 import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonmodel.mapper.util.PageableMapperUtil;
+import com.sang.commonpersistence.support.SeqRepository;
 import com.sang.nv.education.exam.application.dto.request.exam.ExamCreateRequest;
 import com.sang.nv.education.exam.application.dto.request.exam.ExamSearchRequest;
 import com.sang.nv.education.exam.application.dto.request.exam.ExamUpdateRequest;
 import com.sang.nv.education.exam.application.mapper.ExamAutoMapper;
 import com.sang.nv.education.exam.application.mapper.ExamAutoMapperQuery;
 import com.sang.nv.education.exam.application.service.ExamService;
-import com.sang.nv.education.exam.domain.*;
+import com.sang.nv.education.exam.domain.Exam;
+import com.sang.nv.education.exam.domain.PeriodRoom;
+import com.sang.nv.education.exam.domain.Question;
+import com.sang.nv.education.exam.domain.Room;
 import com.sang.nv.education.exam.domain.command.ExamCreateCmd;
 import com.sang.nv.education.exam.domain.repository.ExamDomainRepository;
 import com.sang.nv.education.exam.domain.repository.RoomDomainRepository;
-import com.sang.nv.education.exam.infrastructure.persistence.entity.*;
+import com.sang.nv.education.exam.infrastructure.persistence.entity.ExamEntity;
+import com.sang.nv.education.exam.infrastructure.persistence.entity.ExamQuestionEntity;
+import com.sang.nv.education.exam.infrastructure.persistence.entity.PeriodEntity;
+import com.sang.nv.education.exam.infrastructure.persistence.entity.QuestionEntity;
+import com.sang.nv.education.exam.infrastructure.persistence.entity.SubjectEntity;
 import com.sang.nv.education.exam.infrastructure.persistence.mapper.ExamEntityMapper;
 import com.sang.nv.education.exam.infrastructure.persistence.mapper.QuestionEntityMapper;
 import com.sang.nv.education.exam.infrastructure.persistence.query.ExamSearchQuery;
-import com.sang.nv.education.exam.infrastructure.persistence.repository.*;
+import com.sang.nv.education.exam.infrastructure.persistence.repository.ExamEntityRepository;
+import com.sang.nv.education.exam.infrastructure.persistence.repository.ExamQuestionEntityRepository;
+import com.sang.nv.education.exam.infrastructure.persistence.repository.GroupQuestionEntityRepository;
+import com.sang.nv.education.exam.infrastructure.persistence.repository.PeriodEntityRepository;
+import com.sang.nv.education.exam.infrastructure.persistence.repository.PeriodRoomEntityRepository;
+import com.sang.nv.education.exam.infrastructure.persistence.repository.QuestionEntityRepository;
+import com.sang.nv.education.exam.infrastructure.persistence.repository.SubjectEntityRepository;
 import com.sang.nv.education.exam.infrastructure.support.exception.BadRequestError;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,13 +60,13 @@ public class ExamServiceImpl implements ExamService {
     private final ExamEntityMapper ExamEntityMapper;
     private final RoomDomainRepository roomDomainRepository;
     private final SubjectEntityRepository subjectEntityRepository;
-
+    private final SeqRepository seqRepository;
     public ExamServiceImpl(ExamEntityRepository ExamEntityRepository,
                            GroupQuestionEntityRepository GroupQuestionEntityRepository,
                            QuestionEntityRepository questionEntityRepository,
                            ExamQuestionEntityRepository examQuestionEntityRepository, ExamAutoMapper examAutoMapper,
                            QuestionEntityMapper questionEntityMapper, ExamAutoMapperQuery examAutoMapperQuery, ExamDomainRepository ExamDomainRepository,
-                           com.sang.nv.education.exam.infrastructure.persistence.repository.ExamEntityRepository examEntityRepository, PeriodEntityRepository periodEntityRepository, PeriodRoomEntityRepository periodRoomEntityRepository, ExamEntityMapper ExamEntityMapper, RoomDomainRepository roomDomainRepository, SubjectEntityRepository subjectEntityRepository) {
+                           com.sang.nv.education.exam.infrastructure.persistence.repository.ExamEntityRepository examEntityRepository, PeriodEntityRepository periodEntityRepository, PeriodRoomEntityRepository periodRoomEntityRepository, ExamEntityMapper ExamEntityMapper, RoomDomainRepository roomDomainRepository, SubjectEntityRepository subjectEntityRepository, SeqRepository seqRepository) {
         this.ExamEntityRepository = ExamEntityRepository;
         this.groupQuestionEntityRepository = GroupQuestionEntityRepository;
         this.questionEntityRepository = questionEntityRepository;
@@ -67,6 +81,7 @@ public class ExamServiceImpl implements ExamService {
         this.ExamEntityMapper = ExamEntityMapper;
         this.roomDomainRepository = roomDomainRepository;
         this.subjectEntityRepository = subjectEntityRepository;
+        this.seqRepository = seqRepository;
     }
 
     @Override
@@ -86,6 +101,7 @@ public class ExamServiceImpl implements ExamService {
         }
 
         ExamCreateCmd cmd = this.examAutoMapper.from(request);
+        cmd.setCode(this.seqRepository.generateUserExamCode());
         cmd.setPeriodName(periodEntityOptional.get().getName());
         cmd.setSubjectName(subjectEntityOptional.get().getName());
         Exam Exam = new Exam(cmd, questions);

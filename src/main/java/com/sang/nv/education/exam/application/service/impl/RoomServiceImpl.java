@@ -243,7 +243,7 @@ public class RoomServiceImpl implements RoomService {
         List<String> periodIds = periodRoomEntities.getContent().stream().map(PeriodRoomEntity::getPeriodId).collect(Collectors.toList());
         List<Period> periods = new ArrayList<>();
         if (!CollectionUtils.isEmpty(periodIds)) {
-             periods.addAll(this.periodEntityMapper.toDomain(this.periodEntityRepository.findAllByIds(periodIds)));
+            periods.addAll(this.periodEntityMapper.toDomain(this.periodEntityRepository.findAllByIds(periodIds)));
         }
         List<PeriodRoom> periodRooms = this.periodRoomEntityMapper.toDomain(periodRoomEntities.getContent());
         periodRooms.forEach(periodRoom -> {
@@ -280,7 +280,7 @@ public class RoomServiceImpl implements RoomService {
                 count.getAndIncrement();
                 UserExamCreateCmd cmd = UserExamCreateCmd.builder()
                         .maxPoint(exam.getTotalPoint())
-                        .code(this.seqRepository.generateUserExamCode())
+                        .code(exam.getCode())
                         .examId(exam.getId())
                         .userId(userRoom.getUserId())
                         .roomId(id)
@@ -305,8 +305,7 @@ public class RoomServiceImpl implements RoomService {
             throw new ResponseException(NotFoundError.PERIOD_NOT_EXISTED_IN_ROOM);
         }
         List<Exam> exams = this.examEntityMapper.toDomain(this.examEntityRepository.findAllByPeriodAnsSubject(request.getPeriodId(), room.getSubjectId()));
-        if (CollectionUtils.isEmpty(exams))
-        {
+        if (CollectionUtils.isEmpty(exams)) {
             throw new ResponseException(BadRequestError.PERIOD_NOT_EXAM);
         }
         List<UserRoom> userRooms = this.userRoomEntityMapper.toDomain(this.userRoomEntityRepository.findByRoomId(id));

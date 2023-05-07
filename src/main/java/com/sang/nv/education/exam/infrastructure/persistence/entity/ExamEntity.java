@@ -34,6 +34,8 @@ public class ExamEntity extends AuditableEntity {
     @Column(name = "subjectName")
     String subjectName;
 
+    @Column(name = "code")
+    String code;
     @Column(name = "time",  nullable = false)
     Long time;
 

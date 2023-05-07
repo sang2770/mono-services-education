@@ -30,6 +30,7 @@ public class Exam {
     String subjectName;
     String periodName;
     String name;
+    String code;
     Boolean deleted;
 //  Thời gian làm bài tính bằng phút
     Long time;

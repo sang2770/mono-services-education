@@ -18,7 +18,7 @@ public class ExamCreateCmd {
     String subjectName;
     String periodName;
     Long time;
-
+    String code;
     Long timeDelay;
     List<String> questionIds;
 }
