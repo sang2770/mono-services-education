@@ -27,6 +27,6 @@ public interface PeriodEntityRepository extends JpaRepository<PeriodEntity, Stri
             "from PeriodEntity p where YEAR(p.createdAt) = :year group by YEAR(p.createdAt), MONTH(p.createdAt)")
     List<StatisticPeriod> statisticPeriod(@Param("year") Integer year);
 
-    @Query("select u from PeriodEntity u left join PeriodRoomEntity pu on u.id = pu.periodId where u.deleted = false and (:roomIds is null or pu.roomId in :roomIds) ")
+    @Query("select u from PeriodEntity u left join PeriodRoomEntity pu on u.id = pu.periodId where u.deleted = false and ((:roomIds) is null or pu.roomId in :roomIds) ")
     List<PeriodEntity> findAllByRoomIds(@Param("roomIds") List<String> roomIds);
 }

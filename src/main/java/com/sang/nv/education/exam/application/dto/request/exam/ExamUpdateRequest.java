@@ -14,6 +14,9 @@ public class ExamUpdateRequest extends Request {
     String periodId;
     String subjectId;
     String subjectName;
+    String name;
+    Long time;
+    Long timeDelay;
     List<String> questionIds;
 
 }

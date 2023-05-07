@@ -29,6 +29,9 @@ public class ExamEntity extends AuditableEntity {
     Integer numberQuestion;
     @Column(name = "periodId", nullable = false)
     String periodId;
+
+    @Column(name = "periodName")
+    String periodName;
     @Column(name = "subjectId", nullable = false)
     String subjectId;
     @Column(name = "subjectName")

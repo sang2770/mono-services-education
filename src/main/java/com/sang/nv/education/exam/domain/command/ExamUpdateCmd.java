@@ -10,5 +10,8 @@ public class ExamUpdateCmd {
     String subjectId;
     String subjectName;
     String periodName;
+    String name;
+    Long time;
+    Long timeDelay;
     List<String> questionIds;
 }

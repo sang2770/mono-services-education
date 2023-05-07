@@ -51,6 +51,7 @@ public class Exam {
         this.deleted = Boolean.FALSE;
         this.time = cmd.getTime();
         this.timeDelay = cmd.getTimeDelay();
+        this.code = cmd.getCode();
         this.examQuestions = new ArrayList<>();
         if (!CollectionUtils.isEmpty(cmd.getQuestionIds())) {
             this.updateQuestion(cmd.getQuestionIds(), questions);
@@ -80,6 +81,9 @@ public class Exam {
         this.subjectId = cmd.getSubjectId();
         this.subjectName = cmd.getSubjectName();
         this.periodName = cmd.getPeriodName();
+        this.name = cmd.getName();
+        this.time = cmd.getTime();
+        this.timeDelay = cmd.getTimeDelay();
         this.deleted = Boolean.FALSE;
         if (!CollectionUtils.isEmpty(cmd.getQuestionIds())) {
             this.updateQuestion(cmd.getQuestionIds(), questions);
