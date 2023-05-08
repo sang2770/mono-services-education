@@ -11,7 +11,12 @@ import com.sang.nv.education.exam.domain.command.UserExamInfoCreateCmd;
 import com.sang.nv.education.exam.infrastructure.support.enums.UserExamStatus;
 import com.sang.nv.education.exam.infrastructure.support.exception.NotFoundError;
 import com.sang.nv.education.iam.domain.User;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.springframework.util.CollectionUtils;
 
@@ -51,7 +56,7 @@ public class UserExam extends AuditableDomain {
     Room room;
     Period period;
 
-    public UserExam(UserExamCreateCmd cmd){
+    public UserExam(UserExamCreateCmd cmd) {
         this.id = IdUtils.nextId();
 //        this.timeEnd = cmd.getTimeEnd();
 //        this.timeStart = cmd.getTimeStart();
@@ -69,6 +74,7 @@ public class UserExam extends AuditableDomain {
         this.numberOutTab = 0;
         this.userId = cmd.getUserId();
     }
+
     public UserExam(UserExamCreateCmd cmd, List<ExamQuestion> examQuestions) {
         this.id = IdUtils.nextId();
         this.timeEnd = cmd.getTimeEnd();
@@ -94,14 +100,14 @@ public class UserExam extends AuditableDomain {
         }
     }
 
-    public void validateExam(List<UserExamInfoCreateRequest> userExamInfoCreateRequests, List<ExamQuestion> examQuestions){
+    public void validateExam(List<UserExamInfoCreateRequest> userExamInfoCreateRequests, List<ExamQuestion> examQuestions) {
         userExamInfoCreateRequests.forEach(userExamInfoCreateRequest -> {
             Optional<ExamQuestion> optionalExamQuestion = examQuestions.stream().filter(question ->
                     Objects.equals(question.getQuestionId(), userExamInfoCreateRequest.getQuestionId())).findFirst();
             if (optionalExamQuestion.isEmpty()) {
                 throw new ResponseException(NotFoundError.QUESTION_NOT_EXISTED);
             }
-            Boolean status = Boolean.FALSE;
+            Boolean statusExam = Boolean.FALSE;
             ExamQuestion examQuestion = optionalExamQuestion.get();
             if (Objects.nonNull(userExamInfoCreateRequest.getAnswerId()) && !StrUtils.isBlank(userExamInfoCreateRequest.getAnswerId())) {
                 Optional<Answer> optionalAnswer = examQuestion.getQuestion().answers.stream().filter(answer ->
@@ -110,26 +116,26 @@ public class UserExam extends AuditableDomain {
                     throw new ResponseException(NotFoundError.ANSWER_NOT_EXISTED);
                 }
                 Answer answer = optionalAnswer.get();
-                if (answer.getStatus())
-                {
+                if (Boolean.TRUE.equals(answer.getStatus())) {
                     this.totalPoint += examQuestion.point;
                 }
-                status = answer.getStatus();
+                statusExam = answer.getStatus();
             }
 
             this.userExamInfos.add(new UserExamInfo(UserExamInfoCreateCmd.builder()
                     .answerId(userExamInfoCreateRequest.getAnswerId())
                     .questionId(userExamInfoCreateRequest.getQuestionId())
-                    .status(status)
+                    .status(statusExam)
                     .point(examQuestion.getPoint())
                     .userExamId(this.id)
                     .build()));
         });
     }
 
-    public void startTesting(){
+    public void startTesting() {
         this.timeStart = Instant.now();
     }
+
     public void deleted() {
         this.deleted = true;
     }
@@ -138,34 +144,35 @@ public class UserExam extends AuditableDomain {
         this.deleted = false;
     }
 
-    public void enrichUserExamInfo(List<UserExamInfo> userExamInfos){
+    public void enrichUserExamInfo(List<UserExamInfo> userExamInfos) {
         this.userExamInfos = userExamInfos;
     }
 
-    public void updateStatus(UserExamStatus status)
-    {
+    public void updateStatus(UserExamStatus status) {
         this.status = status;
     }
 
-    public void enrichUser(User user){
+    public void enrichUser(User user) {
         this.user = user;
     }
 
-    public void enrichRoom(Room room){
+    public void enrichRoom(Room room) {
         this.room = room;
     }
 
-    public void enrichPeriod(Period period){
+    public void enrichPeriod(Period period) {
         this.period = period;
     }
-    public void enrichExam(Exam exam){
+
+    public void enrichExam(Exam exam) {
         this.exam = exam;
     }
-    public void enrichUserExamResult(UserExamResult userExamResult){
+
+    public void enrichUserExamResult(UserExamResult userExamResult) {
         this.userExamResult = userExamResult;
     }
 
-    public void overTimeExam(){
+    public void overTimeExam() {
         this.status = UserExamStatus.OVERTIME;
         this.timeEnd = Instant.now();
         this.totalPoint = 0f;

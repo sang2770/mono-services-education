@@ -7,13 +7,13 @@ import com.sang.commonmodel.exception.ResponseException;
 import com.sang.commonmodel.mapper.util.PageableMapperUtil;
 import com.sang.commonpersistence.support.SeqRepository;
 import com.sang.nv.education.common.web.support.SecurityUtils;
-import com.sang.nv.education.exam.application.dto.request.room.RoomCreateOrUpdateRequest;
-import com.sang.nv.education.exam.application.dto.request.room.RoomSearchRequest;
 import com.sang.nv.education.exam.application.dto.request.UpdateMemberInRoomRequest;
 import com.sang.nv.education.exam.application.dto.request.UpdatePeriodInRoomRequest;
 import com.sang.nv.education.exam.application.dto.request.UserExamCreateRequest;
 import com.sang.nv.education.exam.application.dto.request.UserRoomSearchRequest;
 import com.sang.nv.education.exam.application.dto.request.room.PeriodRoomSearchRequest;
+import com.sang.nv.education.exam.application.dto.request.room.RoomCreateOrUpdateRequest;
+import com.sang.nv.education.exam.application.dto.request.room.RoomSearchRequest;
 import com.sang.nv.education.exam.application.dto.request.room.SendExamToUserRequest;
 import com.sang.nv.education.exam.application.mapper.ExamAutoMapper;
 import com.sang.nv.education.exam.application.mapper.ExamAutoMapperQuery;
@@ -92,7 +92,6 @@ public class RoomServiceImpl implements RoomService {
 
     public RoomServiceImpl(RoomEntityRepository roomEntityRepository, ExamAutoMapper examAutoMapper,
                            ExamAutoMapperQuery examAutoMapperQuery, RoomDomainRepository RoomDomainRepository,
-                           RoomEntityRepository RoomEntityRepository,
                            RoomEntityMapper roomEntityMapper, UserRoomEntityRepository userRoomEntityRepository,
                            UserRoomEntityMapper userRoomEntityMapper,
                            UserExamEntityRepository userExamEntityRepository, UserExamEntityMapper userExamEntityMapper, PeriodRoomEntityRepository periodRoomEntityRepository,
@@ -258,6 +257,9 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public void sendExamToUser(String id, UserExamCreateRequest request) {
         // check permision
+        if (SecurityUtils.getCurrentUser().isEmpty()) {
+            throw new ResponseException(BadRequestError.USER_INVALID);
+        }
         User user = this.objectMapper.convertValue(SecurityUtils.getCurrentUser().get(), User.class);
         List<UserRoomEntity> userRoomEntity = this.userRoomEntityRepository.findByUserIds(List.of(user.getId()));
         if (CollectionUtils.isEmpty(userRoomEntity) && !user.getIsRoot()) {
