@@ -321,6 +321,7 @@ public class RoomServiceImpl implements RoomService {
                         .examId(exam.getId())
                         .userId(userRoom.getUserId())
                         .roomId(id)
+                        .timeDelay(Objects.nonNull(request.getTimeDelay()) ? request.getTimeDelay() : exam.getTimeDelay())
                         .periodId(request.getPeriodId())
                         .build();
                 UserExam userExam = new UserExam(cmd);

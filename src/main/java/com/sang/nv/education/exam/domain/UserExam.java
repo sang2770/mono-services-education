@@ -41,6 +41,7 @@ public class UserExam extends AuditableDomain {
     String userId;
     Integer numberOutTab;
     UserExamStatus status;
+    Long timeDelay;
     List<UserExamInfo> userExamInfos;
 
     Exam exam;
@@ -62,6 +63,7 @@ public class UserExam extends AuditableDomain {
         this.userExamInfos = new ArrayList<>();
         this.totalPoint = 0f;
         this.status = UserExamStatus.WAITING;
+        this.timeDelay = cmd.getTimeDelay();
 //        this.timeEnd = Instant.now();
         this.deleted = Boolean.FALSE;
         this.numberOutTab = 0;

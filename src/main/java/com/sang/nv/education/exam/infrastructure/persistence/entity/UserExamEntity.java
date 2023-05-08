@@ -37,17 +37,25 @@ public class UserExamEntity extends AuditableEntity {
 
     @Column(name = "totalPoint")
     Float totalPoint;
+
     @Column(name = "maxPoint")
     Float maxPoint;
+
     @Column(name = "timeEnd")
     Instant timeEnd;
+
     @Column(name = "timeStart")
     Instant timeStart;
+
+    @Column(name = "timeDelay")
+    Long timeDelay;
+
     @Column(name = "examId")
     String examId;
+
     @Column(name = "userId")
     String userId;
-    
+
     @Column(name = "numberOutTab")
     Integer numberOutTab;
 
@@ -60,6 +68,7 @@ public class UserExamEntity extends AuditableEntity {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     UserExamStatus status;
+
     @Column(name = "deleted")
     private Boolean deleted;
 
