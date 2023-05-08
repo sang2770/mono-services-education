@@ -311,7 +311,7 @@ public class RoomServiceImpl implements RoomService {
         List<UserRoom> userRooms = this.userRoomEntityMapper.toDomain(this.userRoomEntityRepository.findByRoomId(id));
         List<UserExam> userExams = new ArrayList<>();
         AtomicInteger count = new AtomicInteger();
-        if (exams.size() > 0) {
+        if (!exams.isEmpty()) {
             userRooms.forEach((userRoom) -> {
                 Exam exam = exams.get(count.get() % exams.size());
                 count.getAndIncrement();
@@ -335,11 +335,11 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public PageDTO<Room> getMyRoom(RoomSearchRequest request) {
         RoomSearchQuery query = this.examAutoMapperQuery.from(request);
-        String userId = SecurityUtils.getCurrentUserLoginId().get();
-        if (Objects.isNull(userId)) {
+        Optional<String> userId = SecurityUtils.getCurrentUserLoginId();
+        if (userId.isEmpty()) {
             throw new ResponseException(BadRequestError.USER_INVALID);
         }
-        query.setUserIds(List.of(userId));
+        query.setUserIds(List.of(userId.get()));
         return this.searchRoom(query);
     }
 
@@ -368,9 +368,7 @@ public class RoomServiceImpl implements RoomService {
         List<Subject> subjects = this.subjectEntityRepository.findAllByIds(subjectIds).stream().map(this.subjectEntityMapper::toDomain).collect(Collectors.toList());
         room.forEach(room1 -> {
             Optional<Subject> subject = subjects.stream().filter(subject1 -> subject1.getId().equals(room1.getSubjectId())).findFirst();
-            if (subject.isPresent()) {
-                room1.enrichSubject(subject.get());
-            }
+            subject.ifPresent(room1::enrichSubject);
         });
         List<String> roomIds = room.stream().map(Room::getId).collect(Collectors.toList());
         List<UserRoom> userRooms = this.userRoomEntityRepository.findAllByRoomIds(roomIds).stream().map(this.userRoomEntityMapper::toDomain).collect(Collectors.toList());
