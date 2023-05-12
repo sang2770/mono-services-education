@@ -1,3 +1,9 @@
+FROM maven:3.8.3-jdk-11-slim AS builder
+COPY pom.xml .
+RUN mvn dependency:go-offline
+COPY src/ /src/
+RUN mvn package
+
 FROM adoptopenjdk/openjdk11-openj9:ubi-minimal-jre
 
 # Set the current working directory inside the image
