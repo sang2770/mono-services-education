@@ -1,18 +1,19 @@
 #
 # Build stage
 #
-FROM maven:3.8.2-jdk-11 AS build
-COPY . .
-RUN mvn -s settings.xml package -Pprod -DskipTests
+FROM maven:3.8.1-openjdk-11 AS build
+WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline
+COPY src ./src
+RUN mvn package -DskipTests
 
 
-FROM adoptopenjdk/openjdk11-openj9:ubi-minimal-jre
+# Build docker
+FROM openjdk:11-jre-slim
+WORKDIR /app
+COPY --from=build /app/target/*.jar education-0.0.1.jar
+# ADD ./src/main/resources /app/config
+EXPOSE 80, 9999
 
-# Set the current working directory inside the image
-WORKDIR /tmp
-
-COPY --from=build /target/*.jar education-0.0.1.jar
-ADD ./src/main/resources /app/config
-EXPOSE 80
-
-ENTRYPOINT ["java","-jar","education-0.0.1.jar","--spring.profiles.active=${ENV:dev}"]
+ENTRYPOINT ["java","-jar","education-0.0.1.jar"]
