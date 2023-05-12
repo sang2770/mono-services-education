@@ -1,7 +1,7 @@
 FROM adoptopenjdk/openjdk11-openj9:ubi-minimal-jre
 
 # Set the current working directory inside the image
-WORKDIR /app
+WORKDIR /tmp
 
 COPY target/*.jar /app/education-0.0.1.jar
 ADD ./src/main/resources /app/config
