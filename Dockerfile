@@ -1,15 +1,17 @@
-FROM maven:3.8.3-jdk-11-slim AS builder
-COPY pom.xml .
-RUN mvn dependency:go-offline
-COPY src/ /src/
-RUN mvn package
+#
+# Build stage
+#
+FROM maven:3.8.2-jdk-11 AS build
+COPY . .
+RUN mvn clean package -Pprod -DskipTests
+
 
 FROM adoptopenjdk/openjdk11-openj9:ubi-minimal-jre
 
 # Set the current working directory inside the image
 WORKDIR /tmp
 
-COPY target/*.jar /app/education-0.0.1.jar
+COPY --from=build /target/*.jar /app/education-0.0.1.jar
 ADD ./src/main/resources /app/config
 EXPOSE 80
 
