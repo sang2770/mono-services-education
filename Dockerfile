@@ -14,6 +14,6 @@ FROM openjdk:11-jre-slim
 WORKDIR /app
 COPY --from=build /app/target/*.jar education-0.0.1.jar
 # ADD ./src/main/resources /app/config
-EXPOSE 80, 9999
+EXPOSE 80 9999
 
 ENTRYPOINT ["java","-jar","education-0.0.1.jar"]
